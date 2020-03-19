@@ -1,0 +1,266 @@
+{% load staticfiles %}
+{% static "" as img %}
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>Colorlib Medi+</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300, 400, 700" rel="stylesheet">
+
+    <link rel="stylesheet" href="{% static 'home/css/bootstrap.css' %}">
+    <link rel="stylesheet" href="{% static 'home/css/animate.css' %}">
+    <link rel="stylesheet" href="{% static 'home/css/owl.carousel.min.css' %}">
+    <link rel="stylesheet" href="{% static 'home/css/bootstrap-datepicker.css' %}">
+    <link rel="stylesheet" href="{% static 'home/css/jquery.timepicker.css' %}">
+
+    <link rel="stylesheet" href="{% static 'home/fonts/ionicons/css/ionicons.min.css' %}">
+    <link rel="stylesheet" href="{% static 'home/fonts/fontawesome/css/font-awesome.min.css' %}">
+    <link rel="stylesheet" href="{% static 'home/fonts/flaticon/font/flaticon.css' %}">
+<!-- chat -->
+
+    <!-- Theme Style -->
+    <link rel="stylesheet" href="{% static 'home/css/style.css' %}">
+	<!-- Meta tag Keywords -->
+
+	<!-- css files -->
+	<link rel="stylesheet" href="{% static 'home/css2/style.css' %}" type="text/css" media="all" />
+	<!-- Style-CSS -->
+	<link href="{% static 'home/css2/font-awesome.min.css' %}" rel="stylesheet">
+	<!-- Font-Awesome-Icons-CSS -->
+	<!-- //css files -->
+
+	<!-- web-fonts -->
+	<link href="//fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i&amp;subset=cyrillic,cyrillic-ext,greek,greek-ext"
+	 rel="stylesheet">
+	<!-- //web-fonts -->
+<!-- 	<script>
+		addEventListener("load", function () {
+			setTimeout(hideURLbar, 0);
+		}, false);
+
+		function hideURLbar() {
+			window.scrollTo(0, 1);
+		}
+	</script> -->
+<!-- <meta name="viewport" content="width=device-width, initial-scale=1"> -->
+<style>
+.chatbody {
+  margin: 0 auto;
+  max-width: 800px;
+  padding: 0 20px;
+}
+
+.chatcontainer {
+  border: 2px solid #dedede;
+  background-color: #f1f1f1;
+  border-radius: 5px;
+  padding: 10px;
+  margin: 10px 0;
+}
+
+.chatdarker {
+  border-color: #ccc;
+  background-color: #ddd;
+}
+
+.chatcontainer::after {
+  content: "";
+  clear: both;
+  display: table;
+}
+
+.chatcontainer img {
+  float: left;
+  max-width: 60px;
+  width: 100%;
+  margin-right: 20px;
+  border-radius: 50%;
+}
+
+.chatcontainer img.right {
+  float: right;
+  margin-left: 20px;
+  margin-right:0;
+}
+
+.chattime-right {
+  float: right;
+  color: #aaa;
+}
+
+.chattime-left {
+  float: left;
+  color: #999;
+}
+</style>
+
+  </head>
+  <body style="text-align: center; background-image: url('{% static 'home/img/allineone-patient.png' %}');background-repeat: none;">
+    
+    <header role="banner">
+      <div class="top-bar">
+        <div class="container">
+          <div class="row">
+            <div class="col-md-6 col-sm-6 col-5">
+              <ul class="social list-unstyled">
+             <!--    <li><a href="#"><span class="fa fa-facebook"></span></a></li>
+                <li><a href="#"><span class="fa fa-twitter"></span></a></li>
+                <li><a href="#"><span class="fa fa-instagram"></span></a></li> -->
+              </ul>
+            </div>
+            <div class="col-md-6 col-sm-6 col-7 text-right">
+			 <p class="mb-0">
+                <!-- <a href="{% url 'booking' %}" class="cta-btn">Make an Appointment</a> -->
+				<a href="{% url 'logout_fn' %}" class="cta-btn">Logout</a></p>            		
+				<!-- <a href="#" class="cta-btn" data-toggle="modal" data-target="#modalAppointment">Register/Login</a></p> -->
+		
+		</div>
+          </div>
+        </div>
+      </div>
+      <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container">
+          <a class="navbar-brand" href="index.html">Touch Of <span>Care</span> </a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExample05" aria-controls="navbarsExample05" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+
+          <div class="collapse navbar-collapse" id="navbarsExample05">
+            <ul class="navbar-nav ml-auto">
+             
+  <!--            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="doctors.html" id="dropdown05" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Doctors</a>
+                <div class="dropdown-menu" aria-labelledby="dropdown05">
+                  <a class="dropdown-item" href="doctors.html">Find Doctors</a>
+                  <a class="dropdown-item" href="#">Practitioner</a>
+                </div>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="news.html">News</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="about.html">About</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="contact.html">Contact</a>
+              </li> -->
+            </ul>
+          </div>
+        </div>
+      </nav>
+    </header>
+    <!-- END header -->
+ 
+    <a class="cta-link element-animate" data-animate-effect="fadeIn" data-toggle="modal" data-target="#modalAppointment">
+      <span class="sub-heading">{{user_dtt.name}}</span>
+      <span class="heading">Welcome</span>
+    </a>
+	<br>
+
+	<br>
+<form action="{% url 'vwchat_new' %}" style="display: inline-block;" method="post">{% csrf_token %}
+<div class="chatbody">
+<h2>Chat</h2>
+               <div class="form-group">
+                    <label for="appointment_date" class="text-black"></label>
+	<select id="sel_dr" name="selt_drr" class="form-control">
+					<option selected disabled>SELECT</option>
+					{% for i in drnm %}
+					<option value={{i.did}}>{{i.name}}</option>
+					{% endfor %}
+					{% for i in lab %}
+					<option value={{i.lid}}>{{i.lab_nm}}</option>
+					{% endfor %}
+					{% for i in pha %}
+					<option value={{i.phar_id}}>{{i.phar_name}}</option>
+					{% endfor %}
+</select>								
+					</div>
+<input type="text" id="doctorid" name="iddr" readonly style="visibility:hidden;">
+</div>
+<input id="vwcht" type="submit" value="Start chat" class="btn btn-primary">
+
+</form>
+
+<br>
+<br>
+<br>
+    <footer class="site-footer" role="contentinfo">
+      <div class="container">
+        <div class="row mb-5 element-animate">
+          <div class="col-md-3 mb-5">
+            <h3>Online Medicine Shopping</h3>
+            <ul class="footer-link list-unstyled">
+              <li><a>Find a location</a></li>
+              <li><a>Find a Pharmacy</a></li>
+              <li><a>Buy Medicine</a></li>
+            </ul>
+          </div>
+          <div class="col-md-3 mb-5">
+            <h3>Make a Appointment</h3>
+            <ul class="footer-link list-unstyled">
+			  <li><a>Choose Your Location</a></li>
+              <li><a>Choose Your Hospital</a></li>
+              <li><a>Find Your Doctor</a></li>
+            </ul>
+          </div>
+          <div class="col-md-3 mb-5">
+            <h3>Book Your Lab Test</h3>
+            <ul class="footer-link list-unstyled">
+              <li><a>Choose Your Location</a></li>
+              <li><a>Choose Your Lab</a></li>
+              <li><a>Book Your Lab Test</a></li>
+
+            </ul>
+          </div>
+        </div>
+	        <div class="row pt-md-3 element-animate">
+          <div class="col-md-12">
+            <hr class="border-t">
+          </div>
+          <div class="col-md-6 col-sm-12 copyright">
+            <p>&copy; 2019 Your Doctor</p>
+          </div>
+   
+        </div>
+      </div>
+    </footer>
+    <!-- END footer -->  
+
+    <script src="{% static 'home/js/jquery-3.2.1.min.js' %}"></script>
+    <script src="{% static 'home/js/popper.min.js' %}"></script>
+    <script src="{% static 'home/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'home/js/owl.carousel.min.js' %}"></script>
+    <script src="{% static 'home/js/bootstrap-datepicker.js' %}"></script>
+    <script src="{% static 'home/js/jquery.timepicker.min.js' %}"></script>
+    <script src="{% static 'home/js/jquery.waypoints.min.js' %}"></script>
+    <script src="{% static 'home/js/main.js' %}"></script>
+<script>
+$(document).ready(function(){
+	<!-- $('.chtbdy').hide(); -->
+
+	$("#sel_dr").on('change', function(){
+	 $('.chtbdy').show();
+	 $('#doctorid').val($(this).val())
+	 <!-- alert($('#sel_dr').val()); -->
+
+	});
+/* $("#send").on('click', function () {
+alert($('#msggg').val());
+		$.ajax({	
+			url:'/chatting/',
+			data:{"msg":$('#msggg').val(),"drid":$('#sel_dr').val()},
+		success:function(data){	
+		alert("message send");
+		window.location.href='/patient_hm/';
+
+			} 
+		});
+	}); */
+});
+</script>
+  </body>
+</html>

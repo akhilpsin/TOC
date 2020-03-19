@@ -1,0 +1,227 @@
+{% load staticfiles %}
+{% static "" as img %}
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>Colorlib Medi+</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300, 400, 700" rel="stylesheet">
+
+    <link rel="stylesheet" href="{% static 'home/css/bootstrap.css' %}">
+    <link rel="stylesheet" href="{% static 'home/css/animate.css' %}">
+    <link rel="stylesheet" href="{% static 'home/css/owl.carousel.min.css' %}">
+    <link rel="stylesheet" href="{% static 'home/css/bootstrap-datepicker.css' %}">
+    <link rel="stylesheet" href="{% static 'home/css/jquery.timepicker.css' %}">
+
+    <link rel="stylesheet" href="{% static 'home/fonts/ionicons/css/ionicons.min.css' %}">
+    <link rel="stylesheet" href="{% static 'home/fonts/fontawesome/css/font-awesome.min.css' %}">
+    <link rel="stylesheet" href="{% static 'home/fonts/flaticon/font/flaticon.css' %}">
+
+
+    <!-- Theme Style -->
+    <link rel="stylesheet" href="{% static 'home/css/style.css' %}">
+	<!-- Meta tag Keywords -->
+
+	<!-- css files -->
+	<link rel="stylesheet" href="{% static 'home/css2/style.css' %}" type="text/css" media="all" />
+	<!-- Style-CSS -->
+	<link href="{% static 'home/css2/font-awesome.min.css' %}" rel="stylesheet">
+	<!-- Font-Awesome-Icons-CSS -->
+	<!-- //css files -->
+
+	<!-- web-fonts -->
+	<link href="//fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i&amp;subset=cyrillic,cyrillic-ext,greek,greek-ext"
+	 rel="stylesheet">
+	<!-- //web-fonts -->
+<!-- 	<script>
+		addEventListener("load", function () {
+			setTimeout(hideURLbar, 0);
+		}, false);
+
+		function hideURLbar() {
+			window.scrollTo(0, 1);
+		}
+	</script> -->
+  </head>
+  <body style="text-align: center;">
+    
+    <header role="banner">
+      <div class="top-bar">
+        <div class="container">
+          <div class="row">
+            <div class="col-md-6 col-sm-6 col-5">
+              <ul class="social list-unstyled">
+               <!--  <li><a href="#"><span class="fa fa-facebook"></span></a></li>
+                <li><a href="#"><span class="fa fa-twitter"></span></a></li>
+                <li><a href="#"><span class="fa fa-instagram"></span></a></li> -->
+              </ul>
+            </div>
+              <div style="visibility:hidden;"class="col-md-6 col-sm-6 col-7 text-right">
+			 <p class="mb-0">
+                <!-- <a href="{% url 'booking' %}" class="cta-btn">Make an Appointment</a> -->
+				<a href="{% url 'logout_fn' %}" class="cta-btn">Logout</a></p>            		
+				<!-- <a href="#" class="cta-btn" data-toggle="modal" data-target="#modalAppointment">Register/Login</a></p> -->
+		</div>
+          </div>
+        </div>
+      </div>
+      <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container">
+          <a class="navbar-brand" href="index.html">Touch Of <span>Care</span> </a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExample05" aria-controls="navbarsExample05" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+
+          <div class="collapse navbar-collapse" id="navbarsExample05">
+            <ul class="navbar-nav ml-auto">
+              <li class="nav-item">
+                <a class="nav-link active" href="index.html">Home</a>
+              </li>
+<!--               <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="services.html" id="dropdown04" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Services</a>
+                <div class="dropdown-menu" aria-labelledby="dropdown04">
+                  <a class="dropdown-item" href="#">Institute</a>
+                  <a class="dropdown-item" href="#">Departments</a>
+                  <a class="dropdown-item" href="services.html">Services</a>
+                </div>
+
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="doctors.html" id="dropdown05" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Doctors</a>
+                <div class="dropdown-menu" aria-labelledby="dropdown05">
+                  <a class="dropdown-item" href="doctors.html">Find Doctors</a>
+                  <a class="dropdown-item" href="#">Practitioner</a>
+                </div>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="news.html">News</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="about.html">About</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="contact.html">Contact</a>
+              </li> -->
+            </ul>
+          </div>
+        </div>
+      </nav>
+    </header>
+    <!-- END header -->
+ 
+    <a class="cta-link element-animate" data-animate-effect="fadeIn" data-toggle="modal" data-target="#modalAppointment">
+      <span class="sub-heading">Login In Now</span>
+      <span class="heading">Make an Appointment</span>
+    </a>
+	<br><br>
+    <!-- END cta-link -->
+		<!-- 		<form action="{% url 'login_check' %}" method="post">{% csrf_token %}
+				
+				</form> -->
+
+				<form action="{% url 'login_check_after' %}" style="display: inline-block;" method="post">{% csrf_token %}
+							<h3 class="legend">Login Here</h3>
+							<div class="input">
+								<span class="fa fa-user-o" aria-hidden="true"></span>
+								<input type="text" placeholder="Username" name="uname" required />
+							</div>
+							<div class="input">
+								<span class="fa fa-key" aria-hidden="true"></span>
+								<input type="password" placeholder="Password" name="passwd" required />
+							</div>
+							<button type="submit" class="btn submit">Login</button>
+							<!-- <a href="#" class="bottom-text-w3ls">Forgot Password?</a> -->
+				</form>
+ 
+
+
+
+
+    <script src="{% static 'home/js/jquery-3.2.1.min.js' %}"></script>
+    <script src="{% static 'home/js/popper.min.js' %}"></script>
+    <script src="{% static 'home/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'home/js/owl.carousel.min.js' %}"></script>
+    <script src="{% static 'home/js/bootstrap-datepicker.js' %}"></script>
+    <script src="{% static 'home/js/jquery.timepicker.min.js' %}"></script>
+    <script src="{% static 'home/js/jquery.waypoints.min.js' %}"></script>
+    <script src="{% static 'home/js/main.js' %}"></script>
+<script>
+$(document).ready(function(){
+	<!-- alert("Booking"); -->
+	$("#sel_loc").on('change', function(){
+	<!-- alert($('#sel_loc').val()); -->
+		$.ajax({	
+			url:'/list_hosp/',
+			data:{"loc":$('#sel_loc').val()},
+		success:function(data){	
+<!-- alert("ok"); -->
+	$('#sel_hosp').empty()
+			$('#sel_hosp').append('<option selected disabled>SELECT</option>')
+
+        	for(var i=0;i<data.dt1.length;i++)
+        	{
+			<!-- alert(data.dt1[i].fields.hosp_nm); -->
+			$('#sel_hosp').append('<option value='+data.dt1[i].pk+'> '+data.dt1[i].fields.hosp_nm+'</option>');
+			}
+		
+			}
+		});
+	});
+
+	$("#sel_hosp").on('change', function(){
+		<!-- alert($('#sel_hosp').val()); -->
+		$.ajax({	
+			url:'/list_dept/',
+			data:{"hosp_id":$('#sel_hosp').val()},
+		success:function(data){	
+var arr1 = [];
+var i = 0;
+for (i = 0;i<data.dt1.length; i++){
+  arr1.push(data.dt1[i].fields.specialization)
+}
+/*alert("hi");
+alert(arr1.length);
+alert("ok");*/
+	$('#spl').empty()
+			$('#spl').append('<option selected disabled>SELECT</option>')
+  var dept = arr1.filter(function(elem, index, self) {
+      return index === self.indexOf(elem);
+  });
+   
+  console.log(dept);
+
+   	for(var i=0;i<dept.length;i++)
+        	{
+			<!-- alert(dept[i]); -->
+			$('#spl').append('<option value='+dept[i]+'> '+dept[i]+'</option>');
+			} 
+		
+			}
+		});
+	});
+	$("#spl").on('change', function(){
+		<!-- alert($('#spl').val()); -->
+		$.ajax({	
+			url:'/list_dr/',
+			data:{"dept":$('#spl').val()},
+		success:function(data){	
+<!-- alert("ok"); -->
+	$('#dr').empty()
+			$('#dr').append('<option selected disabled>SELECT</option>')
+
+        	for(var i=0;i<data.dt1.length;i++)
+        	{
+			<!-- alert(data.dt1[i].pk); -->
+			$('#dr').append('<option value='+data.dt1[i].pk+'> '+data.dt1[i].fields.name+'</option>');
+			}
+		
+			}
+		});
+	});
+});
+</script>
+  </body>
+</html>

@@ -1,0 +1,512 @@
+{% load staticfiles %}
+{% static "" as img %}
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>Colorlib Medi+</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300, 400, 700" rel="stylesheet">
+
+    <link rel="stylesheet" href="{% static 'home/css/bootstrap.css' %}">
+    <link rel="stylesheet" href="{% static 'home/css/animate.css' %}">
+    <link rel="stylesheet" href="{% static 'home/css/owl.carousel.min.css' %}">
+    <link rel="stylesheet" href="{% static 'home/css/bootstrap-datepicker.css' %}">
+    <link rel="stylesheet" href="{% static 'home/css/jquery.timepicker.css' %}">
+
+    <link rel="stylesheet" href="{% static 'home/fonts/ionicons/css/ionicons.min.css' %}">
+    <link rel="stylesheet" href="{% static 'home/fonts/fontawesome/css/font-awesome.min.css' %}">
+    <link rel="stylesheet" href="{% static 'home/fonts/flaticon/font/flaticon.css' %}">
+<!-- datatable -->
+	<link href="{% static 'css/jquery.dataTables.min.css' %}" rel="stylesheet" type="text/css">
+
+
+    <!-- Theme Style -->
+    <link rel="stylesheet" href="{% static 'home/css/style.css' %}">
+	<!-- Meta tag Keywords -->
+
+	<!-- css files -->
+	<link rel="stylesheet" href="{% static 'home/css2/style.css' %}" type="text/css" media="all" />
+	<!-- Style-CSS -->
+	<link href="{% static 'home/css2/font-awesome.min.css' %}" rel="stylesheet">
+	<!-- Font-Awesome-Icons-CSS -->
+	<!-- //css files -->
+
+	<!-- web-fonts -->
+	<link href="//fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i&amp;subset=cyrillic,cyrillic-ext,greek,greek-ext"
+	 rel="stylesheet">
+	<!-- //web-fonts -->
+<!-- 	<script>
+		addEventListener("load", function () {
+			setTimeout(hideURLbar, 0);
+		}, false);
+
+		function hideURLbar() {
+			window.scrollTo(0, 1);
+		}
+	</script> -->
+  </head>
+  <body style="text-align: center; background-color: #f0f8ff;">
+    
+    <header role="banner">
+      <div class="top-bar">
+        <div class="container">
+          <div class="row">
+            <div class="col-md-6 col-sm-6 col-5">
+              <ul class="social list-unstyled">
+<!--                 <li><a href="#"><span class="fa fa-facebook"></span></a></li>
+                <li><a href="#"><span class="fa fa-twitter"></span></a></li>
+                <li><a href="#"><span class="fa fa-instagram"></span></a></li> -->
+              </ul>
+            </div>
+            <div class="col-md-6 col-sm-6 col-7 text-right">
+			 <p class="mb-0">
+                <!-- <a href="{% url 'booking' %}" class="cta-btn">Make an Appointment</a> -->
+				<a href="{% url 'logout_fn' %}" class="cta-btn">Logout</a></p>            </div>
+          </div>
+        </div>
+      </div>
+	  
+	  
+	  
+	  
+	  
+      <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container">
+          <a class="navbar-brand" href="index.html">Touch Of <span>Care</span>  </a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExample05" aria-controls="navbarsExample05" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+
+          <div class="collapse navbar-collapse" id="navbarsExample05">
+            <ul class="navbar-nav ml-auto">
+              <li class="nav-item">
+                <a class="nav-link active" href="{% url 'admin_hm_log' %}">Home</a>
+			</li>
+              <li class="nav-item">
+                <a href="#" class="nav-link active" data-toggle="modal" data-target="#modalAppointment">Add Prescription</a>
+			</li>
+			 <li class="nav-item">
+                <a href="#" class="nav-link active" data-toggle="modal" data-target="#tests">Add Test Result</a>
+			</li>
+             
+       <!--        <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="doctors.html" id="dropdown05" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Doctors</a>
+                <div class="dropdown-menu" aria-labelledby="dropdown05">
+                  <a class="dropdown-item" href="doctors.html">Find Doctors</a>
+                  <a class="dropdown-item" href="#">Practitioner</a>
+                </div>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="news.html">News</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="about.html">About</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="contact.html">Contact</a>
+              </li> -->
+            </ul>
+          </div>
+        </div>
+      </nav>
+    </header>
+    <!-- END header -->
+
+
+	
+	<div class="modal fade" id="modalAppointment" tabindex="-1"  role="dialog" aria-labelledby="modalAppointmentLabel" aria-hidden="true">
+	  <div class="modal-dialog" role="document" style="margin-left: 20%;background-color:white;">
+			<div class="sub-main-w3">
+
+        <div class="modal-content">
+	  
+		<!-- 	<div class="image-style">
+
+			</div> -->
+			<!-- vertical tabs -->
+			<div class="vertical-tab">
+				<div id="section1" class="section-w3ls">
+					<input type="radio" name="sections" id="option1" checked>
+					<label for="option1" class="icon-left-w3pvt"><span class="fa fa-user-circle" aria-hidden="true"></span>Add Prescription</label>
+					<article>
+				<form action="{% url 'addpresc' %}" method="post">{% csrf_token %}
+							<h3 class="legend">Doctor Prescription</h3>
+							<div class="input">
+								<span class="fa fa-user-o" aria-hidden="true"></span>
+								<input type="text" placeholder="Date" id="dat" name="date" />
+								<input type="text" placeholder="pid" name="pid" value="{{pid}}" style="display:none;" />
+							</div>
+							<div class="input">
+								<span class="fa fa-key" aria-hidden="true"></span>
+								<textarea style="width:100%;height:5;" placeholder="Prescription" name="presc" required ></textarea>
+							</div>
+							<button type="submit" class="btn submit">Add Prescription</button>
+							
+							<!-- <a href="#" class="bottom-text-w3ls">Forgot Password?</a> -->
+						</form></article>
+				</div>
+				<div id="section3" class="section-w3ls">
+					<input type="radio" name="sections" id="option3">
+					<label for="option3" class="icon-left-w3pvt"><span class="fa fa-lock" aria-hidden="true"></span>Forgot Password?</label>
+					<article>
+						<form action="{% url 'medpat' %}" method="post">{% csrf_token %}
+							<h3 class="legend last">Medicines</h3>
+							<div class="input">
+								<span class="fa fa-user-o" aria-hidden="true"></span>
+								<input type="text" placeholder="Date" id="dates" name="date" />
+								<input type="text" placeholder="pid" name="pid" value="{{pid}}" style="display:none;" />
+							</div>
+							<div class="input">
+								<span class="fa fa-envelope-o" aria-hidden="true"></span>
+								<select name="medname">
+								{% for i in phar %}
+								<option value="{{i.med_name}}">{{i.med_name}}</option>
+								{% endfor %}
+								</select>
+							</div>
+							<div class="input">
+								<span class="fa fa-user-o" aria-hidden="true"></span>
+								<input type="text" placeholder="Time"  name="time" />
+							</div>
+							<div class="input">
+								<span class="fa fa-user-o" aria-hidden="true"></span>
+								<input type="text" placeholder="No of days"  name="days" />
+							</div>
+							<button type="submit" class="btn submit last-btn">Add</button>
+						</form>
+					</article>
+				</div>
+				<div id="section2" class="section-w3ls">
+					<input type="radio" name="sections" id="option2">
+					<label for="option2" class="icon-left-w3pvt"><span class="fa fa-pencil-square" aria-hidden="true"></span>Register</label>
+					<article>
+
+				<form action="{% url 'testres' %}" method="post"  enctype="multipart/form-data">{% csrf_token %}
+							<h3 class="legend">Add Here</h3>
+		              <div class="row">
+						<div class="col-md-6">
+						  <div class="form-group">
+									<div class="input">
+										<span class="fa fa-user-o" aria-hidden="true"></span>
+										<input type="text" placeholder="Test Name" name="name" required />
+										<input type="text" placeholder="Test Name" name="pid" value="{{pid}}" style="display:none;" />
+									</div>
+								</div>
+							</div>	
+						<div class="col-md-6">
+						  <div class="form-group">									
+									<div class="input">
+										<span aria-hidden="true"></span>
+										<input type="text" placeholder="Date" id="dd" name="date" required />
+									</div>
+								</div>
+							</div>
+
+						<div class="col-md-6">
+						  <div class="form-group" style="color: gray;">									
+									<div class="input">Result:
+										<span  aria-hidden="true"></span>									
+										<input type="radio" name="res" value="Positive" required> Positive
+										<input type="radio" name="res" value="Negative" required> Negative
+									</div>
+								</div>
+							</div>			
+						<div class="col-md-6">
+						  <div class="form-group">									
+									<div class="input">
+								<span class="fa fa-key" aria-hidden="true"></span>
+								<input type="file" id="pa" placeholder="Result file" name="myfile" required />
+									</div>
+								</div>
+							</div>
+						
+						</div>
+							<button type="submit" class="btn submit">Add</button>
+				</form>
+				
+				
+					</article>
+				</div>
+
+			</div>
+			<!-- //vertical tabs -->
+			<div class="clear"></div>
+		</div>
+       
+		</div>  
+	</div>
+</div>	
+ 
+    <a class="cta-link element-animate" data-animate-effect="fadeIn" data-toggle="modal" data-target="#modalAppointment">
+      <span class="sub-heading">Patient Tests</span>
+      <!-- <span class="heading">Make an Appointment</span> -->
+    </a>
+	<br><br>
+
+<table id="tb2">
+<h2>PATIENTS</h2>
+<br><br>
+<thead>
+    <tr>
+<th>Patient Name</th><th>Place</th><th>Test Name</th><th>Date</th><th>Result</th><th>Email</th><th></th>
+    </tr>
+    </thead>
+<tbody>
+    {% for i in data %}
+        <tr>
+        <td class="id">
+            {{ name }}
+        </td>
+        <td>
+            {{ place }}
+        </td>
+        <td>
+            {{ i.tstname }}
+        </td>
+        <td>
+            {{ i.dates }}
+        </td>
+        <td>
+            {{ i.res }}
+        </td>
+        <td>
+            {{ email }}
+        </td>
+<td class="show" style="width: 1%;background-color: #5ac8d899;">
+<button class="btn btn-primary" >DELETE</button>
+     </td>
+        </tr>
+    {% endfor %}
+</tbody>
+</table>
+
+
+<table id="tb3">
+<h2>PATIENTS</h2>
+<br><br>
+<thead>
+    <tr>
+<th>Patient Name</th><th>Place</th><th>Medicine Name</th><th>Date</th><th>Timing</th><th>No of days</th>
+    </tr>
+    </thead>
+<tbody>
+    {% for i in med %}
+        <tr>
+        <td class="id">
+            {{ name }}
+        </td>
+        <td>
+            {{ place }}
+        </td>
+        <td>
+            {{ i.medname }}
+        </td>
+        <td>
+            {{ i.prdate }}
+        </td>
+        <td>
+            {{ i.times }}
+        </td>
+        <td>
+            {{ i.noday }}
+        </td>
+
+        </tr>
+    {% endfor %}
+</tbody>
+</table>
+
+<table id="tb4">
+<h2>PATIENTS</h2>
+<br><br>
+<thead>
+    <tr>
+<th>Patient Name</th><th>Place</th><th>Doctor Name</th><th>Date</th><th>Prescription</th>
+    </tr>
+    </thead>
+<tbody>
+    {% for i in doc %}
+        <tr>
+        <td class="id">
+            {{ name }}
+        </td>
+        <td>
+            {{ place }}
+        </td>
+        <td>
+            {{ i.docname }}
+        </td>
+        <td>
+            {{ i.prdate }}
+        </td>
+        <td>
+            {{ i.pres }}
+        </td>
+
+        </tr>
+    {% endfor %}
+</tbody>
+</table>
+
+
+
+<table id="tb5">
+<h2>PATIENTS</h2>
+<br><br>
+<thead>
+    <tr>
+<th>Patient Name</th><th>Place</th><th>Test Name</th><th>Date</th><th>Result</th><th>View</th>
+    </tr>
+    </thead>
+<tbody>
+    {% for i in lab %}
+        <tr>
+        <td class="id">
+            {{ name }}
+        </td>
+        <td>
+            {{ place }}
+        </td>
+        <td>
+            {{ i.tname }}
+        </td>
+        <td>
+            {{ i.prdate }}
+        </td>
+        <td>
+            {{ i.result }}
+        </td>
+		<td>
+		<iframe 
+        src="{{i.path}}" id="myFrame" 
+        frameborder="0" style="border:0;display:none;" 
+        width="300" height="300">
+    </iframe>
+	<input type="button" id="bt" onclick="print()" value="View" />
+           
+        </td>
+		
+
+        </tr>
+    {% endfor %}
+</tbody>
+</table>
+
+
+
+
+
+					<script>
+	var today = new Date();
+var dd = today.getDate();
+
+var mm = today.getMonth()+1; 
+var yyyy = today.getFullYear();
+if(dd<10) 
+{
+    dd='0'+dd;
+} 
+
+if(mm<10) 
+{
+    mm='0'+mm;
+} 
+today = mm+'-'+dd+'-'+yyyy;
+console.log(today);
+document.getElementById("dat").value = today;
+document.getElementById("dd").value = today;
+document.getElementById("dates").value = today;
+	</script>	
+	<br><br>
+	<br><br>
+	
+	
+    <!-- END cta-link -->
+    <footer class="site-footer" role="contentinfo">
+      <div class="container">
+        <div class="row mb-5 element-animate">
+          <div class="col-md-3 mb-5">
+            <h3>Online Medicine Shopping</h3>
+            <ul class="footer-link list-unstyled">
+              <li><a>Find a location</a></li>
+              <li><a>Find a Pharmacy</a></li>
+              <li><a>Buy Medicine</a></li>
+            </ul>
+          </div>
+          <div class="col-md-3 mb-5">
+            <h3>Make a Appointment</h3>
+            <ul class="footer-link list-unstyled">
+			  <li><a>Choose Your Location</a></li>
+              <li><a>Choose Your Hospital</a></li>
+              <li><a>Find Your Doctor</a></li>
+            </ul>
+          </div>
+          <div class="col-md-3 mb-5">
+            <h3>Book Your Lab Test</h3>
+            <ul class="footer-link list-unstyled">
+              <li><a>Choose Your Location</a></li>
+              <li><a>Choose Your Lab</a></li>
+              <li><a>Book Your Lab Test</a></li>
+
+            </ul>
+          </div>
+        </div>
+	        <div class="row pt-md-3 element-animate">
+          <div class="col-md-12">
+            <hr class="border-t">
+          </div>
+          <div class="col-md-6 col-sm-12 copyright">
+            <p>&copy; 2019 Your Doctor</p>
+          </div>
+   
+        </div>
+      </div>
+    </footer>
+    <!-- END footer -->  
+    <script src="{% static 'home/js/jquery-3.2.1.min.js' %}"></script>
+    <script src="{% static 'home/js/popper.min.js' %}"></script>
+    <script src="{% static 'home/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'home/js/owl.carousel.min.js' %}"></script>
+    <script src="{% static 'home/js/bootstrap-datepicker.js' %}"></script>
+    <script src="{% static 'home/js/jquery.timepicker.min.js' %}"></script>
+    <script src="{% static 'home/js/jquery.waypoints.min.js' %}"></script>
+    <script src="{% static 'home/js/main.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/jquery.dataTables.min.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/bootstable.min.js' %}"></script>
+<script>
+$(document).ready(function(){
+	<!-- alert("view hospital"); -->
+
+           $('#tb2').DataTable();
+		   $('#tb3').DataTable();
+		   $('#tb4').DataTable();
+		   $('#tb5').DataTable();
+$(document).on("click",".show",function(){
+			<!-- alert("deleted click"); -->
+			var $row=$(this).closest("tr");
+			<!-- alert($row); -->
+			<!-- alert($row.find(".hosid").text()); -->
+    	$.ajax({
+    	url:'/delete_patient/',
+		data:{"id":$row.find(".id").text()},
+        success:function(data){
+alert("deleted ");
+window.location.href='/admin_patient_vw/';
+        }
+    });
+});
+
+});
+</script>
+<script>
+    function print() {
+        var objFra = document.getElementById('myFrame');
+        objFra.contentWindow.focus();
+        objFra.contentWindow.print();
+    }
+</script>
+  </body>
+</html>

@@ -1,0 +1,800 @@
+{% load staticfiles %}
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>Colorlib Medi+</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300, 400, 700" rel="stylesheet">
+
+    <link rel="stylesheet" href="{% static 'home/css/bootstrap.css' %}">
+    <link rel="stylesheet" href="{% static 'home/css/animate.css' %}">
+    <link rel="stylesheet" href="{% static 'home/css/owl.carousel.min.css' %}">
+    <link rel="stylesheet" href="{% static 'home/css/bootstrap-datepicker.css' %}">
+    <link rel="stylesheet" href="{% static 'home/css/jquery.timepicker.css' %}">
+
+    <link rel="stylesheet" href="{% static 'home/fonts/ionicons/css/ionicons.min.css' %}">
+    <link rel="stylesheet" href="{% static 'home/fonts/fontawesome/css/font-awesome.min.css' %}">
+    <link rel="stylesheet" href="{% static 'home/fonts/flaticon/font/flaticon.css' %}">
+
+
+    <!-- Theme Style -->
+    <link rel="stylesheet" href="{% static 'home/css/style.css' %}">
+	<!-- Meta tag Keywords -->
+
+	<!-- css files -->
+	<link rel="stylesheet" href="{% static 'home/css2/style.css' %}" type="text/css" media="all" />
+	<!-- Style-CSS -->
+	<link href="{% static 'home/css2/font-awesome.min.css' %}" rel="stylesheet">
+	<!-- Font-Awesome-Icons-CSS -->
+	<!-- //css files -->
+
+	<!-- web-fonts -->
+	<link href="//fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i&amp;subset=cyrillic,cyrillic-ext,greek,greek-ext"
+	 rel="stylesheet">
+	<!-- //web-fonts -->
+	<script>
+		addEventListener("load", function () {
+			setTimeout(hideURLbar, 0);
+		}, false);
+
+		function hideURLbar() {
+			window.scrollTo(0, 1);
+		}
+	</script>
+  </head>
+  <body>
+    
+    <header role="banner">
+      <div class="top-bar">
+        <div class="container">
+          <div class="row">
+            <div class="col-md-6 col-sm-6 col-5">
+            <!--   <ul class="social list-unstyled">
+                <li><a href="#"><span class="fa fa-facebook"></span></a></li>
+                <li><a href="#"><span class="fa fa-twitter"></span></a></li>
+                <li><a href="#"><span class="fa fa-instagram"></span></a></li>
+              </ul> -->
+            </div>
+            <div class="col-md-6 col-sm-6 col-7 text-right">
+			 <p class="mb-0">
+                <a href="{% url 'booking_hm' %}" class="cta-btn">Make an Appointment</a>
+				<a href="#" class="cta-btn" data-toggle="modal" data-target="#modalAppointment">Register/Login</a></p>
+
+            </div>
+<!--             <div class="col-md-6 col-sm-6 col-7 text-right">
+			 <p class="mb-0">
+                <a href="{% url 'booking' %}" class="cta-btn">Make an Appointment</a>
+</p>
+            </div> -->
+          </div>
+        </div>
+      </div>
+      <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container">
+          <a class="navbar-brand" href="index.html">Touch Of <span>Care</span> </a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExample05" aria-controls="navbarsExample05" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+
+          <div class="collapse navbar-collapse" id="navbarsExample05">
+            <ul class="navbar-nav ml-auto">
+              <li class="nav-item">
+                <a class="nav-link active" href="{% url 'index' %}">Home</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link active" href="{% url 'articlespg' %}">Articles</a>
+              </li>
+<!--               <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="services.html" id="dropdown04" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Services</a>
+                <div class="dropdown-menu" aria-labelledby="dropdown04">
+                  <a class="dropdown-item" href="#">Institute</a>
+                  <a class="dropdown-item" href="#">Departments</a>
+                  <a class="dropdown-item" href="services.html">Services</a>
+                </div>
+
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="doctors.html" id="dropdown05" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Doctors</a>
+                <div class="dropdown-menu" aria-labelledby="dropdown05">
+                  <a class="dropdown-item" href="doctors.html">Find Doctors</a>
+                  <a class="dropdown-item" href="#">Practitioner</a>
+                </div>
+              </li>
+              <li class="nav-item">
+				<a class="nav-link active" href="{% url 'index' %}">Articles</a>
+
+                <a class="nav-link" href="news.html">News</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="about.html">About</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="contact.html">Contact</a>
+              </li> -->
+            </ul>
+          </div>
+        </div>
+      </nav>
+    </header>
+    <!-- END header -->
+    
+    <section class="home-slider owl-carousel"> 
+      <div class="slider-item" style="background-image: url('{% static 'home/img/ht4.jpg' %}');">
+        
+        <div class="container">
+          <div class="row slider-text align-items-center">
+            <div class="col-md-7 col-sm-12 element-animate">
+              <h1>Health Tips</h1>
+			  
+              <!-- <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Commodi unde impedit, necessitatibus, soluta sit quam minima expedita atque corrupti reiciendis.</p> -->
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+<!--       <div class="slider-item" style="background-image: url('{% static 'home/img/slider-1.jpg' %}');">
+        <div class="container">
+          <div class="row slider-text align-items-center">
+            <div class="col-md-7 col-sm-12 element-animate">
+              <h1>We Provide Health Care Solutions</h1>
+              <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Commodi unde impedit, necessitatibus, soluta sit quam minima expedita atque corrupti reiciendis.</p>
+            </div>
+          </div>
+        </div>
+        
+      </div> -->
+
+    </section>
+    <!-- END slider -->
+
+    
+ <!--    <section class="container home-feature mb-5">
+      <div class="row">
+        <div class="col-md-4 p-0 one-col element-animate">
+          <div class="col-inner p-xl-5 p-lg-5 p-md-4 p-sm-4 p-4">
+            <h2>Migraine</h2>
+			<p>Migraines are common and usually very painful. There may be ways to prevent them, and there are good treatments for them.</p>
+          </div>
+          <a  class="btn-more" href="{% url 'articlespg' %}">Read More</a>
+        </div>
+        <div class="col-md-4 p-0 two-col element-animate">
+          <div class="col-inner p-xl-5 p-lg-5 p-md-4 p-sm-4 p-4">
+            <span class="icon flaticon-first-aid-kit"></span>
+            <h2>Medical Services</h2>
+            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Commodi unde impedit, necessitatibus, soluta sit quam minima expedita atque corrupti reiciendis.</p>
+          </div>
+          <a class="btn-more"></a>
+        </div>
+        <div class="col-md-4 p-0 three-col element-animate">
+          <div class="col-inner p-xl-5 p-lg-5 p-md-4 p-sm-4 p-4">
+            <span class="icon flaticon-hospital"></span>
+            <h2>Hospital Services</h2>
+            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Commodi unde impedit, necessitatibus, soluta sit quam minima expedita atque corrupti reiciendis.</p>
+          </div>
+          <a  class="btn-more"></a>
+        </div>
+      </div>
+    </section> -->
+   <!-- END section -->
+
+    <section class="section stretch-section" style="color: black;background-color: #5ac8d8;">
+      <div class="container">
+
+        <div class="row justify-content-center mb-5 element-animate">
+          <div class="col-md-8 text-center mb-5">
+		  <h2 class="text-uppercase heading border-bottom mb-4" style="font-size: -webkit-xxx-large;">Top 10 Health Tips</h2>
+            	          <div class="row align-items-center">
+		   <video class="video"  width="100%" controls Autoplay=autoplay>
+  <source src="{% static 'home/img/Top 10 health tips for daily life . - YouTube (720p).mp4' %}" type="video/mp4">
+Your browser does not support the video tag.
+</video> 
+                </div> 
+				<br>
+				<br>
+				<br>
+			<p class="mb-0 lead" style="text-align: justify;">
+According to WHO – Health is defined as “a state of complete physical, mental and social well-being and not merely the absence of disease or infirmity.” The main determinants of health include the social and economic environment, the physical environment and the person’s individual characteristics and behaviors.			<br><br>
+<br>
+
+<h2  style="font-size: x-large;">“Good health is not something we can buy. However, it can be an extremely valuable savings account.”  By– Anne Wilson Schaef</h2>
+<br>
+<p class="mb-0 lead" style="text-align: justify;">
+Now-a-days, people mostly run after success, fame and money and ignore their health. They are trying to build a better future by making more and more money. But is there any future without good health? What would one do with a mountain of money when their bodies are not healthy enough to enjoy it?
+</p>
+<br>
+<!-- <h2  style="font-size: x-large;">Causes</h2> -->
+<br>
+<p class="mb-0 lead" style="text-align: justify;">
+We must give priority to our health and happiness too. Achieving and maintaining good health is not a difficult task, it only requires a little planning and some initial effort.
+
+<br>
+<!-- <h2  style="font-size: x-large;">Diagnosis</h2> -->
+<br>
+          </div>
+        </div>
+        </div>
+
+   </section> 
+    <!-- END section -->
+
+<!--     <section class="section custom-tabs">
+      <div class="container">
+        <div class="row">
+
+          <div class="col-md-4 border-right element-animate">
+            <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+              <a class="nav-link active" id="v-pills-home-tab" data-toggle="pill" href="#v-pills-home" role="tab" aria-controls="v-pills-home" aria-selected="true"><span>01</span> Amenities</a>
+              <a class="nav-link" id="v-pills-profile-tab" data-toggle="pill" href="#v-pills-profile" role="tab" aria-controls="v-pills-profile" aria-selected="false"><span>02</span> Medical Services</a>
+              <a class="nav-link" id="v-pills-messages-tab" data-toggle="pill" href="#v-pills-messages" role="tab" aria-controls="v-pills-messages" aria-selected="false"><span>03</span> Patient Services</a>
+              <a class="nav-link" id="v-pills-settings-tab" data-toggle="pill" href="#v-pills-settings" role="tab" aria-controls="v-pills-settings" aria-selected="false"><span>04</span> Expert Doctors</a>
+            </div>
+          </div>
+          <div class="col-md-1"></div>
+          <div class="col-md-7 element-animate">
+            
+            <div class="tab-content" id="v-pills-tabContent">
+              <div class="tab-pane fade show active" id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab">
+                <span class="icon flaticon-hospital"></span>
+                <h2 class="text-primary">Amenities</h2>
+                <p class="lead">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nesciunt voluptate, quibusdam sunt iste dolores consequatur</p>
+                <p>Inventore fugit error iure nisi reiciendis fugiat illo pariatur quam sequi quod iusto facilis officiis nobis sit quis molestias asperiores rem, blanditiis! Commodi exercitationem vitae deserunt qui nihil ea, tempore et quam natus quaerat doloremque.</p>
+                <p><a href="#" class="btn btn-primary">Learn More</a></p>
+              </div>
+              <div class="tab-pane fade" id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-profile-tab">
+                <span class="icon flaticon-first-aid-kit"></span>
+                <h2 class="text-primary">Medical Services</h2>
+                <p class="lead">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nesciunt voluptate, quibusdam sunt iste dolores consequatur</p>
+                <p>Inventore fugit error iure nisi reiciendis fugiat illo pariatur quam sequi quod iusto facilis officiis nobis sit quis molestias asperiores rem, blanditiis! Commodi exercitationem vitae deserunt qui nihil ea, tempore et quam natus quaerat doloremque.</p>
+                <p><a href="#" class="btn btn-primary">Learn More</a></p>
+              </div>
+              <div class="tab-pane fade" id="v-pills-messages" role="tabpanel" aria-labelledby="v-pills-messages-tab">
+                <span class="icon flaticon-hospital-bed"></span>
+                <h2 class="text-primary">Patient Services</h2>
+                <p class="lead">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nesciunt voluptate, quibusdam sunt iste dolores consequatur</p>
+                <p>Inventore fugit error iure nisi reiciendis fugiat illo pariatur quam sequi quod iusto facilis officiis nobis sit quis molestias asperiores rem, blanditiis! Commodi exercitationem vitae deserunt qui nihil ea, tempore et quam natus quaerat doloremque.</p>
+                <p><a href="#" class="btn btn-primary">Learn More</a></p>
+              </div>
+              <div class="tab-pane fade" id="v-pills-settings" role="tabpanel" aria-labelledby="v-pills-settings-tab">
+                <span class="icon flaticon-doctor"></span>
+                <h2 class="text-primary">Expert Doctors</h2>
+                <p class="lead">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nesciunt voluptate, quibusdam sunt iste dolores consequatur</p>
+                <p>Inventore fugit error iure nisi reiciendis fugiat illo pariatur quam sequi quod iusto facilis officiis nobis sit quis molestias asperiores rem, blanditiis! Commodi exercitationem vitae deserunt qui nihil ea, tempore et quam natus quaerat doloremque.</p>
+                <p><a href="#" class="btn btn-primary">Learn More</a></p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section> -->
+    <!-- END section -->
+
+    <!-- <section class="section bg-light">
+      <div class="container">
+        <div class="row justify-content-center mb-5 element-animate">
+          <div class="col-md-8 text-center mb-5">
+            <h2 class="text-uppercase heading border-bottom mb-4">Our Doctors</h2>
+            <p class="mb-0 lead">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Commodi unde impedit, necessitatibus, soluta sit quam minima expedita atque corrupti reiciendis.</p>
+          </div>
+        </div>
+        <div class="row element-animate">
+          <div class="major-caousel js-carousel-1 owl-carousel">
+            <div>
+              <div class="media d-block media-custom text-center">
+                <img src="{% static 'home/img/doctor_1.jpg' %}" alt="Image Placeholder" class="img-fluid">
+                <div class="media-body">
+                  <h3 class="mt-0 text-black">Dr. Carl Smith</h3>
+                  <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
+                  <p>
+                    <a href="#" class="p-2"><span class="fa fa-facebook"></span></a>
+                    <a href="#" class="p-2"><span class="fa fa-twitter"></span></a>
+                    <a href="#" class="p-2"><span class="fa fa-linkedin"></span></a>
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div>
+              <div class="media d-block media-custom text-center">
+                <img src="{% static 'home/img/doctor_2.jpg' %}" alt="Image Placeholder" class="img-fluid">
+                <div class="media-body">
+                  <h3 class="mt-0 text-black">Dr. Janice Doe</h3>
+                  <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
+                  <p>
+                    <a href="#" class="p-2"><span class="fa fa-facebook"></span></a>
+                    <a href="#" class="p-2"><span class="fa fa-twitter"></span></a>
+                    <a href="#" class="p-2"><span class="fa fa-linkedin"></span></a>
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div>
+              <div class="media d-block media-custom text-center">
+                <img src="{% static 'home/img/doctor_3.jpg' %}" alt="Image Placeholder" class="img-fluid">
+                <div class="media-body">
+                  <h3 class="mt-0 text-black">Dr. Jean Doe</h3>
+                  <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
+                  <p>
+                    <a href="#" class="p-2"><span class="fa fa-facebook"></span></a>
+                    <a href="#" class="p-2"><span class="fa fa-twitter"></span></a>
+                    <a href="#" class="p-2"><span class="fa fa-linkedin"></span></a>
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div>
+              <div class="media d-block media-custom text-center">
+                <img src="{% static 'home/img/doctor_4.jpg' %}" alt="Image Placeholder" class="img-fluid">
+                <div class="media-body">
+                  <h3 class="mt-0 text-black">Dr. Jessica Doe</h3>
+                  <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
+                  <p>
+                    <a href="#" class="p-2"><span class="fa fa-facebook"></span></a>
+                    <a href="#" class="p-2"><span class="fa fa-twitter"></span></a>
+                    <a href="#" class="p-2"><span class="fa fa-linkedin"></span></a>
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <div class="media d-block media-custom text-center">
+                <img src="{% static 'home/img/doctor_1.jpg' %}" alt="Image Placeholder" class="img-fluid">
+                <div class="media-body">
+                  <h3 class="mt-0 text-black">Dr. Carl Smith</h3>
+                  <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
+                  <p>
+                    <a href="#" class="p-2"><span class="fa fa-facebook"></span></a>
+                    <a href="#" class="p-2"><span class="fa fa-twitter"></span></a>
+                    <a href="#" class="p-2"><span class="fa fa-linkedin"></span></a>
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div>
+              <div class="media d-block media-custom text-center">
+                <img src="{% static 'home/img/doctor_2.jpg' %}" alt="Image Placeholder" class="img-fluid">
+                <div class="media-body">
+                  <h3 class="mt-0 text-black">Dr. Janice Doe</h3>
+                  <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
+                  <p>
+                    <a href="#" class="p-2"><span class="fa fa-facebook"></span></a>
+                    <a href="#" class="p-2"><span class="fa fa-twitter"></span></a>
+                    <a href="#" class="p-2"><span class="fa fa-linkedin"></span></a>
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div>
+              <div class="media d-block media-custom text-center">
+                <img src="{% static 'home/img/doctor_3.jpg' %}" alt="Image Placeholder" class="img-fluid">
+                <div class="media-body">
+                  <h3 class="mt-0 text-black">Dr. Jean Doe</h3>
+                  <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
+                  <p>
+                    <a href="#" class="p-2"><span class="fa fa-facebook"></span></a>
+                    <a href="#" class="p-2"><span class="fa fa-twitter"></span></a>
+                    <a href="#" class="p-2"><span class="fa fa-linkedin"></span></a>
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div>
+              <div class="media d-block media-custom text-center">
+                <img src="{% static 'home/img/doctor_4.jpg' %}" alt="Image Placeholder" class="img-fluid">
+                <div class="media-body">
+                  <h3 class="mt-0 text-black">Dr. Jessica Doe</h3>
+                  <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
+                  <p>
+                    <a href="#" class="p-2"><span class="fa fa-facebook"></span></a>
+                    <a href="#" class="p-2"><span class="fa fa-twitter"></span></a>
+                    <a href="#" class="p-2"><span class="fa fa-linkedin"></span></a>
+                  </p>
+                </div>
+              </div>
+            </div>
+
+          </div> -->
+          <!-- END slider -->
+        <!-- </div>
+      </div>
+    </section> -->
+    <!-- END section -->
+
+<!--     <section class="cover_1" style="background-image: url('{% static 'home/img/bg_1.jpg' %}');">
+      <div class="container">
+        <div class="row text-center justify-content-center">
+          <div class="col-md-10">
+            <h2 class="heading element-animate">Experience Our Advance Facilities</h2>
+            <p class="sub-heading element-animate mb-5">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Commodi unde impedit, necessitatibus, soluta sit quam minima expedita atque corrupti reiciendis.</p>
+            <p class="element-animate"><a href="#" class="btn btn-primary btn-lg">Get In Touch</a></p>
+          </div>
+        </div>
+      </div>
+    </section> -->
+    <!-- END section -->
+
+<!--     <section class="section bg-light">
+      <div class="container">
+        <div class="row justify-content-center mb-5 element-animate">
+          <div class="col-md-8 text-center mb-5">
+            <h2 class="text-uppercase heading border-bottom mb-4">News &amp; Events</h2>
+            <p class="mb-0 lead">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Commodi unde impedit, necessitatibus, soluta sit quam minima expedita atque corrupti reiciendis.</p>
+          </div>
+        </div>
+        <div class="row element-animate">
+          <div class="major-caousel js-carousel-2 owl-carousel">
+            <div>
+              <div class="media d-block media-custom text-left">
+                <img src="{% static 'home/img/img_thumb_1.jpg' %}" alt="Image Placeholder" class="img-fluid">
+                <div class="media-body">
+                  <span class="meta-post">December 2, 2017</span>
+                  <h3 class="mt-0 text-black"><a href="#" class="text-black">Lorem ipsum dolor sit amet elit</a></h3>
+                  <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
+                  <p class="clearfix">
+                    <a href="#" class="float-left">Read more</a>
+                    <a href="#" class="float-right meta-chat"><span class="ion-chatbubble"></span> 8</a>
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div>
+              <div class="media d-block media-custom text-left">
+                <img src="{% static 'home/img/img_thumb_2.jpg' %}" alt="Image Placeholder" class="img-fluid">
+                <div class="media-body">
+                  <span class="meta-post">December 2, 2017</span>
+                  <h3 class="mt-0 text-black"><a href="#" class="text-black">Lorem ipsum dolor sit amet elit</a></h3>
+                  <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
+                  <p class="clearfix">
+                    <a href="#" class="float-left">Read more</a>
+                    <a href="#" class="float-right meta-chat"><span class="ion-chatbubble"></span> 2</a>
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div>
+              <div class="media d-block media-custom text-left">
+                <img src="{% static 'home/img/img_thumb_3.jpg' %}" alt="Image Placeholder" class="img-fluid">
+                <div class="media-body">
+                  <span class="meta-post">December 2, 2017</span>
+                  <h3 class="mt-0 text-black"><a href="#" class="text-black">Lorem ipsum dolor sit amet elit</a></h3>
+                  <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
+                  <p class="clearfix">
+                    <a href="#" class="float-left">Read more</a>
+                    <a href="#" class="float-right meta-chat"><span class="ion-chatbubble"></span> 5</a>
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div>
+              <div class="media d-block media-custom text-left">
+                <img src="{% static 'home/img/img_thumb_4.jpg' %}" alt="Image Placeholder" class="img-fluid">
+                <div class="media-body">
+                  <span class="meta-post">December 2, 2017</span>
+                  <h3 class="mt-0 text-black"><a href="#" class="text-black">Lorem ipsum dolor sit amet elit</a></h3>
+                  <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
+                  <p class="clearfix">
+                    <a href="#" class="float-left">Read more</a>
+                    <a href="#" class="float-right meta-chat"><span class="ion-chatbubble"></span> 7</a>
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <div class="media d-block media-custom text-left">
+                <img src="{% static 'home/img/img_thumb_1.jpg' %}" alt="Image Placeholder" class="img-fluid">
+                <div class="media-body">
+                  <span class="meta-post">December 2, 2017</span>
+                  <h3 class="mt-0 text-black"><a href="#" class="text-black">Lorem ipsum dolor sit amet elit</a></h3>
+                  <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
+                  <p class="clearfix">
+                    <a href="#" class="float-left">Read more</a>
+                    <a href="#" class="float-right meta-chat"><span class="ion-chatbubble"></span> 1</a>
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div>
+              <div class="media d-block media-custom text-left">
+                <img src="{% static 'home/img/img_thumb_2.jpg' %}" alt="Image Placeholder" class="img-fluid">
+                <div class="media-body">
+                  <span class="meta-post">December 2, 2017</span>
+                  <h3 class="mt-0 text-black"><a href="#" class="text-black">Lorem ipsum dolor sit amet elit</a></h3>
+                  <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
+                  <p class="clearfix">
+                    <a href="#" class="float-left">Read more</a>
+                    <a href="#" class="float-right meta-chat"><span class="ion-chatbubble"></span> 4</a>
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div>
+              <div class="media d-block media-custom text-left">
+                <img src="{% static 'home/img/img_thumb_3.jpg' %}" alt="Image Placeholder" class="img-fluid">
+                <div class="media-body">
+                  <span class="meta-post">December 2, 2017</span>
+                  <h3 class="mt-0 text-black"><a href="#" class="text-black">Lorem ipsum dolor sit amet elit</a></h3>
+                  <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
+                  <p class="clearfix">
+                    <a href="#" class="float-left">Read more</a>
+                    <a href="#" class="float-right meta-chat"><span class="ion-chatbubble"></span> 12</a>
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div>
+              <div class="media d-block media-custom text-left">
+                <img src="{% static 'home/img/img_thumb_4.jpg' %}" alt="Image Placeholder" class="img-fluid">
+                <div class="media-body">
+                  <span class="meta-post">December 2, 2017</span>
+                  <h3 class="mt-0 text-black"><a href="#" class="text-black">Lorem ipsum dolor sit amet elit</a></h3>
+                  <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
+                  <p class="clearfix">
+                    <a href="#" class="float-left">Read more</a>
+                    <a href="#" class="float-right meta-chat"><span class="ion-chatbubble"></span> 14</a>
+                  </p>
+                </div>
+              </div>
+            </div>
+
+          </div> -->
+          <!-- END slider -->
+      <!--   </div>
+      </div>
+    </section> -->
+    <!-- END section -->
+<div style="border: solid white 7px;">
+    <a href="#" class="cta-link element-animate" data-animate-effect="fadeIn" data-toggle="modal" data-target="#modalAppointment">
+      <span class="sub-heading">Ready to Visit?</span>
+      <span class="heading">Make an Appointment</span>
+    </a>
+</div>
+    <!-- END cta-link -->
+
+
+
+
+    <!-- Modal -->
+    <div class="modal fade" id="modalAppointment" tabindex="-1"  role="dialog" aria-labelledby="modalAppointmentLabel" aria-hidden="true">
+	  <div class="modal-dialog" role="document" style="margin-left: 20%;background-color:white;">
+			<div class="sub-main-w3">
+
+        <div class="modal-content">
+	  
+		<!-- 	<div class="image-style">
+
+			</div> -->
+			<!-- vertical tabs -->
+			<div class="vertical-tab">
+				<div id="section1" class="section-w3ls">
+					<input type="radio" name="sections" id="option1" checked>
+					<label for="option1" class="icon-left-w3pvt"><span class="fa fa-user-circle" aria-hidden="true"></span>Login</label>
+					<article>
+				<form action="{% url 'login_check' %}" method="post">{% csrf_token %}
+							<h3 class="legend">Login Here</h3>
+							<div class="input">
+								<span class="fa fa-user-o" aria-hidden="true"></span>
+								<input type="text" placeholder="Username" name="uname" required />
+							</div>
+							<div class="input">
+								<span class="fa fa-key" aria-hidden="true"></span>
+								<input type="password" placeholder="Password" name="passwd" required />
+							</div>
+							<button type="submit" class="btn submit">Login</button>
+							<!-- <a href="#" class="bottom-text-w3ls">Forgot Password?</a> -->
+						</form>
+					</article>
+				</div>
+				<div style="visibility: hidden; display:inline;" id="section3" class="section-w3ls">
+					<input type="radio" name="sections" id="option3">
+					<label for="option3" class="icon-left-w3pvt"><span class="fa fa-lock" aria-hidden="true"></span>Forgot Password?</label>
+					<article>
+						<form action="#" method="post">
+							<h3 class="legend last">Reset Password</h3>
+							<p class="para-style">Enter your email address below and we'll send you an email with instructions.</p>
+							<p class="para-style-2"><strong>Need Help?</strong> Learn more about how to <a href="#">retrieve an existing
+									account.</a></p>
+							<div class="input">
+								<span class="fa fa-envelope-o" aria-hidden="true"></span>
+								<input type="email" placeholder="Email" name="email" required />
+							</div>
+							<button type="submit" class="btn submit last-btn">Reset</button>
+						</form>
+					</article>
+				</div>
+				<div id="section2" class="section-w3ls">
+					<input type="radio" name="sections" id="option2">
+					<label for="option2" class="icon-left-w3pvt"><span class="fa fa-pencil-square" aria-hidden="true"></span>Register</label>
+					<article>
+
+				<form action="{% url 'patient_reg' %}" method="post">{% csrf_token %}
+							<h3 class="legend">Register Here</h3>
+		              <div class="row">
+						<div class="col-md-6">
+						  <div class="form-group">
+									<div class="input">
+										<span class="fa fa-user-o" aria-hidden="true"></span>
+										<input type="text" placeholder="Name" name="name" required />
+									</div>
+								</div>
+							</div>	
+						<div class="col-md-6">
+						  <div class="form-group">									
+									<div class="input">
+										<span aria-hidden="true"></span>
+										<input type="text" placeholder="Place" name="place" required />
+									</div>
+								</div>
+							</div>
+
+						<div class="col-md-6">
+						  <div class="form-group" style="color: gray;">									
+									<div class="input">GENDER:
+										<span  aria-hidden="true"></span>									
+										<input type="radio" name="gender" value="male" required> Male
+										<input type="radio" name="gender" value="female" required> Female
+									</div>
+								</div>
+							</div>							
+						<div class="col-md-6">
+						  <div class="form-group">
+									<div class="input">
+										<span  aria-hidden="true"></span>
+										<input type="tel" placeholder="Contact No" name="phno" pattern="[0-9]{10}" required />
+									</div>
+								</div>
+							</div>	
+						<div class="col-md-6">
+						  <div class="form-group">
+									<div class="input">
+										<span class="fa fa-envelope-o" aria-hidden="true"></span>
+										<input type="email" placeholder="Email" name="email" required />
+									</div>
+								</div>
+							</div>	
+						<div class="col-md-6">
+						  <div class="form-group">
+									<div class="input">
+										<span class="fa fa-user-o" aria-hidden="true"></span>
+										<input type="text" placeholder="Userameame" name="username" required />
+									</div>
+								</div>
+							</div>	
+						<div class="col-md-6">
+						  <div class="form-group">									
+									<div class="input">
+								<span class="fa fa-key" aria-hidden="true"></span>
+								<input type="password" placeholder="Password" name="password" required />
+									</div>
+								</div>
+							</div>
+						<div class="col-md-6">
+						  <div class="form-group">									
+									<div class="input">
+								<span class="fa fa-key" aria-hidden="true"></span>
+								<input id="con_pass" type="password" placeholder="Confirm Password" name="password" required />
+									</div>
+								</div>
+							</div>
+						</div>
+							<button type="submit" class="btn submit">Register</button>
+				</form>
+					</article>
+				</div>
+
+			</div>
+			<!-- //vertical tabs -->
+			<div class="clear"></div>
+		</div>
+        <!-- <div class="modal-content"> -->
+<!--           <div class="modal-header">
+            <h5 class="modal-title" id="modalAppointmentLabel">Appointment</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form action="#">
+              <div class="form-group">
+                <label for="appointment_name" class="text-black">Full Name</label>
+                <input type="text" class="form-control" id="appointment_name">
+              </div>
+              <div class="form-group">
+                <label for="appointment_email" class="text-black">Email</label>
+                <input type="text" class="form-control" id="appointment_email">
+              </div>
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="appointment_date" class="text-black">Date</label>
+                    <input type="text" class="form-control" id="appointment_date">
+                  </div>    
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="appointment_time" class="text-black">Time</label>
+                    <input type="text" class="form-control" id="appointment_time">
+                  </div>
+                </div>
+              </div>
+              
+
+              <div class="form-group">
+                <label for="appointment_message" class="text-black">Message</label>
+                <textarea name="" id="appointment_message" class="form-control" cols="30" rows="10"></textarea>
+              </div>
+              <div class="form-group">
+                <input type="submit" value="Send Message" class="btn btn-primary">
+              </div>
+            </form>
+          </div> -->
+		  
+		</div>  
+	</div>
+</div>	
+
+    <footer class="site-footer" role="contentinfo">
+      <div class="container">
+        <div class="row mb-5 element-animate">
+          <div class="col-md-3 mb-5">
+            <h3>Online Medicine Shopping</h3>
+            <ul class="footer-link list-unstyled">
+              <li><a>Find a location</a></li>
+              <li><a>Find a Pharmacy</a></li>
+              <li><a>Buy Medicine</a></li>
+            </ul>
+          </div>
+          <div class="col-md-3 mb-5">
+            <h3>Make a Appointment</h3>
+            <ul class="footer-link list-unstyled">
+			  <li><a>Choose Your Location</a></li>
+              <li><a>Choose Your Hospital</a></li>
+              <li><a>Find Your Doctor</a></li>
+            </ul>
+          </div>
+          <div class="col-md-3 mb-5">
+            <h3>Book Your Lab Test</h3>
+            <ul class="footer-link list-unstyled">
+              <li><a>Choose Your Location</a></li>
+              <li><a>Choose Your Lab</a></li>
+              <li><a>Book Your Lab Test</a></li>
+
+            </ul>
+          </div>
+        </div>
+	        <div class="row pt-md-3 element-animate">
+          <div class="col-md-12">
+            <hr class="border-t">
+          </div>
+          <div class="col-md-6 col-sm-12 copyright">
+            <p>&copy; 2019 Your Doctor</p>
+          </div>
+   
+        </div>
+      </div>
+    </footer>
+    <!-- END footer -->  
+    <!-- END footer -->	  
+    <script src="{% static 'home/js/jquery-3.2.1.min.js' %}"></script>
+    <script src="{% static 'home/js/popper.min.js' %}"></script>
+    <script src="{% static 'home/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'home/js/owl.carousel.min.js' %}"></script>
+    <script src="{% static 'home/js/bootstrap-datepicker.js' %}"></script>
+    <script src="{% static 'home/js/jquery.timepicker.min.js' %}"></script>
+    <script src="{% static 'home/js/jquery.waypoints.min.js' %}"></script>
+    <script src="{% static 'home/js/main.js' %}"></script>
+<script>
+$(document).ready(function(){
+/*alert(msg);
+ if (msg =="Invalid User"){
+ alert(msg);
+ } */
+ 
+
+});
+</script>
+  </body>
+</html>
