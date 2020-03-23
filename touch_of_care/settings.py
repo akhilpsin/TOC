@@ -121,7 +121,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 
-
+# used for email notification
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'your@gmail.com'
