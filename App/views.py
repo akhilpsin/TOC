@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from App.models import *
+from app.models import *
 from django.db.models import Avg, Max, Min, Sum, Count
 import json
 from django.http import HttpResponse,JsonResponse
@@ -22,358 +22,400 @@ import pyqrcode
 import cv2
 
 # Create your views here.
-bk_loc=""
-bk_hos=""
-bk_dist=""
-bk_dr=""
-bk_dt=""
-bk_tym=""
-def index_pg(request):
+def home(request):
     return render(request,"index.html",{})
-def admin_hm_log(request):
-    return render(request,"admin_hm_log.html",{})
-def Patient_homelog(request):
-    return render(request,"Patient_homelog.html",{})
-def dhm(request):
-    return render(request,"dr_homelog.html",{})
-def lab_hmlog(request):
-    return render(request,"lab_hmlog.html",{})
-def phar_hmlog(request):
-    return render(request,"phar_hmlog.html",{})
-def articlespg(request):
-    return render(request,"indexarticles.html",{})
-def migraine(request):
-    return render(request,"migraine.html",{})
-def apple(request):
-    return render(request,"apple.html",{})
-def apple(request):
-    return render(request,"apple.html",{})
-def fever(request):
-    return render(request,"Fever in children.html",{})
-def top10(request):
-    return render(request,"top10.html",{})
-def asthma(request):
-    return render(request,"asthma.html",{})
-def stress(request):
-    return render(request,"stress.html",{})
 def index(request):
     return render(request,"index.html",{})
-
-def forgot(request):
-    a=request.POST.get("user")
-    b=request.POST.get("email")
-    ob=login_tb.objects.filter(username=a)
-    c=""
-    d=""
-    for i in ob:
-        c=i.username
-        d=i.password
-    email = EmailMessage('Password for your account', 'Your account password is '+str(d), to=[str(b)])
-    email.send()
-    return HttpResponse("<script>alert('Your password will be sent to your provided email id');window.location.href='/index/';</script>")
-
-def hospital_profile(request):
-    print ("hospital_profile")
+def hos_list(request):
+    return render(request,"hospital/list.html",{})
+def register(request):
+    return render(request,"reg.html",{})
+def out(request):
+    print ("logout_fn")
     if request.session.has_key('uid'):
-        us=login_tb.objects.get(lid=request.session['uid'])
-        hosp=hosptital_regis.objects.get(lid=request.session['uid'])
+        print ("session=: deleting ",request.session['uid'])
+        del request.session['uid']
+        print ("session deleted")
+        return render(request,"index.html",{})
+def login(request):
+    return render(request,"log.html",{})
+def hosp(request):
+    return render(request,"hos.html",{})
+def lab(request):
+    return render(request,"lab.html",{})
+def phar(request):
+    return render(request,"phar.html",{})
+def forget_pass(request):
+    return render(request,"forgotpassword.html",{})
+
+#-----------------------out_pharm reg-------------------------------------------------------------
+
+def phar_reg(request):
+    print ("in phar_reg")
+    if request.method=="POST":
+        a=request.POST.get("name")
+        b=request.POST.get("loc")
+        c=request.POST.get("cname")
+        d=request.POST.get("phone")
+        e=request.POST.get("email")
+        h=request.POST.get("web")
+        f=request.POST.get("uname")
+        g=request.POST.get("pass")
+        h=request.POST.get("out")
+        r=request.POST.get("add")
+        print ("a,b,c,d,e,f,g",a,b,c,d,e,f,g,r)
+        amt=login_tb.objects.filter(username=f)
+        am=out_phar_regis.objects.filter(user=f)
+        print("amt",amt.count(),"am",am.count())
+        if(amt.count()==0):
+            if(am.count()>=1):
+                return HttpResponse("<script>alert('Username already exist. choose another');window.location.href='/phar/';</script>")
+        else:
+            return HttpResponse("<script>alert('Username already used. choose another');window.location.href='/phar/';</script>")
+        ar=phar_regis.objects.filter(name=a,place=b)
+        aa=out_phar_regis.objects.filter(name=a,place=b)
+        if(ar.count()>=1 or aa.count()>=1):
+            return HttpResponse("<script>alert('pharmacy account already exist. please login with username and password');window.location.href='/login/';</script>")  
+        obj=phar_regis.objects.filter(name=a,place=b,email=e)
+        print("out hos",obj.count())
+        if(obj.count()==0):
+            obj=out_phar_regis(name=a,place=b,lid=0,cont_name=c,ph_no=d,email=e,user=f,passw=g,address=r)
+            obj.save()
+            print("out lab is stored")
+            if str(h)=="out":
+                email = EmailMessage('Verification needed','Hi'+' '+str(c)+','+'\n'+'mail the documents'+'\n'+'1. Pharmacy certificates'+'\n'+'2. owner name and address'+'\n'+'3. Pharmacy address', to=[e])
+                email.send()
+                return HttpResponse("<script>alert('successfully Registered. email the concerned document and wait for admin approval');window.location.href='/index/';</script>")
+        else:
+            return HttpResponse("<script>alert('Already Registered. Pls login with username and password');window.location.href='/login/';</script>")
+
+def app_pha(request):
+    print ("admin_pha_vw")
+    if request.session.has_key('uid'):
+        c=request.session['uid']
+        obj=login_tb.objects.filter(lid=c)
+        for i in obj:
+            typ=i.usertype
+    if request.session.has_key('uid') and typ=="admin":
+        pha=out_phar_regis.objects.all()
         print (request.session['uid'])
-        return render(request,"hospital_profile.html",{"hospital":hosp,"userdt":us})
-    return HttpResponse("<script>alert('Please Login');window.location.href='/index/';</script>")
-def admin_hospital_vw(request):
+        return render(request,"admin/out_pha_admin_view.html",{"pha":pha})
+    return HttpResponse("<script>alert('Please Login as admin');window.location.href='/login/';</script>")
+
+def aprove_pha(request):
+    print("aprove")
+    if request.session.has_key('uid'):
+        c=request.session['uid']
+        obj=login_tb.objects.filter(lid=c)
+        for i in obj:
+            typ=i.usertype
+    if request.session.has_key('uid') and typ=="admin":
+        if request.method=="POST":
+            a=request.POST.get("phaname")
+            b=request.POST.get("loc")
+            c=request.POST.get("cont_name")
+            d=request.POST.get("cont_no")
+            e=request.POST.get("email")
+            f=request.POST.get("uname")
+            g=request.POST.get("pass")
+            h=request.POST.get("out")
+            print(h)
+            print ("a,b,c,d,e,f,g",a,b,c,d,e,f,g)
+            obj=login_tb(
+                username=f,password=g,usertype="out_pharmacy"
+                )
+            obj.save()
+            cnt=login_tb.objects.filter(username=f,password=g)
+            print ("phar cnt ",cnt.count())
+            if cnt.count()==1:
+                user=login_tb.objects.get(username=f,password=g)
+                l_id=user.lid
+                print ("l_id===================",l_id)
+                obj=phar_regis(
+                    lid=l_id,name=a,place=b,cont_name=c,ph_no=d,email=e
+                    )
+                obj.save()
+                tt=out_phar_regis.objects.get(lid=0)
+                ar=phar_regis.objects.get(lid=l_id)
+                print(tt,ar)
+                ar.address=tt.address
+                ar.save()
+                ob=out_phar_regis.objects.filter(name=a,place=b,email=e)
+                ob.delete()
+                print ("registered")
+                if str(h)=="out":
+                    email = EmailMessage('Status of Registration','Hi'+' '+str(c)+','+'\n'+'\n'+'Your pharmacy account has been activated. Please login to continue'+'\n'+'user name is:'+' '+str(f)+'\n'+'password is:'+' '+str(g), to=[e])
+                    email.send()
+                return  HttpResponse("<script>alert('Registration Successful');window.location.href='/main/';</script>")
+            else:
+                 return HttpResponse("<script>alert('User already exist, please register with another username');window.location.href='/index/';</script>")
+    return HttpResponse("<script>alert('Please Login');window.location.href='/login/';</script>")
+
+def aa_o_pha_hm(request):
+    if request.session.has_key('uid'):
+        c=request.session['uid']
+        obj=login_tb.objects.filter(lid=c)
+        for i in obj:
+            typ=i.usertype
+    if request.session.has_key('uid') and typ=="out_pharmacy":
+        data=phar_regis.objects.get(lid=c)
+        print(request.session['uid'])
+        return render(request,"pharmacy/out/out_phar_hmlog.html",{"user":data})
+    else:
+        return HttpResponse("<script>alert('Please login using lab username and password');window.location.href='/login/';</script>")
+    return HttpResponse("<script>alert('Please login using lab username and password');window.location.href='/login/';</script>")
+
+#-----------------------out_hosp reg--------------------------------------------------------------------------------------------
+
+def hosp_reg(request):
+    print ("in hos_reg")
+    if request.method=="POST":
+        a=request.POST.get("name")
+        b=request.POST.get("loc")
+        c=request.POST.get("cname")
+        d=request.POST.get("phone")
+        e=request.POST.get("email")
+        h=request.POST.get("web")
+        f=request.POST.get("uname")
+        g=request.POST.get("pass")
+        r=request.POST.get("out")
+        p=request.POST.get("add")
+        print ("a,b,c,d,e,f,g",a,b,c,d,e,f,g,h)
+        amt=login_tb.objects.filter(username=f)
+        am=out_hosptital_regis.objects.filter(user=f)
+        print("amt",amt.count(),"am",am.count())
+        if(amt.count()==0):
+            if(am.count()>=1):
+                return HttpResponse("<script>alert('Username already exist. choose another');window.location.href='/hosp/';</script>")
+        else:
+            return HttpResponse("<script>alert('Username already used. choose another');window.location.href='/hosp/';</script>")
+        ar=hosp_regis.objects.filter(name=a,place=b)
+        aa=out_hosptital_regis.objects.filter(name=a,place=b)
+        if(ar.count()>=1 or aa.count()>=1):
+            return HttpResponse("<script>alert('Hospital account already exist. please login with username and password');window.location.href='/login/';</script>")
+        obj=hosp_regis.objects.filter(name=a,place=b,email=e)
+        print("out hos",obj.count())
+        if(obj.count()==0):
+            obj=out_hosptital_regis(name=a,place=b,lid=0,cont_name=c,ph_no=d,email=e,website=h,user=f,passw=g,address=p)
+            obj.save()
+            print("out hosp is stored")
+            if str(r)=="out":
+                email = EmailMessage('Verification needed','Hi'+' '+str(c)+','+'\n'+'mail the documents' +'\n'+ '1. Hospital certificates'+ '\n'+'2. owner name and address' +'\n'+'3. Hospital address', to=[e])
+                email.send()
+                return HttpResponse("<script>alert('successfully Registered. mail the concern documents and wait for admin approval');window.location.href='/index/';</script>")
+        else:
+            return HttpResponse("<script>alert('Already Registered. Pls login with username and password');window.location.href='/login/';</script>")
+
+def app_hos(request):
     print ("admin_hospital_vw")
     if request.session.has_key('uid'):
-        hosp=hosptital_regis.objects.all()
-        print (request.session['uid'])
-        return render(request,"admin_hospital_vw.html",{"hospital":hosp})
-    return HttpResponse("<script>alert('Please Login');window.location.href='/index/';</script>")
-
-def out_admin_hospital_vw(request):
-    print ("admin_hospital_vw")
-    if request.session.has_key('uid'):
+        c=request.session['uid']
+        obj=login_tb.objects.filter(lid=c)
+        for i in obj:
+            typ=i.usertype
+    if request.session.has_key('uid') and typ=="admin":
         hosp=out_hosptital_regis.objects.all()
         print (request.session['uid'])
-        return render(request,"out_admin_hospital_vw.html",{"hospital":hosp})
-    return HttpResponse("<script>alert('Please Login');window.location.href='/index/';</script>")
+        return render(request,"admin/out_hos_admin_view.html",{"hospital":hosp})
+    return HttpResponse("<script>alert('Please Login as admin');window.location.href='/login/';</script>")
 
 
-def admin_pharmacy_vw(request):
-    print ("admin_pharmacy_vw")
+def aprove_hos(request):
+    print("aprove")
     if request.session.has_key('uid'):
-        p=pharmacy_tb.objects.all()
-        print (request.session['uid'])
-        return render(request,"admin_pharmacy_vw.html",{"pharm":p})
-    return HttpResponse("<script>alert('Please Login');window.location.href='/index/';</script>")
-
-def out_admin_pharmacy_vw(request):
-    print ("admin_pharmacy_vw")
-    if request.session.has_key('uid'):
-        p=out_pharmacy_tb.objects.all()
-        print (request.session['uid'])
-        return render(request,"out_admin_pharmacy_vw.html",{"pharm":p})
-    return HttpResponse("<script>alert('Please Login');window.location.href='/index/';</script>")
-
-
-def admin_lab_vw(request):
-    print ("admin_lab_vw")
-    if request.session.has_key('uid'):
-        l=lab_regis.objects.all()
-        print (request.session['uid'])
-        return render(request,"admin_lab_vw.html",{"labs":l})
-    return HttpResponse("<script>alert('Please Login');window.location.href='/index/';</script>")
-
-def out_admin_lab_vw(request):
-    print ("admin_lab_vw")
-    if request.session.has_key('uid'):
-        l=out_lab_regis.objects.all()
-        print (request.session['uid'])
-        return render(request,"out_admin_lab_vw.html",{"labs":l})
-    return HttpResponse("<script>alert('Please Login');window.location.href='/index/';</script>")
-
-
-def admin_patient_vw(request):
-    print ("admin_patient_vw")
-    if request.session.has_key('uid'):
-        p=patient_regis.objects.all()
-        print (request.session['uid'])
-        return render(request,"admin_patient_vw.html",{"patients":p})
-    return HttpResponse("<script>alert('Please Login');window.location.href='/index/';</script>")
-def admin_dr_vw(request):
-    print ("admin_dr_vw")
-    if request.session.has_key('uid'):
-        d=doctor_regis.objects.all()
-        print (request.session['uid'])
-        return render(request,"admin_dr_vw.html",{"doctors":d})
-    return HttpResponse("<script>alert('Please Login');window.location.href='/index/';</script>")
-def admin_home(request):
-    print ("for return admin home with windows.location.href")
-    if request.session.has_key('uid'):
-        user_dt=login_tb.objects.get(lid=request.session['uid'])
-        return render(request,"admin_hm.html",{"user_dtt":user_dt})
-    return HttpResponse("<script>alert('Please Login');window.location.href='/index/';</script>")
-def lab_hm(request):
-    if request.session.has_key('uid'):
-        user_dt=lab_regis.objects.get(lid=request.session['uid'])
-        return render(request,"lab_hm.html",{"user_dtt":user_dt})
-    return HttpResponse("<script>alert('Please Login');window.location.href='/index/';</script>")
-def viewlabookings(request):
-    print ("viewlabookings")
-    if request.session.has_key('uid'):
-        user_dt=lab_regis.objects.get(lid=request.session['uid'])
-        book=lab_bking.objects.filter(lab_id=user_dt.lab_id)
-        return render(request,"viewbookngs.html",{"user_dtt":user_dt,"books":book})
-    return HttpResponse("<script>alert('Please Login');window.location.href='/index/';</script>")
-def hosptl_hm(request):
-    if request.session.has_key('uid'):
-        user_dt=hosptital_regis.objects.get(lid=request.session['uid'])
-        us=login_tb.objects.get(lid=request.session['uid'])
-        print (request.session['uid'])
-        return render(request,"hospital_hm.html",{"user_dtt":user_dt,"uus":us})
-    return HttpResponse("<script>alert('Please Login');window.location.href='/index/';</script>")
+        c=request.session['uid']
+        obj=login_tb.objects.filter(lid=c)
+        for i in obj:
+            typ=i.usertype
+    if request.session.has_key('uid') and typ=="admin":
+        if request.method=="POST":
+            a=request.POST.get("hosname")
+            b=request.POST.get("loc")
+            c=request.POST.get("cont_name")
+            d=request.POST.get("cont_no")
+            e=request.POST.get("email")
+            f=request.POST.get("uname")
+            g=request.POST.get("pass")
+            h=request.POST.get("out")
+            i=request.POST.get("web")
+            print(h)
+            print ("a,b,c,d,e,f,g",a,b,c,d,e,f,g)
+            obj=login_tb(
+                username=f,password=g,usertype="hospital"
+                )
+            obj.save()
+            cnt=login_tb.objects.filter(username=f,password=g)
+            print ("phar cnt ",cnt.count())
+            if cnt.count()==1:
+                user=login_tb.objects.get(username=f,password=g)
+                l_id=user.lid
+                print ("l_id===================",l_id)
+                obj=hosp_regis(
+                    lid=l_id,name=a,place=b,cont_name=c,ph_no=d,email=e,website=str(i)
+                    )
+                obj.save()
+                tt=out_hosptital_regis.objects.get(lid=0)
+                am=hosp_regis.objects.get(lid=l_id)
+                print(tt,am)
+                am.address=tt.address
+                am.save()
+                ob=out_hosptital_regis.objects.filter(name=a,place=b,email=e)
+                ob.delete()
+                if str(h)=="out":
+                    email = EmailMessage('Status of Registration','Hi'+' '+str(c)+','+'\n'+'\n'+'Your Hospital account has been activated. Please login to continue'+'\n'+'user name is:' + str(f) +'\n'+'password is:' +str(g), to=[e])
+                    email.send()
+                    print ("registered")
+                    return  HttpResponse("<script>alert('Registration Successful');window.location.href='/main/';</script>")
+            else:
+                 return HttpResponse("<script>alert('User already exist, please register with another username');window.location.href='/index/';</script>")
+    return HttpResponse("<script>alert('Please Login as admin');window.location.href='/login/';</script>")
 
 
-def viewpatients(request):
-    return render(request,"dr_usvw.html",{})
 
-def checkqr(request):
-    print("checkqr")
-    s=request.FILES["files"]
-    val=""
-    if s:
-        fs=  FileSystemStorage("App\\static\\res")
-        try:
-            os.remove("App\\static\\res\\out.png")
-        except:
-            pass
-        fs.save("out.png",s)
-        try:
-            img = cv2.imread('App\\static\\res\\out.png')
+#-----------------------out_lab reg----------------------------------------------------------------------------------
 
-            d = decode(img)
-            val=d[0].data.decode('ascii')
-           
-        except Exception as e:
-            print("cannot read",e)
-    print("Value: ",val)
-    ob=patient_regis.objects.get(lid=int(val))
-    return render(request,"dr_userview.html",{"data":ob})
-        
-
-
-        
-
-def dr_hm(request):
-    if request.session.has_key('uid'):
-        user_dt=doctor_regis.objects.get(lid=request.session['uid'])
-        us=login_tb.objects.get(lid=request.session['uid'])
-        return render(request,"dr_home.html",{"user_dtt":user_dt,"uus":us})
-    return HttpResponse("<script>alert('Please Login');window.location.href='/index/';</script>")
-def dr_Vw_bkngs(request):
-    if request.session.has_key('uid'):
-        dr_sessn=doctor_regis.objects.get(lid=request.session['uid'])
-        book=booking_tb.objects.filter(did=dr_sessn.did)
-        return render(request,"dr_vw_bkngs.html",{"books":book})
-    return HttpResponse("<script>alert('Please Login');window.location.href='/index/';</script>")
-def pharmacy_hm(request):
-    if request.session.has_key('uid'):
-        print ("pharmacy_hm")
-        user_dt=pharmacy_tb.objects.get(lid=request.session['uid'])
-        us=login_tb.objects.get(lid=request.session['uid'])
-        return render(request,"phar_hm.html",{"user_dtt":user_dt,"uus":us})
-    return HttpResponse("<script>alert('Please Login');window.location.href='/index/';</script>")
-def med_add(request):
-    print ("med_add")
-    if request.session.has_key('uid'):
-        user_dt=pharmacy_tb.objects.get(lid=request.session['uid'])
-        med=med_cat.objects.all()
-        return render(request,"med_add.html",{"user_dtt":user_dt,"medc":med})
-    return HttpResponse("<script>alert('Please Login');window.location.href='/index/';</script>")
-def med_vw(request):
-    print ("med_vw")
-    if request.session.has_key('uid'):
-        user_dt=pharmacy_tb.objects.get(lid=request.session['uid'])
-        med=medicine_tb.objects.filter(phar_id=user_dt.phar_id)
-        return render(request,"med_vw.html",{"user_dtt":user_dt,"medc":med})
-    return HttpResponse("<script>alert('Please Login');window.location.href='/index/';</script>")
-def delete_med(request):
-    print ("delete_med")
-    data={}
-    if request.session.has_key('uid'):        
-        id=request.GET.get("id") 
-        print ("id",id)
-        ob=medicine_tb.objects.get(med_id=int(id))
-        ob.delete()
-        print ("medicine deleted")
-        ob=serializers.serialize("json",medicine_tb.objects.all())
-        data["dt1"]=json.loads(ob)
-        print (data)
-        return JsonResponse(data,safe=False)
-    return HttpResponse("<script>alert('please login');window.location.href='/index/';</script>") 
-def purchase_rep(request):
-    print ("purchase_rep")
-    if request.session.has_key('uid'):
-        user_dt=pharmacy_tb.objects.get(lid=request.session['uid'])
-        pharid=user_dt.phar_id
-        print ("pharid",pharid)
-        book=odr_details.objects.filter(phar_id=pharid)
-        return render(request,"phar_pur_reprt.html",{"user_dtt":user_dt,"books":book})
-    return HttpResponse("<script>alert('Please Login');window.location.href='/index/';</script>")
-def hospital_dr_bk_vw(request):
-    print ("hospital_dr_bk_vw")
-    if request.session.has_key('uid'):
-        hos=hosptital_regis.objects.get(lid=request.session['uid'])
-        user_dt=hosptital_regis.objects.get(lid=request.session['uid'])
-        print ("lid",request.session['uid'])
-        print ("hos _ id",hos.hid)
-        book=booking_tb.objects.filter(hid=hos.hid)
-        return render(request,"hospital_dr_bk_vw.html",{"books":book,"user_dtt":user_dt})
-    return HttpResponse("<script>alert('Please Login');window.location.href='/index/';</script>")
-def hosptl_add_phar_hm(request):
-    print ("hosptl_add_phar_hm")
-    if request.session.has_key('uid'):
-        user_dt=hosptital_regis.objects.get(lid=request.session['uid'])
-        return render(request,"pharmac_reg_pg_hosp.html",{"user_dtt":user_dt})
-    return HttpResponse("<script>alert('Please Login');window.location.href='/index/';</script>")
-def patient_pg_chat(request):
-    print ("patient_pg_chat")
-    if request.session.has_key('uid'):
-        user=patient_regis.objects.get(lid=request.session['uid'])
-        dr=doctor_regis.objects.all()
-        print ("patient loged hey")
-        return render(request,"patient_chat.html",{"user_dtt":user,"drnm":dr})
-    return HttpResponse("<script>alert('Please Login');window.location.href='/index/';</script>")
-
-def admin_pg_chat(request):
-    print ("patient_pg_chat")
-    dr=doctor_regis.objects.all()
-    lab=lab_regis.objects.all()
-    pha=pharmacy_tb.objects.all()
-    print ("patient loged hey")
-    return render(request,"admin_chat.html",{"user_dtt":"Admin","drnm":dr,"lab":lab,"pha":pha})
-##    return HttpResponse("<script>alert('Please Login');window.location.href='/index/';</script>")
-
-def hsp_pg_chat(request):
-    print ("patient_pg_chat")
-    dr=doctor_regis.objects.filter(hid=request.session['hn'])
-    #lab=lab_regis.objects.filter()
-    pha=pharmacy_tb.objects.filter(hid=request.session['hn'])
-    print ("patient loged hey")
-    return render(request,"hsp_chat.html",{"user_dtt":"Admin","drnm":dr,"lab":lab,"pha":pha})
-
-def patient_hm(request):
-    print ("for return patient home with windows.location.href")
-    if request.session.has_key('uid'):
-        user=patient_regis.objects.get(lid=request.session['uid'])
-        print ("patient loged hey",request.session['uid'])
-        user_dtt=login_tb.objects.get(lid=request.session['uid'])
-        return render(request,"Patient_home.html",{"user_dtt":user,"log":user_dtt})
-    return HttpResponse("<script>alert('Please Login');window.location.href='/index/';</script>")    
-def patient_home(request):
-    print ("for return patient home with windows.location.href")
-    if request.session.has_key('uid'):
-        user=patient_regis.objects.get(lid=request.session['uid'])
-        print ("patient loged hey",request.session['uid'])
-        bk_ststus=booking_tb.objects.filter(pid=request.session['uid'])
-        user_dtt=login_tb.objects.get(lid=request.session['uid'])
-        print (bk_ststus.count())
-        l=bk_ststus.count()
-##        l=[]
-##        for i in bk_ststus:
-##            l.append(i.status)
-##        if u'2' in l:
-##            print l
-##            no=2
-        return render(request,"Patient_home.html",{"user_dtt":user,"log":user_dtt})
-    return HttpResponse("<script>alert('Please Login');window.location.href='/index/';</script>")    
-##def notificatn_bkng_tym(request):
-##    if request.session.has_key('uid'):
-##        obj_update=booking_tb.objects.filter(pid=request.session['uid'])
-##        obj_update.status=1
-##        obj_update.save()
-##        ob=serializers.serialize("json",testtb.objects.filter(pid=request.session['uid']))
-##        data["dt1"]=json.loads(ob)
-##        print data
-##        print "ok"
-##        return JsonResponse(data,safe=False)
-def lab_home(request):
-    print ("lab home")
-    if request.session.has_key('uid'):
-        user=lab_regis.objects.get(lid=request.session['uid'])
-        print ("lab loged hey")
-        us=login_tb.objects.get(lid=request.session['uid'])
-        return render(request,"lab_hm.html",{"user_dtt":user,"uus":us})
-    return HttpResponse("<script>alert('Please Login');window.location.href='/index/';</script>")
 def lab_reg(request):
+    print ("in out_lab_reg")
+    if request.method=="POST":
+        a=request.POST.get("name")
+        b=request.POST.get("loc")
+        c=request.POST.get("cname")
+        d=request.POST.get("phone")
+        e=request.POST.get("email")
+        f=request.POST.get("uname")
+        g=request.POST.get("pass")
+        h=request.POST.get("out")
+        r=request.POST.get("add")
+        print ("a,b,c,d,e,f,g",a,b,c,d,e,f,g)
+        amt=login_tb.objects.filter(username=f)
+        am=out_lab_regis.objects.filter(user=f)
+        print("amt",amt.count(),"am",am.count())
+        if(amt.count()==0):
+            if(am.count()>=1):
+                return HttpResponse("<script>alert('Username already exist. choose another');window.location.href='/lab/';</script>")
+        else:
+            return HttpResponse("<script>alert('Username already used. choose another');window.location.href='/lab/';</script>")
+        ar=lab_regis.objects.filter(name=a,place=b)
+        aa=out_lab_regis.objects.filter(name=a,place=b)
+        if(ar.count()>=1 or aa.count()>=1):
+            return HttpResponse("<script>alert('laboratory account already exist. please login with username and password');window.location.href='/login/';</script>")
+        obj=lab_regis.objects.filter(name=a,place=b,email=e)
+        print("out hos",obj.count())
+        if(obj.count()==0):
+            obj=out_lab_regis(name=a,place=b,lid=0,cont_name=c,ph_no=d,email=e,user=f,passw=g,address=r)
+            obj.save()
+            print("out lab is stored")
+            if(str(h)=="out"):
+                email = EmailMessage('Verification needed','Hi'+' '+str(c)+','+'\n'+'mail the documents' +'\n'+ '1. Laboratory certificates'+ '\n'+'2. owner name and address' +'\n'+'3. Laboratory address', to=[e])
+                email.send()
+                return HttpResponse("<script>alert('successfully Registered. email the concerned document and wait for admin approval');window.location.href='/index/';</script>")
+        else:
+            return HttpResponse("<script>alert('Already Registered. Pls login with username and password');window.location.href='/login/';</script>")
+
+def app_lab(request):
+    print ("admin_lab_vw")
     if request.session.has_key('uid'):
-        return render(request,"lab_reg_pg.html",{})
-    return HttpResponse("<script>alert('Please Login');window.location.href='/index/';</script>")
-def lab_bk_pg(request):
+        c=request.session['uid']
+        obj=login_tb.objects.filter(lid=c)
+        for i in obj:
+            typ=i.usertype
+    if request.session.has_key('uid') and typ=="admin":
+        lab=out_lab_regis.objects.all()
+        print (request.session['uid'])
+        return render(request,"admin/out_lab_admin_view.html",{"lab":lab})
+    return HttpResponse("<script>alert('Please Login as admin');window.location.href='/login/';</script>")
+
+def aprove_lab(request):
+    print("aprove")
     if request.session.has_key('uid'):
-        return render(request,"labbooking_pg.html",{})
-    return HttpResponse("<script>alert('Please Login');window.location.href='/index/';</script>")
-def lab_reg_pg_hosp(request):
+        c=request.session['uid']
+        obj=login_tb.objects.filter(lid=c)
+        for i in obj:
+            typ=i.usertype
+    if request.session.has_key('uid') and typ=="admin":
+        if request.method=="POST":
+            a=request.POST.get("labname")
+            b=request.POST.get("loc")
+            c=request.POST.get("cont_name")
+            d=request.POST.get("cont_no")
+            e=request.POST.get("email")
+            f=request.POST.get("uname")
+            g=request.POST.get("pass")
+            h=request.POST.get("out")
+            print(h)
+            print ("a,b,c,d,e,f,g",a,b,c,d,e,f,g)
+            obj=login_tb(
+                username=f,password=g,usertype="out_laboratory"
+                )
+            obj.save()
+            cnt=login_tb.objects.filter(username=f,password=g)
+            print ("phar cnt ",cnt.count())
+            if cnt.count()==1:
+                user=login_tb.objects.get(username=f,password=g)
+                l_id=user.lid
+                print ("l_id===================",l_id)
+                obj=lab_regis(
+                    lid=l_id,name=a,place=b,cont_name=c,ph_no=d,email=e
+                    )
+                obj.save()
+                tt=out_lab_regis.objects.get(lid=0)
+                ar=lab_regis.objects.get(lid=l_id)
+                print(tt,ar)
+                ar.address=tt.address
+                ar.save()
+                ob=out_lab_regis.objects.filter(name=a,place=b,email=e)
+                ob.delete()
+                if str(h)=="out":
+                    email = EmailMessage('Status of Registration','Hi'+' '+str(c)+','+'\n'+'\n'+'Your Laboratory account has been activated. Please login to continue'+'\n'+'user name is:'+' '+str(f)+'\n'+'password is:'+' '+str(g), to=[e])
+                    email.send()
+                print ("registered")
+                return  HttpResponse("<script>alert('Registration Successful');window.location.href='/main/';</script>")
+            else:
+                 return HttpResponse("<script>alert('User already exist, please register with another username');window.location.href='/index/';</script>")
+    return HttpResponse("<script>alert('Please Login as admin');window.location.href='/login/';</script>")
+
+def o_labo_hm(request):
     if request.session.has_key('uid'):
-        user_dt=hosptital_regis.objects.get(lid=request.session['uid'])
-        return render(request,"lab_reg_pg_hosp.html",{"user_dtt":user_dt})
-    return HttpResponse("<script>alert('Please Login');window.location.href='/index/';</script>")
+        c=request.session['uid']
+        obj=login_tb.objects.filter(lid=c)
+        for i in obj:
+            typ=i.usertype
+    if request.session.has_key('uid') and typ=="out_laboratory":
+        data=lab_regis.objects.get(lid=c)
+        print(request.session['uid'])
+        return render(request,"lab/out/out_lab_hmlog.html",{"user":data})
+    else:
+        return HttpResponse("<script>alert('Please login using lab username and password');window.location.href='/login/';</script>")
+    return HttpResponse("<script>alert('Please login using lab username and password');window.location.href='/login/';</script>")
+
+
+
+#--------------------patient registration------------------------------------------------------------
+        
 def patient_reg(request):
     print ("in patient_reg")
     if request.method=="POST":
         a=request.POST.get("name")
-        b=request.POST.get("place")
+        b=request.POST.get("loc")
         c=request.POST.get("gender")
-        d=request.POST.get("phno")
+        d=request.POST.get("phone")
         e=request.POST.get("email")
         h=request.POST.get("bld")
-        f=request.POST.get("username")
-        g=request.POST.get("password")
-        
+        f=request.POST.get("uname")
+        g=request.POST.get("pass")
+        r=request.POST.get("date")
+        m=request.POST.get("add")
         print ("a,b,c,d,e,f,g",a,b,c,d,e,f,g,h)
-        obj=login_tb(
-                username=f,password=g,usertype="patient"
-                )
-        obj.save()
-        
+        amt=login_tb.objects.filter(username=f)
+        print("amt",amt.count())
+        aa=patient_regis.objects.filter(email=e)
+        if(aa.count()>=1):
+            return HttpResponse("<script>alert('email already Exist .Choose another email');window.location.href='/register/';</script>")
+        if(amt.count()==0):
+            obj=login_tb(username=f,password=g,usertype="patient")
+            obj.save()
+        else:
+            return HttpResponse("<script>alert('Username already Exist .Choose another username');window.location.href='/register/';</script>")
 ##        cv2.imshow('generated_png',img)
 ##        cv2.waitKey(0)
         cnt=login_tb.objects.filter(username=f,password=g)
@@ -393,12 +435,14 @@ def patient_reg(request):
             print("The Required output is:",msg)
             print(len(msg))
             qr = pyqrcode.create(msg)
-            qr.png('App/userqr/'+f+'.png', scale=8)
-            img = cv2.imread('App/userqr/'+f+'.png', 0)
+            qr.png('app/qrcode/'+f+'.png', scale=8)
+            img = cv2.imread('app/qrcode/'+f+'.png', 0)
             img=cv2.resize(img, (150, 150)) 
-            cv2.imwrite('App/userqr/'+f+'.png', img)
+            cv2.imwrite('app/qrcode/'+f+'.png', img)
+            from datetime import date
+            today = date.today()
             obj=patient_regis(
-                lid=l_id,name=a,place=b,gender=c,ph_no=d,email=e,bld=str(h)
+                lid=l_id,name=a,place=b,gender=c,ph_no=d,email=e,bld=str(h),user=f,passw=g,dob=r,address=m,age=0,date=today
                 )
             obj.save()
             print ("registered")
@@ -406,272 +450,28 @@ def patient_reg(request):
         else:
             return HttpResponse("<script>alert('User already exist, please register with another username');window.location.href='/index/';</script>")
 
-##    return render(request,"index.html",{})
-def booking_hm(request):
-    print ("booking_hm from index")
-    return render(request,"booking_frm_hm.html",{})
-def booking(request):
-    print ("booking from patient home")
-    if request.session.has_key('uid'):
-        user=patient_regis.objects.get(lid=request.session['uid'])
-        return render(request,"booking_pg.html",{"user_dt":user})
-    return HttpResponse("<script>alert('Please Login');window.location.href='/index/';</script>")
-def pharmacy_pg(request):
-    print ("pharmac_reg_pg.html")
-    if request.session.has_key('uid'):
-        return render(request,"pharmac_reg_pg.html",{})
-    return HttpResponse("<script>alert('Please Login');window.location.href='/index/';</script>")
-
-def out_pharmacy_pg(request):
-    print ("pharmac_reg_pg.html")
-    return render(request,"out_pharmac_reg_pg.html",{})
-
-
-def hospital_pg(request):
-    print ("hospital_pg")
-    if request.session.has_key('uid'):
-        return render(request,"hosp_reg_pg.html",{})
-    return HttpResponse("<script>alert('Please Login');window.location.href='/index/';</script>")
-
-def out_hospital_pg(request):
-    print ("hospital_pg")
-    return render(request,"out_hosp_reg_pg.html",{})
-
-def notices(request):
-    print ("notices")
-    if request.session.has_key('uid'):
-        return render(request,"notice.html",{})
-    return HttpResponse("<script>alert('Please Login');window.location.href='/index/';</script>")
-
-
-def addnotices(request):
-    print ("in addnotices")
-    if request.method=="POST":
-        a=request.POST.get("notname")
-        b=request.POST.get("loc")
-        c=request.POST.get("desc")
-        d=request.POST.get("pres")
-        obj=notifications(
-                    notname=a,loc=b,desc=c,pres=d
-                    )
-        obj.save()
-        return HttpResponse("<script>alert('Success');window.location.href='/notices/';</script>")
-
-def notivw(request):
-    print ("notivw")
-    if request.session.has_key('uid'):
-        noti=notifications.objects.all()
-        return render(request,"notivw.html",{"noti":noti})
-    return HttpResponse("<script>alert('Please Login');window.location.href='/index/';</script>")
+#------------------------------------login check-------------------------------------------------------------------------------------------------------
         
-def dr_reg(request):
-    print ("dr_reg")
-    if request.session.has_key('uid'):
-        return render(request,"dr_reg.html",{})
-    return HttpResponse("<script>alert('Please Login');window.location.href='/index/';</script>")
-def hospital_reg(request):
-    print ("in hospital_reg")
-    if request.session.has_key('uid'):
-        if request.method=="POST":
-            a=request.POST.get("hosname")
-            b=request.POST.get("loc")
-            c=request.POST.get("cont_name")
-            d=request.POST.get("cont_no")
-            e=request.POST.get("email")
-            f=request.POST.get("uname")
-            g=request.POST.get("pass")
-            h=request.POST.get("out")
-            print(h)
-            if str(h)=="out":
-                email = EmailMessage('Status of Registration', 'Your account has been activated. Please login to continue', to=[e])
-                email.send()
-            print ("a,b,c,d,e,f,g",a,b,c,d,e,f,g)
-            obj=login_tb(
-                username=f,password=g,usertype="hospital"
-                )
-            obj.save()
-            cnt=login_tb.objects.filter(username=f,password=g)
-            print ("phar cnt ",cnt.count())
-            if cnt.count()==1:
-                user=login_tb.objects.get(username=f,password=g)
-                l_id=user.lid
-                print ("l_id===================",l_id)
-                obj=hosptital_regis(
-                    lid=l_id,hosp_nm=a,location=b,contct_persn=c,contct_no=d,email=e
-                    )
-                obj.save()
-                print ("registered")
-                return  HttpResponse("<script>alert('Registration Successful');window.location.href='/admin_hm_log/';</script>")
-            else:
-                 return HttpResponse("<script>alert('User already exist, please register with another username');window.location.href='/pharmacy_regs_admin/';</script>")
-    return HttpResponse("<script>alert('Please Login');window.location.href='/index/';</script>")
-
-
-def out_hospital_reg(request):
-    print ("in hospital_reg")
-    if request.method=="POST":
-        a=request.POST.get("hosname")
-        b=request.POST.get("loc")
-        c=request.POST.get("cont_name")
-        d=request.POST.get("cont_no")
-        e=request.POST.get("email")
-        f=request.POST.get("uname")
-        g=request.POST.get("pass")
-        st=False
-        print ("a,b,c,d,e,f,g",a,b,c,d,e,f,g)
-        try:
-            ob=hosptital_regis.objects.get(hosp_nm=a,location=b,email=e)
-        except:
-            st=True
-        try:
-            ob=out_hosptital_regis.objects.get(hosp_nm=a,location=b,contct_persn=c,contct_no=d,email=e)
-            
-            print ("registered")
-            return HttpResponse("<script>alert('Registration Faild. Duplicates');window.location.href='/index/';</script>")
-        except Exception as ex:
-            if st:
-                obj=out_hosptital_regis(
-                    lid=1,hosp_nm=a,location=b,contct_persn=c,contct_no=d,email=e,username=f,password=g
-                    )
-                obj.save()
-                return  HttpResponse("<script>alert('Registration Successful');window.location.href='/index/';</script>")
-            print("Exception: ",ex)
-            return HttpResponse("<script>alert('Registration Faild. Duplicates');window.location.href='/index/';</script>")
-    return HttpResponse("<script>alert('Registration Faild');window.location.href='/index/';</script>")
-
-
-def lab_regs_pg(request):
-    return render(request,"lab_reg_pg.html",{})
-
-
-def out_lab_regs_pg(request):
-    return render(request,"out_lab_reg_pg.html",{})
-
-
-def lab_regs_fn(request):
-    print ("in lab_regs_fn admin")
-    if request.session.has_key('uid'):
-        if request.method=="POST":
-            a=request.POST.get("labname")
-            b=request.POST.get("loc")
-            c=request.POST.get("uname")
-            d=request.POST.get("pass")
-            e=request.POST.get("em")
-            print ("a,b,c,d,email",a,b,c,d,e)
-            obj=login_tb(
-                username=c,password=d,usertype="lab"
-                )
-            obj.save()
-            cnt=login_tb.objects.filter(username=c,password=d)
-            print ("phar cnt ",cnt.count())
-            if cnt.count()==1:
-                print ("new user")
-                user=login_tb.objects.get(username=c,password=d)
-                l_id=user.lid
-                print ("l_id===================",l_id)
-                obj=lab_regis(
-                    lid=l_id,lab_nm=a,location=b,email=e
-                    )
-                obj.save()
-                print ("admin lab registered")
-                return HttpResponse("<script>alert('Registration Successful');window.location.href='/admin_hm_log/';</script>")
-            else:
-                return HttpResponse("<script>alert('User already exist, please register with another username');window.location.href='/pharmacy_regs_admin/';</script>")
-        else:
-            return HttpResponse("<script>alert('Registration Unsuccessful');window.location.href='/admin_hm_log/';</script>")
-    return HttpResponse("<script>alert('Registration Successfull');window.location.href='/index/';</script>")
-
-def out_lab_regs_fn(request):
-    
-    if request.method=="POST":
-        a=request.POST.get("labname")
-        b=request.POST.get("loc")
-        c=request.POST.get("uname")
-        d=request.POST.get("pass")
-        e=request.POST.get("em")
-        print ("a,b,c,d,email",a,b,c,d,e)
-        try:
-            ob=lab_regis.objects.get(lab_nm=a,location=b,email=e)
-        except:
-            st=True
-        try:
-            ob=out_lab_regis.objects.get(lab_nm=a,location=b,email=e)
-            
-            print ("registered")
-            return HttpResponse("<script>alert('Registration Faild. Duplicates');window.location.href='/index/';</script>")
-        except Exception as ex:
-            if st:
-                obj=out_lab_regis(
-                    lid=1,lab_nm=a,location=b,email=e,username=c,password=d
-                    )
-                obj.save()
-                return  HttpResponse("<script>alert('Registration Successful');window.location.href='/index/';</script>")
-            print("Exception: ",ex)
-            return HttpResponse("<script>alert('Registration Faild. Duplicates');window.location.href='/index/';</script>")
-    return HttpResponse("<script>alert('Registration Successfull');window.location.href='/index/';</script>")
-
-def lab_regs_fn_hosp(request):
-    print ("in lab_regs_fn_hosp---------------")
-    if request.method=="POST":
-        a=request.POST.get("labname")
-        b=request.POST.get("loc")
-        c=request.POST.get("uname")
-        d=request.POST.get("pass")
-        e=request.POST.get("em")
-        print ("a,b,c,d,e",a,b,c,d,e)
-        obj=login_tb(
-                username=c,password=d,usertype="lab"
-                )
-        obj.save()
-        user=login_tb.objects.get(username=c,password=d)
-        l_id=user.lid
-        print ("l_id===================",l_id)
-        obj=lab_regis(
-                lid=l_id,lab_nm=a,location=b,email=e
-                    )
-        obj.save()
-        print ("lab registered")
-        return HttpResponse("<script>alert('Registration Successful');window.location.href='/hosptl_hm/';</script>")
-    else:
-        return HttpResponse("<script>alert('Registration Unsuccessful');window.location.href='/hosptl_hm/';</script>")
-def med_insert(request):
-    print ("in med_insert---------------")
-    if request.method=="POST":
-        a=request.POST.get("name")
-        b=request.POST.get("cat")
-        c=request.POST.get("descp")
-        d=request.POST.get("pric")  
-        print ("a,b,c,d",a,b,c,d)
-        phar=pharmacy_tb.objects.get(lid=request.session['uid'])
-        print ("pharmacy id===================",phar.phar_id,phar.phar_name)
-        obj=medicine_tb(
-                med_cid=b,med_name=a,price=d,description=c,phar_id=phar.phar_id
-                )
-        obj.save()
-        print ("medicine inserted")
-        return HttpResponse("<script>alert('Inserted Successful');window.location.href='/med_add/';</script>")
-    else:
-        return HttpResponse("<script>alert('Insertion Failed');window.location.href='/pharmacy_hm/';</script>")
-def login_check(request):
-    print ("in login_check")
+def login_ck(request):
+    print("login check")
     count=0
     if request.method=="POST":
-        un=request.POST.get("uname")
-        ps=request.POST.get("passwd")
-        print ("un",un,"ps",ps)
-        user=login_tb.objects.filter(username=un,password=ps)
+        a=request.POST.get("uname")
+        b=request.POST.get("pass")
+        print ("un",a,"ps",b)
+        user=login_tb.objects.filter(username=a,password=b)
         print (user)
         count=user.count()
+#count is counting the number of users in same usrname and password. atleast one is there. if 0 then invalid username and password
         if count==0:
             print ("Invalid User")
-            return HttpResponse("<script>alert('Invalid User');window.location.href='/index/';</script>")
+            return HttpResponse("<script>alert('Invalid User: enter correct username and password');window.location.href='/login/';</script>")
 ##            return render(request,"index.html",{"msg":"Invalid User"})
         else:
             for i in user:
                 typ=i.usertype
                 llid=i.lid
-            print ("type",typ,"username",un,"paswd",ps,"usercount",count,"userid",llid)
-    ##    return render(request,"index.html",{})
+            print ("type",typ,"username",a,"paswd",b,"usercount",count,"userid",llid)
             if count==0 or count>1:
                 return HttpResponse("<script>alert('Sorry Database Error');window.location.href='/index/';</script>")
 ##                return render(request,"index.html",{"msg":"Invalid Userdata"})
@@ -681,151 +481,1088 @@ def login_check(request):
                 request.session['uid']=user_dt.lid
                 print ("session=: created ",request.session['uid'])
                 user_dtt=login_tb.objects.get(lid=request.session['uid'])
-                return render(request,"Patient_homelog.html",{"user_dtt":user_dt,"log":user_dtt})
+                if request.session.has_key('uid'):
+                    user=patient_regis.objects.get(user=a,passw=b)
+                    print(request.session['uid'])
+                    return render(request,"patient/patient_hm.html",{"user":user})
             if count==1 and typ=="admin":
                 print ("admin page")
                 user_dt=login_tb.objects.get(lid=llid)
                 request.session['uid']=user_dt.lid
                 print ("session=: created ",request.session['uid'])
-                hosp=hosptital_regis.objects.all()
-                return render(request,"admin_hm_log.html",{"user_dtt":user_dt,"hospital":hosp})
+                if request.session.has_key('uid'):
+                    data=admin_tb.objects.get(lid=1)
+                    print (request.session['uid'])
+                    return render(request,"admin/admin_hm.html",{"data":data})
             if count==1 and typ=="hospital":
-                print ("hospital page")
-                user_dt=hosptital_regis.objects.get(lid=llid)
+                print("hospital page")
+                user_dt=login_tb.objects.get(lid=llid)
                 request.session['uid']=user_dt.lid
-                request.session['hn']=user_dt.hid
-                print ("session=: created ",request.session['uid'])
-                us=login_tb.objects.get(lid=llid)
-                return render(request,"hospital_hm.html",{"user_dtt":user_dt,"uus":us})
-            if count==1 and typ=="lab":
-                print ("lab page")
-                user_dt=lab_regis.objects.get(lid=llid)
-                request.session['uid']=user_dt.lid
-                request.session['lid']=user_dt.lab_id
-                request.session['lname']=user_dt.lab_nm
-                us=login_tb.objects.get(lid=llid)
-                print ("session=: created ",request.session['uid'])
-                return render(request,"lab_hmlog.html",{"user_dtt":user_dt,"uus":us})
+                print("session:= created ", request.session['uid'])
+                if request.session.has_key('uid'):
+                    data=hosp_regis.objects.get(lid=llid)
+                    print(request.session['uid'])
+                    return render(request,"hospital/hospital_hm.html",{"data":data})
             if count==1 and typ=="doctor":
-                print ("doctor page log check")
-                user_dt=doctor_regis.objects.get(lid=llid)
+                print("Doctor page")
+                user_dt=login_tb.objects.get(lid=llid)
                 request.session['uid']=user_dt.lid
-                request.session['did']=user_dt.did
-                request.session['dname']=user_dt.name
-                print (user_dt.name)
-                us=login_tb.objects.get(lid=llid)
-                print ("session=: created ",request.session['uid'])
-                return render(request,"dr_homelog.html",{"user_dtt":user_dt,"uus":us})
+                print("session:= created ", request.session['uid'])
+                if request.session.has_key('uid'):
+                    data=doc_regis.objects.get(lid=llid)
+                    print(request.session['uid'])
+                    return render(request,"doctor/dr_homelog.html",{"user":data})
+            if count==1 and typ=="laboratory":
+                print("lab page")
+                user_dt=login_tb.objects.get(lid=llid)
+                request.session['uid']=user_dt.lid
+                print("session:= created ", request.session['uid'])
+                if request.session.has_key('uid'):
+                    data=hos_lab.objects.get(lid=llid)
+                    print(request.session['uid'])
+                    return render(request,"lab/lab_hmlog.html",{"user":data})
+            if count==1 and typ=="out_laboratory":
+                print("lab page")
+                user_dt=login_tb.objects.get(lid=llid)
+                request.session['uid']=user_dt.lid
+                print("session:= created ", request.session['uid'])
+                if request.session.has_key('uid'):
+                    data=lab_regis.objects.get(lid=llid)
+                    print(request.session['uid'])
+                    return render(request,"lab/out/out_lab_hmlog.html",{"user":data})
             if count==1 and typ=="pharmacy":
-                print ("pharmacy page")
-                user_dt=pharmacy_tb.objects.get(lid=llid)
-                us=login_tb.objects.get(lid=llid)
+                print("pha page")
+                user_dt=login_tb.objects.get(lid=llid)
                 request.session['uid']=user_dt.lid
-                request.session['ppid']=user_dt.phar_id
-                print ("session=: created ",request.session['uid'])
-                return render(request,"phar_hmlog.html",{"user_dtt":user_dt,"uus":us})
-        return render(request,"index.html",{"msg":"Invalid User"})
+                print("session:= created ", request.session['uid'])
+                if request.session.has_key('uid'):
+                    data=hos_phar.objects.get(lid=llid)
+                    print(request.session['uid'])
+                    return render(request,"pharmacy/phar_hmlog.html",{"user":data})
+            if count==1 and typ=="out_pharmacy":
+                print("phar page")
+                user_dt=login_tb.objects.get(lid=llid)
+                request.session['uid']=user_dt.lid
+                print("session:= created ", request.session['uid'])
+                if request.session.has_key('uid'):
+                    data=phar_regis.objects.get(lid=llid)
+                    print(request.session['uid'])
+                    return render(request,"pharmacy/out/out_phar_hmlog.html",{"user":data})
+                    
+def reset(request):
+    a=request.POST.get("uname")
+    b=request.POST.get("email")
+    obj=login_tb.objects.filter(username=a)
+    if(obj.count()==0):
+        return HttpResponse("<script>alert('No account found in that username');window.location.href='/forget_pass/';</script>")
+    aa=login_tb.objects.get(username=a)
+    if(obj.count()==1):
+        c=aa.username
+        d=aa.password
+        ob=patient_regis.objects.filter(email=b)
+        if (ob.count()==1):
+            email = EmailMessage('Password for your account','you account username and password are'+'\n'+'username :-'+' '+str(c)+'\n'+'Your account password is :-'+' '+str(d), to=[str(b)])
+            email.send()
+            return HttpResponse("<script>alert('Your password will be sent to your provided email id');window.location.href='/login/';</script>")
+        return HttpResponse("<script>alert('Your entered email is not registered email. please use registered email');window.location.href='/forget_pass/';</script>")
+            
 
-def doctor_reg_fn(request):
-    print ("in doctor reg fn")
+#------------ADMIN---------------------------------------------------------
+
+def main(request):
+    if request.session.has_key('uid'):
+        c=request.session['uid']
+        obj=login_tb.objects.filter(lid=c)
+        for i in obj:
+            typ=i.usertype
+    if request.session.has_key('uid') and typ=="admin":
+        data=admin_tb.objects.get(lid=1)
+        print (request.session['uid'])
+        return render(request,"admin/admin_hm.html",{"data":data})
+    else:
+        return HttpResponse("<script>alert('Please login using admin username and password');window.location.href='/login/';</script>")
+    return HttpResponse("<script>alert('Please login using admin username and password');window.location.href='/login/';</script>")
+def admin_hos(request):
+    if request.session.has_key('uid'):
+        c=request.session['uid']
+        obj=login_tb.objects.filter(lid=c)
+        for i in obj:
+            typ=i.usertype
+    if request.session.has_key('uid') and typ=="admin":
+        return render(request,"admin/add_hosp.html",{})
+    else:
+        return HttpResponse("<script>alert('Please login using admin username and password');window.location.href='/login/';</script>")
+    return HttpResponse("<script>alert('Please login using admin username and password');window.location.href='/login/';</script>")
+def admin_lab(request):
+    if request.session.has_key('uid'):
+        c=request.session['uid']
+        obj=login_tb.objects.filter(lid=c)
+        for i in obj:
+            typ=i.usertype
+    if request.session.has_key('uid') and typ=="admin":
+        return render(request,"admin/add_lab.html",{})
+    else:
+        return HttpResponse("<script>alert('Please login using admin username and password');window.location.href='/login/';</script>")
+    return HttpResponse("<script>alert('Please login using admin username and password');window.location.href='/login/';</script>")
+def admin_pha(request):
+    if request.session.has_key('uid'):
+        c=request.session['uid']
+        obj=login_tb.objects.filter(lid=c)
+        for i in obj:
+            typ=i.usertype
+    if request.session.has_key('uid') and typ=="admin":
+        return render(request,"admin/add_phar.html",{})
+    else:
+        return HttpResponse("<script>alert('Please login using admin username and password');window.location.href='/login/';</script>")
+    return HttpResponse("<script>alert('Please login using admin username and password');window.location.href='/login/';</script>")
+def adm_hosp(request):
+    print ("in admin hospital reg ----> adm_hosp")
+    if request.method=="POST":
+        a=request.POST.get("hosname")
+        b=request.POST.get("loc")
+        c=request.POST.get("coname")
+        d=request.POST.get("phone")
+        e=request.POST.get("email")
+        h=request.POST.get("web")
+        f=request.POST.get("uname")
+        g=request.POST.get("pass")
+        m=request.POST.get("add")
+        print ("a,b,c,d,e,f,g",a,b,c,d,e,f,g,h)
+        amt=login_tb.objects.filter(username=f)
+        print("amt",amt.count())
+        if(amt.count()==0):
+            obj=login_tb(username=f,password=g,usertype="hospital")
+            obj.save()
+        else:
+            return HttpResponse("<script>alert('Username alraedy exist. Choose another');window.location.href='/admin_hos/';</script>")
+        cnt=login_tb.objects.filter(username=f,password=g)
+        print ("phar cnt ",cnt.count())
+        if cnt.count()==1:
+            user=login_tb.objects.get(username=f,password=g)
+            l_id=user.lid
+            obj=hosp_regis(
+                lid=l_id,name=a,place=b,cont_name=c,ph_no=d,email=e,website=str(h),address=m
+                )
+            obj.save()
+            print("registered")
+            email = EmailMessage('Hospital Account activated','Hi'+' '+str(c)+','+'\n'+'\n'+'Your Hospital account is created'+'\n'+'USERNAME :'+str(f)+'\n'+'PASSWORD :'+str(g), to=[e])
+            email.send()
+            return HttpResponse("<script>alert('Hospital successfully added');window.location.href='/admin_hos/';</script>")
+    return HttpResponse("<script>alert('Please login using admin username and password');window.location.href='/login/';</script>")
+def adm_phar(request):
+    print ("in admin pharmacy reg ----> adm_phar")
     if request.method=="POST":
         a=request.POST.get("name")
-        b=request.POST.get("speclztn")
-        c=request.POST.get("qualiftn")
-        d=request.POST.get("exp")
+        b=request.POST.get("loc")
+        c=request.POST.get("coname")
+        d=request.POST.get("phone")
         e=request.POST.get("email")
         f=request.POST.get("uname")
-        g=request.POST.get("pass")  
+        g=request.POST.get("pass")
+        m=request.POST.get("add")
         print ("a,b,c,d,e,f,g",a,b,c,d,e,f,g)
-        uchk=login_tb.objects.filter(username=f,password=g)
-        if uchk.count()==0:
-                obj=login_tb(
-                    username=f,password=g,usertype="doctor"
-                    )
-                obj.save()
-                user=login_tb.objects.get(username=f,password=g)
-                l_id=user.lid
-                print ("l_id===================",l_id)
-                user_dt=hosptital_regis.objects.get(lid=request.session['uid'])
-                print ("session=: hospital name :",user_dt.hosp_nm,"hospital id",user_dt.hid)
-                obj=doctor_regis(
-                    lid=l_id,name=a,specialization=b,qualification=c,experience=d,email=e,hid=user_dt.hid
-                    )
-                obj.save()
-                print ("registered")
-                llid=request.session['uid']
-                return HttpResponse("<script>alert('Registration Successful');window.location.href='/hosptl_hm/';</script>")
+        amt=login_tb.objects.filter(username=f)
+        print("amt",amt.count())
+        if(amt.count()==0):
+            obj=login_tb(username=f,password=g,usertype="out_pharmacy")
+            obj.save()
         else:
-            return HttpResponse("<script>alert('Username already exits,please register with another username');window.location.href='/hosptl_hm/';</script>")
+            return HttpResponse("<script>alert('Username alraedy exist. Choose another');window.location.href='/admin_pha/';</script>")
+        cnt=login_tb.objects.filter(username=f,password=g)
+        print ("phar cnt ",cnt.count())
+        if cnt.count()==1:
+            user=login_tb.objects.get(username=f,password=g)
+            l_id=user.lid
+            obj=phar_regis(
+                lid=l_id,name=a,place=b,cont_name=c,ph_no=d,email=e,address=m
+                )
+            obj.save()
+            email = EmailMessage('Pharmacy Account activated','Hi'+' '+str(c)+','+'\n'+'\n'+'Your Pharmacy account is created'+'\n'+'USERNAME :'+str(f)+'\n'+'PASSWORD :'+str(g), to=[e])
+            email.send()
+            print("registered")
+            return HttpResponse("<script>alert('Pharmacy successfully added');window.location.href='/admin_pha/';</script>")
+    return HttpResponse("<script>alert('Please login using admin username and password');window.location.href='/login/';</script>")
+def adm_lab(request):
+    print ("in admin lab reg ----> adm_lab")
+    if request.method=="POST":
+        a=request.POST.get("lab")
+        b=request.POST.get("loc")
+        c=request.POST.get("coname")
+        d=request.POST.get("phone")
+        e=request.POST.get("email")
+        f=request.POST.get("uname")
+        g=request.POST.get("pass")
+        m=request.POST.get("add")
+        print ("a,b,c,d,e,f,g",a,b,c,d,e,f,g)
+        amt=login_tb.objects.filter(username=f)
+        print("amt",amt.count())
+        if(amt.count()==0):
+            obj=login_tb(username=f,password=g,usertype="out_laboratory")
+            obj.save()
+        else:
+            return HttpResponse("<script>alert('username alraedy exist. Choose another');window.location.href='/admin_lab/';</script>")
+        cnt=login_tb.objects.filter(username=f,password=g)
+        print ("phar cnt ",cnt.count())
+        if cnt.count()==1:
+            user=login_tb.objects.get(username=f,password=g)
+            l_id=user.lid
+            obj=lab_regis(
+                lid=l_id,name=a,place=b,cont_name=c,ph_no=d,email=e,address=m
+                )
+            obj.save()
+            email = EmailMessage('Laboratory Account activated','Hi'+' '+str(c)+','+'\n'+'\n'+'Your Labouratory account is created'+'\n'+'USERNAME :'+str(f)+'\n'+'PASSWORD :'+str(g), to=[e])
+            email.send()
+            print("registered")
+            return HttpResponse("<script>alert('lab successfully added');window.location.href='/admin_lab/';</script>")
+    return HttpResponse("<script>alert('Please login using admin username and password');window.location.href='/login/';</script>")
 
-def logout_fn(request):
-    try:
-        print ("logout_fn")
-##        usrtyp=login_tb.objects.all().values_list("usertype",flat=True).distinct()
-        if request.session.has_key('uid'):
-            print ("session=: deleting ",request.session['uid'])
-            del request.session['uid']
-            print ("session deleted")
+def ad_hosp_vw(request):
+    print ("admin_hospital_view")
+    if request.session.has_key('uid'):
+        c=request.session['uid']
+        obj=login_tb.objects.filter(lid=c)
+        for i in obj:
+            typ=i.usertype
+    if request.session.has_key('uid') and typ=="admin":
+        hosp=hosp_regis.objects.all()
+        print (request.session['uid'])
+        return render(request,"admin/admin_hos_view.html",{"hospital":hosp})
+    return HttpResponse("<script>alert('Please Login');window.location.href='/index/';</script>")
+def ad_lab_vw(request):
+    print ("admin_lab_view")
+    if request.session.has_key('uid'):
+        c=request.session['uid']
+        obj=login_tb.objects.filter(lid=c)
+        for i in obj:
+            typ=i.usertype
+    if request.session.has_key('uid') and typ=="admin":
+        lab=lab_regis.objects.all()
+        print (request.session['uid'])
+        return render(request,"admin/admin_lab_view.html",{"lab":lab})
+    return HttpResponse("<script>alert('Please Login');window.location.href='/index/';</script>")
+def ad_pha_vw(request):
+    print ("admin_phar_view")
+    if request.session.has_key('uid'):
+        c=request.session['uid']
+        obj=login_tb.objects.filter(lid=c)
+        for i in obj:
+            typ=i.usertype
+    if request.session.has_key('uid') and typ=="admin":
+        pha=phar_regis.objects.all()
+        print (request.session['uid'])
+        return render(request,"admin/admin_pha_view.html",{"pha":pha})
+    return HttpResponse("<script>alert('Please Login');window.location.href='/index/';</script>")
+def ad_pat_vw(request):
+    print ("admin_phar_view")
+    if request.session.has_key('uid'):
+        c=request.session['uid']
+        obj=login_tb.objects.filter(lid=c)
+        for i in obj:
+            typ=i.usertype
+    if request.session.has_key('uid') and typ=="admin":
+        pat=patient_regis.objects.all()
+        print (request.session['uid'])
+        return render(request,"admin/admin_pat_view.html",{"pat":pat})
+    return HttpResponse("<script>alert('Please Login');window.location.href='/index/';</script>")
+def h_ad_delete(request):
+    print("admin hospital delete")
+    a=request.POST.get("name")
+    b=request.POST.get("loc")
+    c=request.POST.get("out")
+    e=request.POST.get("email")
+    d=request.POST.get("id")
+    if(c=="out"):
+        email = EmailMessage('Status of Account', 'Your account has been .Terminated. Please contact concern department', to=[e])
+        email.send()
+    ob=hosp_regis.objects.filter(name=a,place=b,email=e)
+    ob.delete()
+    obj=login_tb.objects.filter(lid=d)
+    obj.delete()
+    return HttpResponse("<script>alert('Hospital Successfully Deleted');window.location.href='/main/';</script>")
+def l_ad_delete(request):
+    print("admin lab delete")
+    a=request.POST.get("name")
+    b=request.POST.get("loc")
+    c=request.POST.get("out")
+    e=request.POST.get("email")
+    d=request.POST.get("id")
+    if(c=="out"):
+        email = EmailMessage('Status of Account', 'Your account has been Terminated. Please contact concern department', to=[e])
+        email.send()
+    ob=lab_regis.objects.filter(name=a,place=b,email=e)
+    ob.delete()
+    obj=login_tb.objects.filter(lid=d)
+    obj.delete()
+    return HttpResponse("<script>alert('Laboratory Successfully Deleted');window.location.href='/main/';</script>")
+def p_ad_delete(request):
+    print("admin phar delete")
+    a=request.POST.get("name")
+    b=request.POST.get("loc")
+    c=request.POST.get("out")
+    e=request.POST.get("email")
+    d=request.POST.get("id")
+    if(c=="out"):
+        email = EmailMessage('Status of Account', 'Your account has been Terminated. Please contact concern department', to=[e])
+        email.send()
+    ob=phar_regis.objects.filter(name=a,place=b,email=e)
+    ob.delete()
+    obj=login_tb.objects.filter(lid=d)
+    obj.delete()
+    return HttpResponse("<script>alert('Pharmacy Successfully Deleted');window.location.href='/main/';</script>")
+def refresh(request):
+    print("refresh")
+    aa=hosp_regis.objects.all()
+    ab=patient_regis.objects.all()
+    ac=phar_regis.objects.all()
+    ad=lab_regis.objects.all()
+    a=aa.count()
+    b=ab.count()
+    c=ac.count()
+    d=ad.count()
+    print("aa",a,"ab",b,"ac",c,"ad",d)
+    obj=admin_tb.objects.get(lid=1)
+    obj.hos=a
+    obj.pat=b
+    obj.lab=d
+    obj.phar=c
+    obj.save()
+    if request.session.has_key('uid'):
+        data=admin_tb.objects.get(lid=1)
+        print (request.session['uid'])
+        return render(request,"admin/admin_hm.html",{"data":data})
+    
+    
+
+#-----------HOSPITAL-------------------------------------------------------------------------------------------------------------------------------
+
+def hm_hosp(request):
+    if request.session.has_key('uid'):
+        c=request.session['uid']
+        obj=login_tb.objects.filter(lid=c)
+        for i in obj:
+            typ=i.usertype
+    if request.session.has_key('uid') and typ=="hospital":
+        hos=hosp_regis.objects.get(lid=c)
+        return render(request,"hospital/hospital_hm.html",{"data":hos})
+    else:
+        return HttpResponse("<script>alert('Please login as Hospital');window.location.href='/login/';</script>")
+    return HttpResponse("<script>alert('Please login as Hospital');window.location.href='/login/';</script>")
+def h_doc(request):
+    if request.session.has_key('uid'):
+        c=request.session['uid']
+        obj=login_tb.objects.filter(lid=c)
+        for i in obj:
+            typ=i.usertype
+    if request.session.has_key('uid') and typ=="hospital":
+        hos=hosp_regis.objects.get(lid=c)
+        return render(request,"hospital/add_doc_hos.html",{"hos":hos})
+    return HttpResponse("<script>alert('Please login as Hospital');window.location.href='/login/';</script>")
+    
+def doc_h_add(request):
+    print("doc add")
+    if request.session.has_key('uid'):
+        z=request.session['uid']
+        obj=login_tb.objects.filter(lid=z)
+        for i in obj:
+            typ=i.usertype
+    if request.session.has_key('uid') and typ=="hospital":
+        a=request.POST.get("name")
+        m=request.POST.get("loc")
+        n=request.POST.get("dob")
+        o=request.POST.get("gender")
+        b=request.POST.get("qual")
+        c=request.POST.get("dep")
+        d=request.POST.get("exp")
+        e=request.POST.get("email")
+        f=request.POST.get("ph_no")
+        g=request.POST.get("uname")
+        h=request.POST.get("pass")
+        ab=hosp_regis.objects.get(lid=z)
+        i=ab.name
+        j=ab.place
+        p=ab.hid
+        print("i",i,"j",j)
+        print("a",a,"b",b,"c",c,"D",d,"e",e,"f",f,"g",g,"h",h)
+        aa=login_tb.objects.filter(username=g)
+        ab=doc_regis.objects.filter(user=g)
+        print("aa",aa.count(),"ab",ab.count())
+        if(aa.count()>=1 or ab.count()>=1):
+            return HttpResponse("<script>alert('Username alraedy taken. choose another');window.location.href='/h_doc/';</script>")
+        if aa.count()==0:
+            print("ok")
+            obj=login_tb(username=g,password=h,usertype="doctor")
+            obj.save()
+            user=login_tb.objects.get(username=g,password=h)
+            l_id=user.lid
+            ob=doc_regis(lid=l_id,hid=p,hos=i,name=a,place=m,dob=n,gender=o,qual=b,special=c,exper=d,email=e,phone=f,user=g,passw=h)
+            ob.save()
+            return HttpResponse("<script>alert('Successfully doctor added');window.location.href='/hm_hosp/';</script>")
+    return HttpResponse("<script>alert('login');window.location.href='/login/';</script>")
+
+def h_lab(request):
+    if request.session.has_key('uid'):
+        z=request.session['uid']
+        obj=login_tb.objects.filter(lid=z)
+        for i in obj:
+            typ=i.usertype
+    if request.session.has_key('uid') and typ=="hospital":
+        hos=hosp_regis.objects.get(lid=z)
+        return render(request,"hospital/add_lab_hos.html",{"hos":hos})
+    return HttpResponse("<script>alert('Please login as Hospital');window.location.href='/login/';</script>")
+def ho_lab_add(request):
+    print("lab add")
+    if request.session.has_key('uid'):
+        z=request.session['uid']
+        obj=login_tb.objects.filter(lid=z)
+        for i in obj:
+            typ=i.usertype
+    print(typ)
+    if request.session.has_key('uid') and typ=="hospital":
+        a=request.POST.get("con_name")
+        b=request.POST.get("email")
+        c=request.POST.get("ph_no")
+        d=request.POST.get("uname")
+        e=request.POST.get("pass")
+        ab=hosp_regis.objects.get(lid=z)
+        i=ab.name
+        j=ab.place
+        print("i",i,"j",j)
+        print("a",a,"b",b,"z",z,"D",d,"e",e)
+        aa=login_tb.objects.filter(username=d)
+        ab=hos_lab.objects.filter(user=d)
+        print("aa",aa.count(),"ab",ab.count())
+        if(aa.count()>=1 or ab.count()>=1):
+            return HttpResponse("<script>alert('Username alraedy taken. choose another');window.location.href='/h_lab/';</script>")
+        if aa.count()==0:
+            print("ok")
+            obj=login_tb(username=d,password=e,usertype="laboratory")
+            obj.save()
+            user=login_tb.objects.get(username=d,password=e)
+            l_id=user.lid
+            ob=hos_lab(lid=l_id,name=i,place=j,cont_name=a,email=b,ph_no=c,user=d,passw=e)
+            ob.save()
+            return HttpResponse("<script>alert('Successfully Laboratory added');window.location.href='/hm_hosp/';</script>")
+    return HttpResponse("<script>alert('Please login as Hospital');window.location.href='/login/';</script>")
+
+def h_pha(request):
+    if request.session.has_key('uid'):
+        z=request.session['uid']
+        obj=login_tb.objects.filter(lid=z)
+        for i in obj:
+            typ=i.usertype
+    if request.session.has_key('uid') and typ=="hospital":
+        hos=hosp_regis.objects.get(lid=z)
+        return render(request,"hospital/add_pha_hos.html",{"hos":hos})
+def pha_h_add(request):
+    print("pharmacy add")
+    if request.session.has_key('uid'):
+        z=request.session['uid']
+        obj=login_tb.objects.filter(lid=z)
+        for i in obj:
+            typ=i.usertype
+    print(typ)
+    if request.session.has_key('uid') and typ=="hospital":
+        a=request.POST.get("con_name")
+        b=request.POST.get("email")
+        c=request.POST.get("ph_no")
+        d=request.POST.get("uname")
+        e=request.POST.get("pass")
+        ab=hosp_regis.objects.get(lid=z)
+        i=ab.name
+        j=ab.place
+        print("i",i,"j",j)
+        print("a",a,"b",b,"z",z,"D",d,"e",e)
+        aa=login_tb.objects.filter(username=d)
+        ab=hos_lab.objects.filter(user=d)
+        print("aa",aa.count(),"ab",ab.count())
+        if(aa.count()>=1 or ab.count()>=1):
+            return HttpResponse("<script>alert('Username alraedy taken. choose another');window.location.href='/h_pha/';</script>")
+        if aa.count()==0:
+            print("ok")
+            obj=login_tb(username=d,password=e,usertype="pharmacy")
+            obj.save()
+            user=login_tb.objects.get(username=d,password=e)
+            l_id=user.lid
+            ob=hos_phar(lid=l_id,name=i,place=j,cont_name=a,email=b,ph_no=c,user=d,passw=e)
+            ob.save()
+            return HttpResponse("<script>alert('Successfully Pharmacy added');window.location.href='/hm_hosp/';</script>")
+    return HttpResponse("<script>alert('Please login as Hospital');window.location.href='/login/';</script>")
+
+def hos_doc_vw(request):
+    print("doc view")
+    if request.session.has_key('uid'):
+        z=request.session['uid']
+        obj=login_tb.objects.filter(lid=z)
+        for i in obj:
+            typ=i.usertype
+    print(typ)
+    if request.session.has_key('uid') and typ=="hospital":
+        ob=hosp_regis.objects.get(lid=z)
+        print("ob",ob)
+        aa=ob.name
+        ab=ob.place
+        print("aa",aa)
+        doctor=doc_regis.objects.filter(hos=aa,place=ab)
+        return render(request,"hospital/doc_hos_view.html",{"doctor":doctor,"hos":ob})
+    return HttpResponse("<script>alert('Please login as Hospital');window.location.href='/login/';</script>")
+def del_h_doc(request):
+    print("doc delete")
+    if request.session.has_key('uid'):
+        z=request.session['uid']
+        obj=login_tb.objects.filter(lid=z)
+        for i in obj:
+            typ=i.usertype
+    print(typ)
+    if request.session.has_key('uid') and typ=="hospital":
+        a=request.POST.get("name")
+        b=request.POST.get("qual")
+        c=request.POST.get("dep")
+        e=request.POST.get("phon")
+        f=request.POST.get("uname")
+        g=request.POST.get("pass")
+        h=request.POST.get("out")
+        if(h=="out"):
+            obj=login_tb.objects.filter(username=f,password=g)
+            obj.delete()
+            ob=doc_regis.objects.filter(name=a,qual=b,user=f,passw=g)
+            ob.delete()
+            return HttpResponse("<script>alert('Doctor account Successfully Removed');window.location.href='/hm_hosp/';</script>")
+        return HttpResponse("<script>alert('error');window.location.href='/hm_hosp/';</script>")
+    return HttpResponse("<script>alert('Please login as Hospital');window.location.href='/login/';</script>")
+
+def hos_lab_vw(request):
+    print("lab view")
+    if request.session.has_key('uid'):
+        z=request.session['uid']
+        obj=login_tb.objects.filter(lid=z)
+        for i in obj:
+            typ=i.usertype
+    print(typ)
+    if request.session.has_key('uid') and typ=="hospital":
+        ob=hosp_regis.objects.get(lid=z)
+        print("ob",ob)
+        aa=ob.name
+        ab=ob.place
+        print("aa",aa)
+        lab=hos_lab.objects.filter(name=aa,place=ab)
+        return render(request,"hospital/lab_hos_view.html",{"lab":lab,"hos":ob})
+    return HttpResponse("<script>alert('Please login as Hospital');window.location.href='/login/';</script>")
+def del_h_lab(request):
+    print("lab delete")
+    if request.session.has_key('uid'):
+        z=request.session['uid']
+        obj=login_tb.objects.filter(lid=z)
+        for i in obj:
+            typ=i.usertype
+    print(typ)
+    if request.session.has_key('uid') and typ=="hospital":
+        a=request.POST.get("name")
+        b=request.POST.get("phon")
+        c=request.POST.get("email")
+        f=request.POST.get("uname")
+        g=request.POST.get("pass")
+        h=request.POST.get("out")
+        if(h=="out"):
+            obj=login_tb.objects.filter(username=f,password=g)
+            obj.delete()
+            ob=hos_lab.objects.filter(cont_name=a,ph_no=b,user=f,passw=g)
+            ob.delete()
+            return HttpResponse("<script>alert('Lab Successfully Removed');window.location.href='/hm_hosp/';</script>")
+        return HttpResponse("<script>alert('error');window.location.href='/hm_hosp/';</script>")
+    return HttpResponse("<script>alert('Please login as Hospital');window.location.href='/login/';</script>")
+
+def hos_phar_vw(request):
+    print("pharmacy view")
+    if request.session.has_key('uid'):
+        z=request.session['uid']
+        obj=login_tb.objects.filter(lid=z)
+        for i in obj:
+            typ=i.usertype
+    print(typ)
+    if request.session.has_key('uid') and typ=="hospital":
+        ob=hosp_regis.objects.get(lid=z)
+        print("ob",ob)
+        aa=ob.name
+        ab=ob.place
+        print("aa",aa)
+        pha=hos_phar.objects.filter(name=aa,place=ab)
+        return render(request,"hospital/pha_hos_view.html",{"pha":pha,"hos":ob})
+    return HttpResponse("<script>alert('Please login as Hospital');window.location.href='/login/';</script>")
+def del_h_phar(request):
+    print("phar delete")
+    if request.session.has_key('uid'):
+        z=request.session['uid']
+        obj=login_tb.objects.filter(lid=z)
+        for i in obj:
+            typ=i.usertype
+    print(typ)
+    if request.session.has_key('uid') and typ=="hospital":
+        a=request.POST.get("name")
+        b=request.POST.get("phon")
+        c=request.POST.get("email")
+        f=request.POST.get("uname")
+        g=request.POST.get("pass")
+        h=request.POST.get("out")
+        if(h=="out"):
+            obj=login_tb.objects.filter(username=f,password=g)
+            obj.delete()
+            ob=hos_phar.objects.filter(cont_name=a,ph_no=b,user=f,passw=g)
+            ob.delete()
+            return HttpResponse("<script>alert('Pharmacy Successfully Removed');window.location.href='/hm_hosp/';</script>")
+        return HttpResponse("<script>alert('error');window.location.href='/hm_hosp/';</script>")
+    return HttpResponse("<script>alert('Please login as Hospital');window.location.href='/login/';</script>")
+def edit_hos(request):
+    print("hosp profile")
+    if request.session.has_key('uid'):
+        z=request.session['uid']
+        obj=login_tb.objects.filter(lid=z)
+        for i in obj:
+            typ=i.usertype
+    print(typ)
+    if request.session.has_key('uid') and typ=="hospital":
+        hosp=hosp_regis.objects.get(lid=z)
+        data=login_tb.objects.get(lid=z)
+        return render(request,"hospital/edit_prof.html",{"hosp":hosp,"data":data})
+    return HttpResponse("<script>alert('Please login as Hospital');window.location.href='/login/';</script>")
+def upd_hos(request):
+    print("hosp profile")
+    if request.session.has_key('uid'):
+        z=request.session['uid']
+        obj=login_tb.objects.filter(lid=z)
+        for i in obj:
+            typ=i.usertype
+    print(typ)
+    if request.session.has_key('uid') and typ=="hospital":
+        a=request.POST.get("cont_name")
+        b=request.POST.get("cont_no")
+        c=request.POST.get("email")
+        d=request.POST.get("pass")
+        print("a","b","c","d",a,b,c,d)
+        obj=hosp_regis.objects.get(lid=z)
+        obj.cont_name=a
+        obj.ph_no=b
+        obj.email=c
+        obj.save()
+        ob=login_tb.objects.get(lid=z)
+        ob.password=d
+        ob.save()
+        return HttpResponse("<script>alert('Profile Successfully updated');window.location.href='/hm_hosp/';</script>")
+    return HttpResponse("<script>alert('Please login as Hospital');window.location.href='/login/';</script>")
+        
+    
+#--------------DOCTOR------------------------------------------------------
+
+def doct_hm(request):
+    if request.session.has_key('uid'):
+        c=request.session['uid']
+        obj=login_tb.objects.filter(lid=c)
+        for i in obj:
+            typ=i.usertype
+    if request.session.has_key('uid') and typ=="doctor":
+        data=doc_regis.objects.get(lid=c)
+        print (request.session['uid'])
+        return render(request,"doctor/dr_homelog.html",{"user":data})
+    else:
+        return HttpResponse("<script>alert('Please login using username and password');window.location.href='/login/';</script>")
+def dr_bk_vw(request):
+    print ("dr bking vw")
+    if request.session.has_key('uid'):
+        c=request.session['uid']
+        obj=login_tb.objects.filter(lid=c)
+        for i in obj:
+            typ=i.usertype
+    if request.session.has_key('uid') and typ=="doctor":
+        data=doc_regis.objects.get(lid=c)
+        print("ok")
+        from datetime import date
+        today = date.today()
+        print(today)
+        book=booking_tb.objects.filter(did=data.did,date=today)
+        return render(request,"doctor/Patient_dr_bk_vw.html",{"book":book,"user":data})
+    else:
+        return HttpResponse("<script>alert('Please login using username and password');window.location.href='/login/';</script>")
+
+def qrcheck_dr(request):
+    c=request.session['uid']
+    global pat
+    print("checkqr")
+    val="9"
+    s=request.FILES["files"]
+    if s:
+        fs=  FileSystemStorage("app\\static\\res")
+        try:
+            os.remove("app\\static\\res\\out.png")
+        except:
+            pass
+        fs.save("out.png",s)
+        try:
+            img = cv2.imread('app\\static\\res\\out.png')
+            d = decode(img)
+            val=d[0].data.decode('ascii')
+           
+        except Exception as e:
+            print("cannot read",e)
+    print("Value: ",val)
+    pat=int(val)
+    user=doc_regis.objects.get(lid=c)
+    obb=patient_regis.objects.filter(lid=int(val))
+    if(obb.count()==0):
+        return HttpResponse("<script>alert('No Data Available. check crct qr');window.location.href='/doct_hm/';</script>")
+    else:
+        ob=patient_regis.objects.get(lid=int(val))
+    from datetime import date
+    today = date.today()
+    ob.date=today
+    dates=ob.dob
+    ag = int(today.year) - int(dates.year)
+    ob.age=ag
+    test=lab_tb.objects.all().filter(pid=int(val)).order_by('-date')
+    pre=phar_tb.objects.all().filter(pid=int(val)).order_by('-date')
+    return render(request,"doctor/qr_pat_page.html",{"data":ob,"user":user,"phar":pre,"lab":test})
+
+def back(request):
+    c=request.session['uid']
+    user=doc_regis.objects.get(lid=c)
+    global pat
+    ob=patient_regis.objects.get(lid=int(pat))
+    test=lab_tb.objects.all().filter(pid=int(pat)).order_by('-date')
+    pre=phar_tb.objects.all().filter(pid=int(pat)).order_by('-date')
+    from datetime import date
+    today = date.today()
+    ob.date=today
+    dates=ob.dob
+    ag = int(today.year) - int(dates.year)
+    ob.age=ag
+    return render(request,"doctor/qr_pat_page.html",{"data":ob,"user":user,"phar":pre,"lab":test})
+
+def test_dr(request):
+    c=request.session['uid']
+    a=request.POST.get("test")
+    b=request.POST.get("date")
+    d=request.POST.get("pid")
+    obj=doc_regis.objects.get(lid=c)
+    ob=lab_tb(name="Not visited",pid=d,test=a,doc=obj.name,hos=obj.hos,date=b,result="Not Avilable"
+              )
+    ob.save()
+    return HttpResponse("<script>alert('Test successfully added');window.location.href='/back/';</script>")
+
+def pre_dr(request):
+    c=request.session['uid']
+    a=request.POST.get("date")
+    b=request.POST.get("dis")
+    d=request.POST.get("med")
+    e=request.POST.get("times")
+    f=request.POST.get("day")
+    g=request.POST.get("pid")
+    obj=doc_regis.objects.get(lid=c)
+    ob=phar_tb(name="Not visited",pid=g,date=a,doc=obj.name,hos=obj.hos,disease=b,med=d,timing=e,days=f
+              )
+    ob.save()
+    return HttpResponse("<script>alert('Prescription successfully added');window.location.href='/back/';</script>")
+    
+    
+
+#--------------PATIENT----------------------------------------------------------------------------------------------------------------------
+
+def pat_hm(request):
+    if request.session.has_key('uid'):
+        c=request.session['uid']
+        obj=login_tb.objects.filter(lid=c)
+        for i in obj:
+            typ=i.usertype
+    if request.session.has_key('uid') and typ=="patient":
+        user=patient_regis.objects.get(lid=c)
+        print (request.session['uid'])
+        return render(request,"patient/patient_hm.html",{"user":user})
+    else:
+        return HttpResponse("<script>alert('Please login using username and password');window.location.href='/login/';</script>")
+def for_log(request):
+    return render(request,"patient_log.html",{})
+def check_log(request):
+    print ("in login_check_after for book appoitment")
+    count=0
+    if request.method=="POST":
+        un=request.POST.get("uname")
+        ps=request.POST.get("pass")
+        print ("un",un,"ps",ps)
+        user=login_tb.objects.filter(username=un,password=ps)
+        print (user)
+        count=user.count()
+        if count==0:
+            print ("Invalid User")
+            return HttpResponse("<script>alert('Invalid User');window.location.href='/index/';</script>")
         else:
-##            return HttpResponse("plz login")
-            return render(request,"index.html",{})
-    except Exception as e:
-        print ("logout error")
-    return render(request,"index.html",{})
+            for i in user:
+                typ=i.usertype
+                llid=i.lid
+            print ("type",typ,"username",un,"paswd",ps,"usercount",count,"userid",llid)
+            if count==0 or count>1:
+                return render(request,"index.html",{"msg":"Invalid Userdata"})
+            if count==1 and typ=="patient":
+                print ("patient page")
+                user_dt=patient_regis.objects.get(lid=llid)
+                request.session['uid']=user_dt.lid
+                print ("session=: created ",request.session['uid'])
+                print ("user loged in is",request.session['uid'])
+                uname=patient_regis.objects.get(lid=request.session['uid'])
+                p_nm=uname.name
+                global bk_loc,bk_hos,bk_dist,bk_dr,bk_dt,bk_tym
+                print ("bk_loc",bk_loc)
+                print ("bk_hos",bk_hos)
+                print ("bk_dist",bk_dist)
+                print ("bk_dr",bk_dr)
+                print ("bk_dt",bk_dt)
+                print ("bk_tym",bk_tym)
+                import datetime
+                date_str = bk_dt # The date - 29 Dec 2017
+                format_str = '%m/%d/%Y' # The format
+                datetime_obj = datetime.datetime.strptime(date_str, format_str)
+                print(datetime_obj.date())
+                bk_dt=str(datetime_obj.date())
+                check_bk=booking_tb.objects.filter(did=bk_dr,date=bk_dt,time=bk_tym)
+                print ("no of bookings",check_bk.count())
+                if check_bk.count()<=2:
+                    print ("check_bk.count()",check_bk.count())
+                    hsp=hosp_regis.objects.get(hid=bk_hos)
+                    dr=doc_regis.objects.get(did=bk_dr)
+                    pat=patient_regis.objects.get(lid=request.session['uid'])
+                    gen=pat.gender
+                    plc=pat.place
+                    from datetime import date
+                    today = date.today()
+                    dates=pat.dob
+                    ag = int(today.year) - int(dates.year)
+                    obj=booking_tb(
+                        pid=request.session['uid'],did=bk_dr,location=bk_loc,age=ag,place=plc,gender=gen,status="Requested",specialization=bk_dist,time=bk_tym,date=bk_dt,hid=bk_hos,hosp_name=hsp.name,dr_name=dr.name,name=p_nm
+                        )
+                    obj.save()
+                    print ("booked")
+                    bk_loc=""
+                    bk_hos=""
+                    bk_dist=""
+                    bk_dr=""
+                    bk_dt=""
+                    bk_tym=""
+                    print ("global deleted")
+                    print ("bk_loc",bk_loc)
+                    print ("bk_hos",bk_hos)
+                    print ("bk_dist",bk_dist)
+                    print ("bk_dr",bk_dr)
+                    print ("bk_dt",bk_dt)
+                    print ("bk_tym",bk_tym)
+                    return HttpResponse("<script>alert('Booked Successful');window.location.href='/pat_hm/';</script>")
+                else:
+                    return HttpResponse("<script>alert('Sorry booking closed for this day');window.location.href='/pat_hm/';</script>")
+                
+        return render(request,"index.html",{"msg":"Invalid User"})
+
+def vw_dr(request):
+    if request.session.has_key('uid'):
+        c=request.session['uid']
+        obj=login_tb.objects.filter(lid=c)
+        for i in obj:
+            typ=i.usertype
+    if request.session.has_key('uid') and typ=="patient":
+        obj=booking_tb.objects.filter(pid=c)
+        return render(request,"patient/view_appoinment.html",{"vw":obj})
+
+def pt_test(request):
+    if request.session.has_key('uid'):
+        c=request.session['uid']
+        obj=login_tb.objects.filter(lid=c)
+        for i in obj:
+            typ=i.usertype
+    if request.session.has_key('uid') and typ=="patient":
+        lab=lab_tb.objects.all().filter(pid=c).order_by('-date')
+        return render(request,"patient/lab_history.html",{"lab":lab})
+def pt_pre(request):
+    if request.session.has_key('uid'):
+        c=request.session['uid']
+        obj=login_tb.objects.filter(lid=c)
+        for i in obj:
+            typ=i.usertype
+    if request.session.has_key('uid') and typ=="patient":
+        pres=phar_tb.objects.all().filter(pid=c).order_by('-date')
+        return render(request,"patient/pres_history.html",{"pres":pres})
+    
+    
+
+#--------------PHARMACY------------------------------------------------------------------------------------------------------------------------
+
+def pha_hm(request):
+    if request.session.has_key('uid'):
+        c=request.session['uid']
+        obj=login_tb.objects.filter(lid=c)
+        for i in obj:
+            typ=i.usertype
+    if request.session.has_key('uid') and typ=="pharmacy":
+        user=hos_phar.objects.get(lid=c)
+        return render(request,"pharmacy/phar_hmlog.html",{"user":user})
+    else:
+        return HttpResponse("<script>alert('Please login using lab username and password');window.location.href='/login/';</script>")
+    return HttpResponse("<script>alert('Please login using lab username and password');window.location.href='/login/';</script>")
+
+def presc_pha(request):
+    c=request.session['uid']
+    global pat
+    print("checkqr")
+    val="9"
+    s=request.FILES["files"]
+    if s:
+        fs=  FileSystemStorage("app\\static\\res")
+        try:
+            os.remove("app\\static\\res\\out.png")
+        except:
+            pass
+        fs.save("out.png",s)
+        try:
+            img = cv2.imread('app\\static\\res\\out.png')
+            d = decode(img)
+            val=d[0].data.decode('ascii')
+           
+        except Exception as e:
+            print("cannot read",e)
+    print("Value: ",val)
+    pat=int(val)
+    user=hos_phar.objects.get(lid=c)
+    obb=patient_regis.objects.filter(lid=int(val))
+    if(obb.count()==0):
+        return HttpResponse("<script>alert('No Data Available. check crct qr');window.location.href='/doct_hm/';</script>")
+    else:
+        ob=patient_regis.objects.get(lid=int(val))
+    from datetime import date
+    today = date.today()
+    ob.date=today
+    dates=ob.dob
+    ag = int(today.year) - int(dates.year)
+    ob.age=ag
+    pre=phar_tb.objects.all().filter(pid=int(val),name="Not visited").order_by('-date')
+    return render(request,"pharmacy/qrcode_after.html",{"data":ob,"user":user,"phar":pre})
+
+def pstatus(request):
+    c=request.session['uid']
+    user=hos_phar.objects.get(lid=c)
+    a=request.POST.get("date")
+    b=request.POST.get("hos")
+    d=request.POST.get("pt")
+    e=request.POST.get("doc")
+    f=request.POST.get("llid")
+    obj=phar_tb.objects.get(pid=d,doc=e,date=a,hos=b,llid=f)
+    obj.name=user.name
+    obj.save()
+    return render(request,"pharmacy/phar_hmlog.html",{"user":user})
+
+def vew_presc(request):
+    c=request.session['uid']
+    user=hos_phar.objects.get(lid=c)
+    a=user.name
+    print(a)
+    from datetime import date
+    time=date.today()
+    today=time.strftime("%B %d, %Y")
+    print(time.strftime("%B %d, %Y"))
+    data=phar_tb.objects.all().filter(hos=user.name,name="Not visited",date=today).order_by('-date')
+    if(data.count()==0):
+        return HttpResponse("<script>alert('No Prescription Request Available');window.location.href='/pha_hm/';</script>")
+    else:
+        obj=phar_tb.objects.get(hos=user.name,name="Not visited",date=today)
+    ab=obj.pid
+    print(ab)
+    pat=patient_regis.objects.get(lid=ab)
+    return render(request,"pharmacy/pres_view.html",{"user":user,"pres":data,"pat":pat})
+#---------------LAB-------------------------------------------------------------------------------------------------------------------------------
+
+def homelab(request):
+    if request.session.has_key('uid'):
+        c=request.session['uid']
+        obj=login_tb.objects.filter(lid=c)
+        for i in obj:
+            typ=i.usertype
+    if request.session.has_key('uid') and typ=="laboratory":
+        user=hos_lab.objects.get(lid=c)
+        return render(request,"lab/lab_hmlog.html",{"user":user})
+    else:
+        return HttpResponse("<script>alert('Please login using lab username and password');window.location.href='/login/';</script>")
+    return HttpResponse("<script>alert('Please login using lab username and password');window.location.href='/login/';</script>")
+
+def tst_lab(request):
+    c=request.session['uid']
+    global pat
+    print("checkqr")
+    val="9"
+    s=request.FILES["files"]
+    if s:
+        fs=  FileSystemStorage("app\\static\\res")
+        try:
+            os.remove("app\\static\\res\\out.png")
+        except:
+            pass
+        fs.save("out.png",s)
+        try:
+            img = cv2.imread('app\\static\\res\\out.png')
+            d = decode(img)
+            val=d[0].data.decode('ascii')
+           
+        except Exception as e:
+            print("cannot read",e)
+    print("Value: ",val)
+    pat=int(val)
+    user=hos_lab.objects.get(lid=c)
+    obb=patient_regis.objects.filter(lid=int(val))
+    if(obb.count()==0):
+        return HttpResponse("<script>alert('No Data Available. check crct qr');window.location.href='/doct_hm/';</script>")
+    else:
+        ob=patient_regis.objects.get(lid=int(val))
+    from datetime import date
+    today = date.today()
+    ob.date=today
+    dates=ob.dob
+    ag = int(today.year) - int(dates.year)
+    ob.age=ag
+    lab=lab_tb.objects.all().filter(pid=int(val),name="Not visited").order_by('-date')
+    return render(request,"lab/qrcode_after_lab.html",{"data":ob,"user":user,"lab":lab})
+
+def lstatus(request):
+    c=request.session['uid']
+    user=hos_lab.objects.get(lid=c)
+    a=request.POST.get("date")
+    b=request.POST.get("test")
+    d=request.POST.get("pt")
+    e=request.POST.get("doc")
+    f=request.POST.get("llid")
+    obj=lab_tb.objects.get(pid=d,doc=e,date=a,test=b,llid=f)
+    obj.name=user.name
+    obj.save()
+    return render(request,"lab/lab_hmlog.html",{"user":user})
+
+def vow_lab(request):
+    c=request.session['uid']
+    user=hos_lab.objects.get(lid=c)
+    a=user.name
+    print(a)
+    from datetime import date
+    time=date.today()
+    today=time.strftime("%B %d, %Y")
+    print(time.strftime("%B %d, %Y"))
+    data=lab_tb.objects.all().filter(hos=user.name,name="Not visited",date=today).order_by('-date')
+    if(data.count()==0):
+        return HttpResponse("<script>alert('No Test Request Available');window.location.href='/homelab/';</script>")
+    else:
+        obj=lab_tb.objects.get(hos=user.name,name="Not visited",date=today)
+    ab=obj.pid
+    print(ab)
+    pat=patient_regis.objects.get(lid=ab)
+    return render(request,"lab/lab_view.html",{"user":user,"pres":data,"pat":pat})
+
+
+#-----------------------------------------------Booking------------------------------------------------------------------------------------
 
 def list_hosp(request):
     print ("list_hosp")
     data={}
     loc=request.GET.get("loc")
     print ("District___________________________________________",loc)
-    ob=serializers.serialize("json",hosptital_regis.objects.filter(location=loc))
-    data["dt1"]=json.loads(ob)
-    print (data)
-    return JsonResponse(data,safe=False)
-def list_lab(request):
-    print ("list_lab")
-    data={}
-    loc=request.GET.get("loc")
-    print ("District___________________________________________",loc)
-    ob=serializers.serialize("json",lab_regis.objects.filter(location=loc))
-    data["dt1"]=json.loads(ob)
-    print (data)
-    return JsonResponse(data,safe=False)
-def list_phar(request):
-    print ("list_phar")
-    data={}
-    loc=request.GET.get("loc")
-    print ("District___________________________________________",loc)
-    ob=serializers.serialize("json",pharmacy_tb.objects.filter(location=loc))
-    data["dt1"]=json.loads(ob)
-    print (data)
-    return JsonResponse(data,safe=False)
-def list_cat(request):
-    print ("list_cat")
-    data={}
-    cat=request.GET.get("catt")
-    print ("Categorey___________________________________________",cat)
-    ob=serializers.serialize("json",med_cat.objects.all())
-    data["dt1"]=json.loads(ob)
-    print (data)
-    return JsonResponse(data,safe=False)
-def list_med(request):
-##    print "list_med"
-##    data={}
-##    cat=request.GET.get("mcat")
-##    phar=request.GET.get("phar")
-##    print "Categorey_______________________phar____________________",cat,phar
-##    ob=serializers.serialize("json",medicine.objects.filter(med_cid=cat))
-##    data["dt1"]=json.loads(ob)
-##    print data
-##    return JsonResponse(data,safe=False)
-    print ("list_cat")
-    data={}
-    catg=request.GET.get("mcat")
-    phar=request.GET.get("phar")
-
-    print ("Categorey_____________________pharmacy______________________",catg,phar)
-    ob=serializers.serialize("json",medicine_tb.objects.filter(med_cid=catg,phar_id=phar))
+    ob=serializers.serialize("json",hosp_regis.objects.filter(place=loc))
     data["dt1"]=json.loads(ob)
     print (data)
     return JsonResponse(data,safe=False)
@@ -834,11 +1571,7 @@ def list_dept(request):
     data={}
     hosp_id=request.GET.get("hosp_id")
     print ("hospital id___________________________________________",hosp_id)
-##    ob =doctor_regis.objects.raw('SELECT distinct(specialization) FROM hms_app_doctor_regis where hid=%s',[hosp_id])
-##    print "ob",ob,type(ob)
-##    ob=serializers.serialize("json",doctor_regis.objects.raw('SELECT distinct(specialization) FROM hms_app_doctor_regis where hid=%s',[hosp_id]))
-##    print ob,"OB--------------------------------------"
-    ob=serializers.serialize("json",doctor_regis.objects.filter(hid=hosp_id))
+    ob=serializers.serialize("json",doc_regis.objects.filter(hid=hosp_id))
     data["dt1"]=json.loads(ob)
     print (data)
     return JsonResponse(data,safe=False)
@@ -848,86 +1581,29 @@ def list_dr(request):
     dept=request.GET.get("dept")
     hosp_id=request.GET.get("hosp_id")
     print ("selected department id___________________________________________",dept,hosp_id)
-    ob=serializers.serialize("json",doctor_regis.objects.filter(specialization=dept,hid=hosp_id))
+    ob=serializers.serialize("json",doc_regis.objects.filter(special=dept,hid=hosp_id))
     data["dt1"]=json.loads(ob)
     print (data)
     return JsonResponse(data,safe=False)
-def list_details(request):
-    print ("list_details")
-    data={}
-    medcn=request.GET.get("medcn")
-    print ("selected medcn id___________________________________________",medcn)
-    ob=serializers.serialize("json",medicine_tb.objects.filter(med_id=medcn))
-    data["dt1"]=json.loads(ob)
-    print (data)
-    return JsonResponse(data,safe=False)
+def pt_hm_book(request):
+    if request.session.has_key('uid'):
+        c=request.session['uid']
+        obj=login_tb.objects.filter(lid=c)
+        for i in obj:
+            typ=i.usertype
+    if request.session.has_key('uid') and typ=="patient":
+        return render(request,"patient/book_appoinment.html",{})
+        
 def book_now(request):
     print ("in book_now page fn when user not login in")
+    global bk_loc,bk_hos,bk_dist,bk_dr,bk_dt,bk_tym
+    if request.session.has_key('uid'):
+        c=request.session['uid']
+        obj=login_tb.objects.filter(lid=c)
+        for i in obj:
+            typ=i.usertype
     if request.method=="POST":
-        global bk_loc,bk_hos,bk_dist,bk_dr,bk_dt,bk_tym
-        if request.session.has_key('uid'):
-            print ("user loged in is",request.session['uid'])
-            utype=login_tb.objects.get(lid=request.session['uid'])
-            print ("utype.usertype",utype.usertype)
-            if utype.usertype=="patient":
-                uname=patient_regis.objects.get(lid=request.session['uid'])
-                p_nm=uname.name
-                print ("p_nm",p_nm)
-                global bk_loc,bk_hos,bk_dist,bk_dr,bk_dt,bk_tym
-                bk_loc=request.POST.get("loc")
-                bk_hos=request.POST.get("selt_hosp")
-                bk_dist=request.POST.get("departmnt")
-                bk_dr=request.POST.get("dr")
-                bk_dt=request.POST.get("appointment_dt")
-                bk_tym=request.POST.get("appoint_tym")
-                import datetime
-                date_str = bk_dt # The date - 29 Dec 2017
-                format_str = '%d/%m/%Y' # The format
-                datetime_obj = datetime.datetime.strptime(date_str, format_str)
-                print(datetime_obj.date())
-                bk_dt=str(datetime_obj.date())
-                p_nm=uname.name
-                print ("bk_loc",bk_loc)
-                print ("bk_hos",bk_hos)
-                print ("bk_dist",bk_dist)
-                print ("bk_dr",bk_dr)
-                print ("bk_dt",bk_dt)
-                print ("bk_tym",bk_tym)
-                check_bk=booking_tb.objects.filter(did=bk_dr,date=bk_dt,time=bk_tym)
-                print ("no of bookings",check_bk.count())
-                if check_bk.count()<=2:
-                    hsp=hosptital_regis.objects.get(hid=bk_hos)
-                    dr=doctor_regis.objects.get(did=bk_dr)
-                    obj=booking_tb(
-                        pid=request.session['uid'],did=bk_dr,location=bk_loc,specialization=bk_dist,time=bk_tym,date=bk_dt,hid=bk_hos,hosp_name=hsp.hosp_nm,dr_name=dr.name,name=p_nm
-                        )
-                    obj.save()
-                    print ("booked")
-                    return HttpResponse("<script>alert('Booking Successful');window.location.href='/index/';</script>")
-                else:
-                    return HttpResponse("<script>alert('Sorry booking closed for this day');window.location.href='/dr_bk_msg/';</script>")
-                
-            else:
-                return HttpResponse("<script>alert('Invalid User, please login');window.location.href='/index/';</script>")            
-        else:
-            bk_loc=request.POST.get("loc")
-            bk_hos=request.POST.get("selt_hosp")
-            bk_dist=request.POST.get("departmnt")
-            bk_dr=request.POST.get("dr")
-            bk_dt=request.POST.get("appointment_dt")
-            bk_tym=request.POST.get("appoint_tym")
-            print ("bk_loc",bk_loc)
-            print ("bk_hos",bk_hos)
-            print ("bk_dist",bk_dist)
-            print ("bk_dr",bk_dr)
-            print ("bk_dt",bk_dt)
-            print ("bk_tym",bk_tym)
-            return render(request,"login_patient.html",{})
-    return render(request,"index.html",{})
-def do_booking(request):
-    print ("in do_booking fn")
-    if request.method=="POST":
-        if request.session.has_key('uid'):
+        if request.session.has_key('uid') and typ=="patient":
             user_dt=patient_regis.objects.get(lid=request.session['uid'])
             print ("user loged in is",request.session['uid'])
             uname=patient_regis.objects.get(lid=request.session['uid'])
@@ -947,1028 +1623,45 @@ def do_booking(request):
             print ("bk_tym",bk_tym)
             import datetime
             date_str = bk_dt # The date - 29 Dec 2017
-            format_str = '%d/%m/%Y' # The format
+            format_str = '%m/%d/%Y' # The format
             datetime_obj = datetime.datetime.strptime(date_str, format_str)
             print(datetime_obj.date())
             bk_dt=str(datetime_obj.date())
             check_bk=booking_tb.objects.filter(did=bk_dr,date=bk_dt,time=bk_tym)
             print ("no of bookings",check_bk.count())
             if check_bk.count()<=2:
-                hsp=hosptital_regis.objects.get(hid=bk_hos)
-                dr=doctor_regis.objects.get(did=bk_dr)
+                hsp=hosp_regis.objects.get(hid=bk_hos)
+                dr=doc_regis.objects.get(did=bk_dr)
+                pat=patient_regis.objects.get(lid=request.session['uid'])
+                gen=pat.gender
+                plc=pat.place
+                from datetime import date
+                today = date.today()
+                dates=pat.dob
+                ag = int(today.year) - int(dates.year)
                 obj=booking_tb(
-                    pid=request.session['uid'],did=bk_dr,location=bk_loc,specialization=bk_dist,time=bk_tym,date=bk_dt,hid=bk_hos,hosp_name=hsp.hosp_nm,dr_name=dr.name,name=p_nm
+                    pid=request.session['uid'],did=bk_dr,location=bk_loc,age=ag,place=plc,gender=gen,status="Requested",specialization=bk_dist,time=bk_tym,date=bk_dt,hid=bk_hos,hosp_name=hsp.name,dr_name=dr.name,name=p_nm
                     )
                 obj.save()
                 print ("booked")
                 msgg="booked"
                 llid=request.session['uid']
-                return HttpResponse("<script>alert('Booked Successful');window.location.href='/dr_bk_msg/';</script>")
+                return HttpResponse("<script>alert('Booked Successful');window.location.href='/pat_hm/';</script>")
             else:
-                return HttpResponse("<script>alert('Sorry booking closed for this day');window.location.href='/dr_bk_msg/';</script>")
-##            return render(request,"booking_pg.html",{"user_dtt":user_dt,"msg":msgg})
+                return HttpResponse("<script>alert('Sorry booking closed for this day');window.location.href='/login/';</script>")
+                           
         else:
-            return HttpResponse("<script>alert('Please Login');window.location.href='/index/';</script>")
-    return HttpResponse("<script>alert(' in do booking funtion Please Login');window.location.href='/index/';</script>")
-def medicine(request):
-    if request.session.has_key('uid'):
-        return render(request,"Buymedicine.html",{})
-    return HttpResponse("<script>alert('Please Login');window.location.href='/index/';</script>")
-def dr_bk_msg(request):
-    if request.session.has_key('uid'):
-        user_dt=patient_regis.objects.get(lid=request.session['uid'])
-        return render(request,"booking_pg.html",{"user_dtt":user_dt})
-    return HttpResponse("<script>alert('Please Login');window.location.href='/index/';</script>")
-def book_pg_msg(request):
-    return render(request,"booking_pg.html",{})
-    
-def login_check_after(request):
-    print ("in login_check_after")
-    count=0
-    if request.method=="POST":
-        un=request.POST.get("uname")
-        ps=request.POST.get("passwd")
-        print ("un",un,"ps",ps)
-        user=login_tb.objects.filter(username=un,password=ps)
-        print (user)
-        count=user.count()
-        if count==0:
-            print ("Invalid User")
-            return HttpResponse("<script>alert('Invalid User');window.location.href='/index/';</script>")
-        else:
-            for i in user:
-                typ=i.usertype
-                llid=i.lid
-            print ("type",typ,"username",un,"paswd",ps,"usercount",count,"userid",llid)
-            if count==0 or count>1:
-                return render(request,"index.html",{"msg":"Invalid Userdata"})
-            if count==1 and typ=="patient":
-                print ("patient page")
-                global bk_loc,bk_hos,bk_dist,bk_dr,bk_dt,bk_tym
-                user_dt=patient_regis.objects.get(lid=llid)
-                request.session['uid']=user_dt.lid
-                print ("session=: created ",request.session['uid'])
-                print ("user loged in is",request.session['uid'])
-                uname=patient_regis.objects.get(lid=request.session['uid'])
-                p_nm=uname.name
-                print ("p_nm",p_nm)
-
-                print ("bk_loc",bk_loc)
-                print ("bk_hos",bk_hos)
-                print ("bk_dist",bk_dist)
-                print ("bk_dr",bk_dr)
-                print ("bk_dt",bk_dt)
-                print ("bk_tym",bk_tym)
-                check_bk=booking_tb.objects.filter(did=bk_dr,date=bk_dt,time=bk_tym)
-                print ("no of bookings",check_bk.count())
-                if check_bk.count()<=2:
-                    print ("check_bk.count()",check_bk.count())
-                    hsp=hosptital_regis.objects.get(hid=bk_hos)
-                    dr=doctor_regis.objects.get(did=bk_dr)
-                    obj=booking_tb(
-                        pid=request.session['uid'],did=bk_dr,location=bk_loc,specialization=bk_dist,time=bk_tym,date=bk_dt,hid=bk_hos,hosp_name=hsp.hosp_nm,dr_name=dr.name,name=p_nm
-                        )
-                    obj.save()
-                    print ("booked")
-                    bk_loc=""
-                    bk_hos=""
-                    bk_dist=""
-                    bk_dr=""
-                    bk_dt=""
-                    bk_tym=""
-                    print ("global deleted")
-                    print ("bk_loc",bk_loc)
-                    print ("bk_hos",bk_hos)
-                    print ("bk_dist",bk_dist)
-                    print ("bk_dr",bk_dr)
-                    print ("bk_dt",bk_dt)
-                    print ("bk_tym",bk_tym)
-                    return HttpResponse("<script>alert('Booked Successful');window.location.href='/dr_bk_msg/';</script>")
-                else:
-                    return HttpResponse("<script>alert('Sorry booking closed for this day');window.location.href='/dr_bk_msg/';</script>")
-                
-        return render(request,"index.html",{"msg":"Invalid User"})
-
-def pharmacy_regs_admin(request):
-    print ("in pharmacy_regs")
-    if request.method=="POST":
-        a=request.POST.get("loc")
-        b=request.POST.get("uname")
-        c=request.POST.get("pass")
-        d=request.POST.get("pharname")
-        print ("a,b,c,d",a,b,c,d)
-        obj=login_tb(
-                username=b,password=c,usertype="pharmacy"
-                )
-        obj.save()
-        cnt=login_tb.objects.filter(username=b,password=c)
-        print ("phar cnt ",cnt.count())
-        if cnt.count()==1:
-            user=login_tb.objects.get(username=b,password=c)
-            l_id=user.lid
-            print ("l_id===================",l_id)
-            hhid=0
-            obj=pharmacy_tb(
-                phar_name=d,lid=l_id,hid=hhid,location=a
-                )
-            obj.save()
-            print ("registered")
-            return HttpResponse("<script>alert('Registration Successful');window.location.href='/admin_hm_log/';</script>")
-        else:
-            return HttpResponse("<script>alert('User already exist, please register with another username');window.location.href='/pharmacy_regs_admin/';</script>")
-    else:
-        return HttpResponse("<script>alert('Registration Unsuccessful');window.location.href='/admin_hm_log/';</script>")
-
-
-def out_pharmacy_regs_admin(request):
-    print ("in pharmacy_regs")
-    if request.method=="POST":
-        a=request.POST.get("loc")
-        b=request.POST.get("uname")
-        c=request.POST.get("pass")
-        d=request.POST.get("pharname")
-
-        try:
-            ob=pharmacy_tb.objects.get(phar_name=d,location=a)
-        except:
-            st=True
-        try:
-            ob=out_pharmacy_tb.objects.get(phar_name=d,location=a)
-            
-            print ("registered")
-            return HttpResponse("<script>alert('Registration Faild. Duplicates');window.location.href='/index/';</script>")
-        except Exception as ex:
-            if st:
-                obj=out_pharmacy_tb(
-                    phar_name=d,lid=1,hid=2,location=a,username=b,password=c
-                    )
-                obj.save()
-                return  HttpResponse("<script>alert('Registration Successful');window.location.href='/index/';</script>")
-            print("Exception: ",ex)
-            return HttpResponse("<script>alert('Registration Faild. Duplicates');window.location.href='/index/';</script>")
-
-    else:
-        return HttpResponse("<script>alert('Registration Unsuccessful');window.location.href='/admin_hm_log/';</script>")
-
-
-    
-def pharmacy_regs_hosp(request):
-    print ("in pharmacy_regs hospital")
-    if request.method=="POST":
-        a=request.POST.get("loc")
-        b=request.POST.get("uname")
-        c=request.POST.get("pass")
-        d=request.POST.get("pharname")
-        print ("a,b,c,d",a,b,c,d)
-        obj=login_tb(
-                username=b,password=c,usertype="pharmacy"
-                )
-        obj.save()
-        cnt=login_tb.objects.filter(username=b,password=c)
-        print ("phar cnt ",cnt.count())
-        if cnt.count()==1:
-            user=login_tb.objects.get(username=b,password=c)
-            l_id=user.lid
-            print ("l_id===================",l_id)
-            hhid=hosptital_regis.objects.get(lid=request.session['uid'])
-            print ("hos id",hhid.hid)
-            obj=pharmacy_tb(
-                phar_name=d,lid=l_id,hid=hhid.hid,location=a
-                )
-            obj.save()
-            print ("registered")
-            return HttpResponse("<script>alert('Registration Successful');window.location.href='/hosptl_hm/';</script>")
-        else:
-            return HttpResponse("<script>alert('User already exist, please register with another username');window.location.href='/pharmacy_regs_hosp/';</script>")
-    else:
-        return HttpResponse("<script>alert('Registration Unsuccessful');window.location.href='/hosptl_hm/';</script>")
-
-#----------------------------------Medicine---------------------------------
-def medicine(request):
-    if request.session.has_key('uid'):
-        return render(request,"Buymedicine.html",{})
-    return HttpResponse("<script>alert('Please Login');window.location.href='/index/';</script>")
-def vw_cart(request):
-    print ("in vw_cart")
-    if request.session.has_key('uid'):
-        usrid=request.session['uid']
-        my_cart=cart_tb.objects.filter(pid=usrid)
-        print ("no of items",my_cart.count())
-        no_items=my_cart.count()
-        return render(request,"view_cart.html",{"cart_items":my_cart,"itemcount":no_items})
-    return HttpResponse("<script>alert('Please Login');window.location.href='/index/';</script>")
-def vw_cart_order(request):
-    print ("in vw_cart_order")
-    if request.session.has_key('uid'):
-        usrid=request.session['uid']
-        my_order=odr_details.objects.filter(lid=usrid)
-        print ("no of orders",my_order.count())
-        no_items=my_order.count()
-        return render(request,"Patient_order_vw.html",{"cart_items":my_order,"itemcount":no_items})
-    return HttpResponse("<script>alert('Please Login');window.location.href='/index/';</script>")
-def update_cart(request):
-    print ("in update_cart")
-    if request.session.has_key('uid'):
-        usrid=request.session['uid']
-        my_cart=cart_tb.objects.filter(pid=usrid)
-        print ("no of items",my_cart.count())
-        no_items=my_cart.count()
-        return render(request,"view_cart.html",{"cart_items":my_cart,"itemcount":no_items})
-def add_cart(request):
-    print ("add_cart")
-    if request.method=="POST":
-        a=request.POST.get("medc_nm")
-        b=request.POST.get("sel_phar_nm")
-        c=request.POST.get("pric")
-        d=request.session['uid']
-        print ("med id,phar id,price,patient id ",a,b,c,d)
-        m_nm=medicine_tb.objects.get(med_id=a)
-        print (m_nm.med_name)
-        p_nm=pharmacy_tb.objects.get(phar_id=b)
-        print (p_nm.phar_name)
-        pat_nm=patient_regis.objects.get(lid=request.session['uid'])
-        obj=cart_tb(
-                med_name=m_nm.med_name,phar_id=b,phar_name=p_nm.phar_name,pid=request.session['uid'],name=pat_nm.name,price=c
-                )
-        obj.save()
-        print ("added to cart")
-        return HttpResponse("<script>alert('added to cart Successful');window.location.href='/medicine/';</script>")
-    else:
-        return HttpResponse("<script>alert('Registration Unsuccessful');window.location.href='/index/';</script>")
-
-import webbrowser
-def delete_pdt(request):
-    print ("delete_pdt")
-    if request.session.has_key('uid'):
-        itid=request.GET.get("itid") 
-        print ("itid",itid)
-        ob=cart_tb.objects.get(cart_id=itid)
-        ob.delete()
-        print ("deleted")
-        usrid=request.session['uid']
-        my_cart=cart_tb.objects.filter(pid=usrid)
-        print ("no of items",my_cart.count())
-        no_items=my_cart.count()
-        return HttpResponse("<script>alert('Delete from cart');window.location.href='/vw_cart/';</script>")
-    else:
-        return render(request,"index.html",{"msg":"Invalid User"})
-##    return render(request,"view_cart.html",{"cart_items":my_cart,"itemcount":no_items})
-##    data={}
-##    ob=serializers.serialize("json",product_tb.objects.all())
-##    data["dt1"]=json.loads(ob)
-##    print data
-##    return JsonResponse(data,safe=False)
-##    return HttpResponse("deleted")
-def cart_sum(request):
-    print ("not used--------------------------------------------------")
-    print (cart_sum)
-    return HttpResponse("<script>alert('quantity added');window.location.href='/update_cart/';</script>")
-def placeorder(request):
-    print ("in placeorder")
-    if request.method=="POST":
-        bilno=''
-        for i in range(10):
-            n=random.randrange(0,9)
-            bilno=bilno+str(n)
-        print ("bilno",bilno)
-        a=request.POST.get("funame")
-        b=request.POST.get("mob")
-        c=request.POST.get("adr")
-        d=request.POST.get("phname")
-        e=request.POST.get("qunt")
-        f=request.POST.get("pdtnm")
-        g=request.POST.get("prcc")
-        print ("a,b,c,d,e,f,g",a,b,c,d,e,f,g)
-        phar_list=((str(d).replace("u+",''))).replace("+",'').split(",")
-        print ("length",len(phar_list))
-        arylen=len(phar_list)/2
-        print ("arylen",arylen)
-        qu_list=((str(e).replace("u+",''))).replace("+",'').split(",")
-        pdt_list=((str(f).replace("u+",''))).replace("+",'').split(",")
-        pr_list=((str(g).replace("u+",''))).replace("+",'').split(",")
-        print ("phar_list-------",phar_list)
-        print ("qu_list---------",qu_list)
-        print ("(pdt_list--------",pdt_list)
-        print ("pr_list---------",pr_list)
-        dy=datetime.now().strftime("%Y-%m-%d")
-        print ("date",dy)  
-        obj=odr_delivry(
-                lid=request.session['uid'],ful_name=a,ph_no=b,pay_typ="COD",addres=c,billno=int(bilno)
-                )
-        obj.save()
-        for i in range(0,len(phar_list)-1):
-            print (i)
-            pharid=pharmacy_tb.objects.get(phar_name=phar_list[i])
-            print ("paharmy id",pharid.phar_id)
-            phrid=pharid.phar_id
-            tot=int(qu_list[i]) * int(pr_list[i])
-            print ("tot",tot)
-            obj1=odr_details(
-                lid=request.session['uid'],billno=int(bilno),med_name=pdt_list[i],phar_id=int(phrid),phar_name=phar_list[i],quantity=int(qu_list[i]),price=int(pr_list[i]),total=tot,date=dy
-                )
-            obj1.save()
-            print ("inserted")
-        ob=cart_tb.objects.filter(pid=request.session['uid'])
-        ob.delete()
-        print ("deleted from cart")
-    return HttpResponse("<script>alert('Medicine Ordered Successfully');window.location.href='/patient_home/';</script>")
-#---------------------------------------lab booking--------------------------------------------------------------------------
-
-def book_lab(request):
-    print ("booking lab")
-    if request.method=="POST":
-        if request.session.has_key('uid'):
-            print ("user loged in is",request.session['uid'])
-            utype=login_tb.objects.get(lid=request.session['uid'])
-            print ("utype.usertype",utype.usertype)
-
-                   
-            if utype.usertype=="patient":
-                bk_tstnm=''
-                bk_loc=request.POST.get("loc")
-                bk_lab=request.POST.get("selt_lab")
-                bk_tsts=request.POST.get("tstname")
-                bk_tym=request.POST.get("bok_tym")
-                bk_dt=request.POST.get("appointment_dt")
-                print (type(bk_tsts))
-                asciistring = bk_tsts.encode("ascii")
-                print (type(asciistring))
-                print (asciistring,"-----------------------------------------------------")
-                tlsst=asciistring.split(",")
-                print ("----------",tlsst)
-                for i in tlsst:
-                    t=testtb.objects.get(tid=int(i))
-                    bk_tstnm=bk_tstnm+t.tstname+","
-##                print type(bk_tstnm),bk_tstnm[:-1]
-                bk_tsts=bk_tstnm[:-1]
-                print (bk_tsts)
-                print ("bk_loc",bk_loc)
-                print ("bk_lab",bk_lab)
-                print ("bk_tsts",bk_tsts)
-                print ("bk_tym",bk_tym)
-                print ("bk_dt",bk_dt)
-                lbnm=lab_regis.objects.get(lab_id=bk_lab)
-                obj=lab_bking(
-                    lab_id=bk_lab,lid=request.session['uid'],test_nms=bk_tsts,bk_time=bk_tym,lab_nm=lbnm.lab_nm,date=bk_dt,status="requested",notifica=1
-                    )
-                obj.save()
-                print ("lab booked")
-                return HttpResponse("<script>alert('Lab Booked Successfully');window.location.href='/patient_home/';</script>")
-            else:
-                return HttpResponse("not a registered patient")
-    return HttpResponse("<script>alert('not booked');window.location.href='/patient_home/';</script>")
-#--------------------------------booking views patient--------------------------------------------------------
-def dr_bk_vw(request):
-    print ("dr bking vw")
-    book=booking_tb.objects.filter(pid=request.session['uid'])
-    return render(request,"Patient_dr_bk_vw.html",{"books":book})
-
-def lab_bk_vw(request):
-    print ("lab bking vw")
-    book=lab_bking.objects.filter(lid=request.session['uid'])
-    return render(request,"Patient_lab_bk_vw.html",{"books":book})
-#--------------------------------update booking time--------------------------------------------------------
-def updt_bkng_tym(request):
-    print ("updt_bkng_tym")
-    if request.method=="POST":
-        pidd=request.POST.get("pidd")
-        appoint_tym=request.POST.get("appoint_tym")
-        pptnnm=request.POST.get("pptnnm")
-        pswd=request.POST.get("pswd")
-        dttt=request.POST.get("dttt")
-        bkid=request.POST.get("bkkidd")
-        print ("pidd,appoint_tym,pptnnm,pswd,bkid",pidd.strip(),appoint_tym.strip(),pptnnm.strip(),pswd.strip(),dttt.strip(),bkid.strip())
-        obj_update=booking_tb.objects.get(bid=int(bkid))
-        obj_update.time=appoint_tym.strip()
-        obj_update.status=2
-        obj_update.save()
-        password=pswd.strip()
-        ptdt=patient_regis.objects.get(lid=int(pidd))
-        pn=ptdt.name
-        print (pn)
-        tosend=ptdt.email
-        print (tosend)
-        drdt=doctor_regis.objects.get(lid=request.session['uid'])
-        frmsend=drdt.email
-        print (frmsend)
-        msg=str("Sorry "+pn+", Your appointment time on "+dttt.strip()+ " change to "+appoint_tym.strip())
-        print (msg)
-
-##        server=smtplib.SMTP('smtp.gmail.com',587)
-##        server.ehlo()
-##        server.starttls()
-##        server.login(frmsend,password)
-##        server.sendmail(frmsend,tosend,msg)
-##        server.close()  
-        return HttpResponse("<script>alert('Successfully Changed. Notification to patient will be send');window.location.href='/dr_Vw_bkngs/';</script>")
-    return HttpResponse("<script>alert('Mail Send Unsuccessfully');window.location.href='/dr_Vw_bkngs/';</script>")
-def updt_lab_bkng_tym(request):
-    print ("updt_lab_bkng_tym")
-    if request.method=="POST":
-##        pidd=request.POST.get("pidd")
-        bkidd=request.POST.get("bkidd")
-        appoint_tym=request.POST.get("appoint_tym")
-        bkngstatus=request.POST.get("bkstatus")
-        dttt=request.POST.get("dttt")
-        pswd=request.POST.get("pswd")
-##        pswd=request.POST.get("pswd")
-        print ("pidd,bkidd",bkidd.strip())
-        print ("appoint_tym",appoint_tym)
-        print ("bkngstatus",bkngstatus)
-        print ("dttt",dttt.strip())
-        print ("password",pswd)
-        pemil=lab_bking.objects.get(labbk_id=int(bkidd))
-        emil=patient_regis.objects.get(lid=pemil.lid)
-        tosend=emil.email
-        lb=lab_regis.objects.get(lab_id=pemil.lab_id)
-        frmsend=lb.email
-        print (tosend,frmsend)
-        pn=emil.name
-        lnm=lb.lab_nm
-##        nwtym=bkidd.strip()
-##        nwstatus=bkngstatus.strip()
-##        print "nwtym,nwstatus",nwtym,nwstatus
-        obj_update=lab_bking.objects.get(labbk_id=bkidd)
-        obj_update.bk_time=appoint_tym
-        obj_update.status=bkngstatus
-        obj_update.notifica=2
-        obj_update.save()
-        print ("updated")
-        msg=str("Dear " +pn+", Your "+lnm+" lab appointment  on "+dttt.strip()+ " at "+appoint_tym.strip()+ " was "+bkngstatus)
-        print (msg)
-        server=smtplib.SMTP('smtp.gmail.com',587)
-        server.ehlo()
-        server.starttls()
-        server.login(frmsend,pswd)
-        server.sendmail(frmsend,tosend,msg)
-        server.close() 
-        return HttpResponse("<script>alert('Booking Updated and notification mail send Successfully');window.location.href='/viewlabookings/';</script>")
-    return HttpResponse("<script>alert('Booking has no change');window.location.href='/viewlabookings/';</script>")
-def addtest(request):
-    print ("addtest")
-    user_dt=lab_regis.objects.get(lid=request.session['uid'])
-    users=patient_regis.objects.all()
-    return render(request,"addtest.html",{"user_dtt":user_dt,"data":users})
-def del_test(request):
-    print ("del_test")
-    user_dt=lab_regis.objects.get(lid=request.session['uid'])
-    test_dt=testtb.objects.filter(lab_id=user_dt.lab_id)
-    return render(request,"deltest.html",{"tests":test_dt,"user_dtt":user_dt})
-def deleting_test(request):
-    print ("deleting_test")
-    if request.session.has_key('uid'):        
-        user_dt=lab_regis.objects.get(lid=request.session['uid'])
-        test_dt=testtb.objects.filter(lab_id=user_dt.lab_id)
-        tst=request.POST.get("tst") 
-        print ("tst",tst)
-        ob=testtb.objects.get(tid=tst)
-        ob.delete()
-        print ("deleted")
-        return HttpResponse("<script>alert('Deleted Successfully');window.location.href='/del_test/';</script>")
-    return HttpResponse("<script>alert('Please Login');window.location.href='/index/';</script>")
-def addingtest(request):
-    print ("addingtest")
-    if request.method=="POST":
-        print ("in addingtest post function")
-        testname=request.POST.get("testname")
-        pid=request.POST.get("username")
-        res=request.POST.get("res")
-        from datetime import datetime
-
-        dat=datetime.today().strftime('%d/%m/%Y')
-        print ("testname",testname,pid)
-        lab=lab_regis.objects.get(lid=request.session['uid'])
-        lbnm=lab.lab_id
-        obj=testtb(
-                tstname=testname,lab_id=lbnm
-                )
-        obj.save()
-        obj1=newtesttb(
-                tstname=testname,lab_id=lbnm,pid=int(pid),dates=str(dat),res=str(res)
-                )
-        obj1.save() 
-        return HttpResponse("<script>alert('Added  Successfully');window.location.href='/addtest/';</script>")
-    return HttpResponse("<script>alert('Insertion Failed');window.location.href='/addtest/';</script>")
-
-
-glpid,glname,glplace,glphno,glemail="","","","",""
-
-def showpdf(request):
-    global glpid,glname,glplace,glphno,glemail
-    pdfpath=request.POST.get("path")
-    webbrowser.open(pdfpath)
-    ob=newtesttb.objects.filter(pid=int(glpid))
-    md=medpatients.objects.filter(pid=int(glpid))
-    lb=labtesttab.objects.filter(pid=int(glpid))
-    pr=presctab.objects.filter(pid=int(glpid))
-    
-    try:
-        ob1=medicine_tb.objects.filter(phar_id=int(request.session['ppid']))
-    except:
-        ob1=medicine_tb.objects.filter(phar_id=0)
-    return render(request,"dr_usertests.html",{"data":ob,"email":glemail,"phno":glphno,"place":glplace,"name":glname,"pid":glpid,"phar":ob1,"med":md,"doc":pr,"lab":lb})
-    
-
-def viewtests(request):
-    global glpid,glname,glplace,glphno,glemail
-    pid=request.POST.get("pid")
-    name=request.POST.get("name")
-    place=request.POST.get("place")
-    phno=request.POST.get("phno")
-    email=request.POST.get("email")
-    glpid,glname,glplace,glphno,glemail=pid,name,place,phno,email
-    ob=newtesttb.objects.filter(pid=int(pid))
-    md=medpatients.objects.filter(pid=int(pid))
-    lb=labtesttab.objects.filter(pid=int(pid))
-    pr=presctab.objects.filter(pid=int(pid))
-    
-    try:
-        ob1=medicine_tb.objects.filter(phar_id=int(request.session['ppid']))
-    except:
-        ob1=medicine_tb.objects.filter(phar_id=0)
-    return render(request,"dr_usertests.html",{"data":ob,"email":email,"phno":phno,"place":place,"name":name,"pid":pid,"phar":ob1,"med":md,"doc":pr,"lab":lb})
-
-def addpresc(request):
-    pid=request.POST.get("pid")
-    d=request.POST.get("date")
-    pre=request.POST.get("presc")
-    ob=presctab(pid=int(pid),prdate=d,pres=pre,docid=int(request.session['did']),docname=request.session['dname']).save()
-    return render(request,"dr_homelog.html",{})
-
-def testres(request):
-    s = request.FILES["myfile"]
-    print (s)
-    if request.FILES["myfile"]:
-        fs = FileSystemStorage("App/static/files/")
-        fs.save(s.name, s)
-        filename ="App/static/files/"+s.name
-        pid=request.POST.get("pid")
-        d=request.POST.get("date")
-        name=request.POST.get("name")
-        res=request.POST.get("res")
-        ob=labtesttab(pid=int(pid),prdate=d,tname=name,labname=request.session['lname'],labid=int(request.session['lid']),result=res,path=filename).save()
-    return render(request,"dr_homelog.html",{})
-
-def medpat(request):
-    pid=request.POST.get("pid")
-    d=request.POST.get("date")
-    name=request.POST.get("medname")
-    t=request.POST.get("time")
-    dys=request.POST.get("days")
-    ob=medpatients(pid=int(pid),prdate=d,medname=name,pharid=int(request.session['ppid']),times=t,noday=dys).save()
-    return render(request,"dr_homelog.html",{})
-
-    
-def pharmviewtests(request):
-    pid=request.POST.get("pid")
-    name=request.POST.get("name")
-    place=request.POST.get("place")
-    phno=request.POST.get("phno")
-    email=request.POST.get("email")
-    ob=newtesttb.objects.filter(pid=int(pid))
-    return render(request,"pharm_usertests.html",{"data":ob,"email":email,"phno":phno,"place":place,"name":name})
-    
-
-
-def fetchtest(request):
-    print ("fetchtest")
-    data={}
-    labid=request.GET.get("tsts")
-    print ("labid",labid)
-    ob=serializers.serialize("json",testtb.objects.filter(lab_id=labid))
-    data["dt1"]=json.loads(ob)
-    print (data)
-    return JsonResponse(data,safe=False)
-def chatting(request):
-    print ("chatting")
-    if request.session.has_key('uid'):
-        user=patient_regis.objects.get(lid=request.session['uid'])
-        msg=request.POST.get("msgg")
-        drid=request.POST.get("ppid")
-        print ("message___________________________________________",msg)
-        print ("doctor___________________________________________",drid)
-
-        usr=patient_regis.objects.get(lid=request.session['uid'])
-        usrtyp=login_tb.objects.get(lid=request.session['uid'])
-        tm=datetime.now().strftime("%H:%M:%S")
-        print ("time",tm)
-        dy=datetime.now().strftime("%Y-%m-%d")
-        print ("date",dy)        
-        obj=chat_tb(
-            pid=usr.pid,pname=usr.name,did=drid,time=tm,date=dy,message=msg,lid=request.session['uid'],utype=usrtyp.usertype
-            )
-        obj.save()
-        print ("message saved")
-##        drid=doctor_regis.objects.get(lid=request.session['uid'])
-        fetmsg=chat_tb.objects.filter(did=drid,pid=usr.pid)
-        print ("fetmsg",fetmsg.count())
-        return render(request,"patient_vw_chat.html",{"chatmsg":fetmsg,"did":drid})
-
-#------------------------------------------------------------------------        
-        return render(request,"patient_chat.html",{"user_dtt":user,"drnm":dr})
-def vwchatwithdr(request):
-    print ("vwchatwithdr")
-    if request.method=="POST":
-        iddr=request.POST.get("iddr")
-        print ("doctor id",iddr,"pip------- lid",request.session['uid'])
-        pn=patient_regis.objects.get(lid=request.session['uid'])
-        fetmsg=chat_tb.objects.filter(pid=pn.pid,did=int(iddr))
-        print ("fetmsg",fetmsg.count())
-        return render(request,"patient_vw_chat.html",{"chatmsg":fetmsg,"did":iddr})
-    return HttpResponse("no messages")
-
-def vwchat_new(request):
-    print ("vwchatwithdr")
-    if request.method=="POST":
-        iddr=request.POST.get("iddr")
-        print ("doctor id",iddr,"pip------- lid",request.session['uid'])
-        fetmsg={}
-        try:
-            pn=doctor_regis.objects.get(lid=request.session['uid'])
-            fetmsg=chat_tb.objects.filter(pid=pn.pid,did=int(iddr))
-            print ("fetmsg",fetmsg.count())
-            return render(request,"patient_vw_chat.html",{"chatmsg":fetmsg,"did":iddr})
-        except:
-            pass
-        try:
-            pn=lab_regis.objects.get(lid=request.session['uid'])
-            fetmsg=chat_tb.objects.filter(pid=pn.pid,did=int(iddr))
-            print ("fetmsg",fetmsg.count())
-            return render(request,"patient_vw_chat.html",{"chatmsg":fetmsg,"did":iddr})
-        except:
-            pass
-        try:
-            pn=patient_regis.objects.get(lid=request.session['uid'])
-            fetmsg=chat_tb.objects.filter(pid=pn.pid,did=int(iddr))
-            print ("fetmsg",fetmsg.count())
-            return render(request,"patient_vw_chat.html",{"chatmsg":fetmsg,"did":iddr})
-        except:
-            pass
-        try:
-            pn=pharmacy_tb.objects.get(lid=request.session['uid'])
-            fetmsg=chat_tb.objects.filter(pid=pn.pid,did=int(iddr))
-            print ("fetmsg",fetmsg.count())
-            return render(request,"patient_vw_chat.html",{"chatmsg":fetmsg,"did":iddr})
-        except:
-            pass
-        
-    return HttpResponse("no messages")
-
-
-def patients_msgto_dr(request):
-    print ("patients_msgto_dr")
-    if request.session.has_key('uid'):
-        user=doctor_regis.objects.get(lid=request.session['uid'])
-        fetmsg=chat_tb.objects.filter(did=user.did)
-        print ("fetmsg",fetmsg.count())
-        return render(request,"msgstodr.html",{"chatmsg":fetmsg})
-    return HttpResponse("no messages")
-def msgfrm_p(request):
-    print ("msgfrm_p")
-    if request.method=="POST":
-        selt_pn=request.POST.get("selt_pn")
-        print ("selt_pn",selt_pn)
-        drid=doctor_regis.objects.get(lid=request.session['uid'])
-        fetmsg=chat_tb.objects.filter(did=drid.did,pid=int(selt_pn))
-        print ("fetmsg",fetmsg.count())
-        return render(request,"dr_vw_chat.html",{"chatmsg":fetmsg,"pid":selt_pn})
-    return HttpResponse("no messages")
-def sendrply(request):
-    print ("sendrply")
-    if request.session.has_key('uid'):
-        user=doctor_regis.objects.get(lid=request.session['uid'])
-        print ("sendrply chatting print")
-#------------------------------------chatting----------------------------
-        msg=request.POST.get("msgg")
-        ppid=request.POST.get("ppid")
-        print ("message___________________________________________",msg)
-        print ("patient___________________________________________",ppid)
-        pn=patient_regis.objects.get(pid=ppid)
-        usr=doctor_regis.objects.get(lid=request.session['uid'])
-        usrtyp=login_tb.objects.get(lid=request.session['uid'])
-        
-        tm=datetime.now().strftime("%H:%M:%S")
-        print ("time",tm)
-        dy=datetime.now().strftime("%Y-%m-%d")
-        print ("date",dy)        
-        obj=chat_tb(
-            pid=ppid,pname=pn.name,did=usr.did,time=tm,date=dy,message=msg,lid=request.session['uid'],utype=usrtyp.usertype
-            )
-        obj.save()
-        print ("message saved")
-        drid=doctor_regis.objects.get(lid=request.session['uid'])
-        fetmsg=chat_tb.objects.filter(did=drid.did,pid=int(ppid))
-        print ("fetmsg",fetmsg.count())
-        return render(request,"dr_vw_chat.html",{"chatmsg":fetmsg,"pid":ppid})
-    return HttpResponse("chat  failed")
-#------------------------------------profile updation----------------------------
-def hosp_prof_up(request):
-    print ("hosp_prof")
-    if request.method=="POST":
-        if request.session.has_key('uid'):
-            a=request.POST.get("hosname")
-            b=request.POST.get("uname")
-            c=request.POST.get("cont_name")
-            d=request.POST.get("cont_no")
-            e=request.POST.get("email")
-            f=request.POST.get("pass")
-            print ("profile details",a,b,c,d,e,f)
-            obj_update=login_tb.objects.get(lid=request.session['uid'])
-            obj_update.username=b
-            obj_update.password=f
-            obj_update.save()
-            print ("updated1")
-            obj_update1=hosptital_regis.objects.get(lid=request.session['uid'])
-            obj_update1.hosp_nm=a
-            obj_update1.contct_persn=c
-            obj_update1.contct_no=d
-            obj_update1.email=e
-            obj_update1.save()
-            print ("updated2")            
-        return HttpResponse("<script>alert('Profile updated successfully');window.location.href='/hospital_profile/';</script>")
-    return HttpResponse("<script>alert('please login');window.location.href='/index/';</script>")
-def patient_prof_up(request):
-    print ("patient_prof_up")
-    if request.method=="POST":
-        if request.session.has_key('uid'):
-            a=request.POST.get("name")
-            b=request.POST.get("em")
-            c=request.POST.get("gender")
-            d=request.POST.get("ph_no")
-            e=request.POST.get("uname")
-            f=request.POST.get("pass")
-            print ("profile details",a,b,c,d,e,f)
-            obj_update=login_tb.objects.get(lid=request.session['uid'])
-            obj_update.username=e
-            obj_update.password=f
-            obj_update.save()
-            print ("updated1")
-            obj_update1=patient_regis.objects.get(lid=request.session['uid'])
-            obj_update1.name=a
-            obj_update1.email=b
-            obj_update1.gender=c
-            obj_update1.ph_no=d
-            obj_update1.save()
-            print ("updated2")            
-        return HttpResponse("<script>alert('Profile updated successfully');window.location.href='/patient_hm/';</script>")
-    return HttpResponse("<script>alert('please login');window.location.href='/index/';</script>")
-def phar_prof_up(request):
-    print ("phar_prof_up")
-    if request.method=="POST":
-        if request.session.has_key('uid'):
-            a=request.POST.get("name")
-            b=request.POST.get("uname")
-            c=request.POST.get("pass")
-            print ("profile details",a,b,c)
-            obj_update=login_tb.objects.get(lid=request.session['uid'])
-            obj_update.username=b
-            obj_update.password=c
-            obj_update.save()
-            print ("updated1")
-            obj_update1=pharmacy_tb.objects.get(lid=request.session['uid'])
-            obj_update1.name=a
-            obj_update1.save()
-            print ("updated2")            
-        return HttpResponse("<script>alert('Profile updated successfully');window.location.href='/pharmacy_hm/';</script>")
-    return HttpResponse("<script>alert('please login');window.location.href='/index/';</script>")
-def dr_prof_up(request):
-    print ("dr_prof_up")
-    if request.method=="POST":
-        if request.session.has_key('uid'):
-            a=request.POST.get("name")
-            b=request.POST.get("email")
-            d=request.POST.get("uname")
-            c=request.POST.get("pass")
-            print ("profile details",a,b,c)
-            obj_update=login_tb.objects.get(lid=request.session['uid'])
-            obj_update.username=d
-            obj_update.password=c
-            obj_update.save()
-            print ("updated1")
-            obj_update1=doctor_regis.objects.get(lid=request.session['uid'])
-            obj_update1.name=a
-            obj_update1.email=b
-            obj_update1.save()
-            print ("updated2")            
-        return HttpResponse("<script>alert('Profile updated successfully');window.location.href='/dr_hm/';</script>")
-    return HttpResponse("<script>alert('please login');window.location.href='/index/';</script>")
-def lab_prof_up(request):
-    print ("lab_prof_up")
-    if request.method=="POST":
-        if request.session.has_key('uid'):
-            a=request.POST.get("name")
-            b=request.POST.get("email")
-            d=request.POST.get("uname")
-            c=request.POST.get("pass")
-            print ("profile details",a,b,c)
-            obj_update=login_tb.objects.get(lid=request.session['uid'])
-            obj_update.username=d
-            obj_update.password=c
-            obj_update.save()
-            print ("updated1")
-            obj_update1=lab_regis.objects.get(lid=request.session['uid'])
-            obj_update1.lab_nm=a
-            obj_update1.email=b
-            obj_update1.save()
-            print ("updated2")            
-        return HttpResponse("<script>alert('Profile updated successfully');window.location.href='/lab_home/';</script>")
-    return HttpResponse("<script>alert('please login');window.location.href='/index/';</script>")
-def admin_prof_up(request):
-    print ("admin_prof_up")
-    if request.method=="POST":
-        if request.session.has_key('uid'):
-            d=request.POST.get("uname")
-            c=request.POST.get("pass")
-            print ("profile details",d,c)
-            obj_update=login_tb.objects.get(lid=request.session['uid'])
-            obj_update.username=d
-            obj_update.password=c
-            obj_update.save()
-            print ("updated1")       
-        return HttpResponse("<script>alert('Profile updated successfully');window.location.href='/admin_home/';</script>")
-    return HttpResponse("<script>alert('please login');window.location.href='/index/';</script>")
-#---------------------------delete--------------------
-def delete_hos(request):
-    print ("delete_hos")
-    data={}
-    if request.session.has_key('uid'):        
-        hid=request.GET.get("hid") 
-        print ("hid",hid)
-        ob=hosptital_regis.objects.get(hid=int(hid))
-        ob.delete()
-        print ("Hospital deleted")
-        ob=serializers.serialize("json",hosptital_regis.objects.all())
-        data["dt1"]=json.loads(ob)
-        print (data)
-        return JsonResponse(data,safe=False)
-    return HttpResponse("<script>alert('please login');window.location.href='/index/';</script>")     
-def delete_phar(request):
-    print ("delete_phar")
-    data={}
-    if request.session.has_key('uid'):        
-        id=request.GET.get("id") 
-        print ("id",id)
-        ob=pharmacy_tb.objects.get(phar_id=int(id))
-        ob.delete()
-        print ("Pharmacy deleted")
-        ob=serializers.serialize("json",pharmacy_tb.objects.all())
-        data["dt1"]=json.loads(ob)
-        print (data)
-        return JsonResponse(data,safe=False)
-    return HttpResponse("<script>alert('please login');window.location.href='/index/';</script>")
-def delete_lab(request):
-    print ("delete_lab")
-    data={}
-    if request.session.has_key('uid'):        
-        id=request.GET.get("id") 
-        print ("id",id)
-        ob=lab_regis.objects.get(lab_id=int(id))
-        ob.delete()
-        print ("lab deleted")
-        ob=serializers.serialize("json",lab_regis.objects.all())
-        data["dt1"]=json.loads(ob)
-        print (data)
-        return JsonResponse(data,safe=False)
-    return HttpResponse("<script>alert('please login');window.location.href='/index/';</script>") 
-def delete_patient(request):
-    print ("delete_patient")
-    data={}
-    if request.session.has_key('uid'):        
-        id=request.GET.get("id") 
-        print ("id",id)
-        ob=patient_regis.objects.get(pid=int(id))
-        ob.delete()
-        print ("patient deleted")
-        ob=serializers.serialize("json",patient_regis.objects.all())
-        data["dt1"]=json.loads(ob)
-        print (data)
-        return JsonResponse(data,safe=False)
-    return HttpResponse("<script>alert('please login');window.location.href='/index/';</script>") 
-def delete_dr(request):
-    print ("delete_dr")
-    data={}
-    if request.session.has_key('uid'):        
-        id=request.GET.get("id") 
-        print ("id",id)
-        ob=doctor_regis.objects.get(did=int(id))
-        ob.delete()
-        print ("dr deleted")
-        ob=serializers.serialize("json",doctor_regis.objects.all())
-        data["dt1"]=json.loads(ob)
-        print (data)
-        return JsonResponse(data,safe=False)
-    return HttpResponse("<script>alert('please login');window.location.href='/index/';</script>") 
-
-
-#disease prediction
-def disease(request):
-    return render(request,'adminadddisease.html',{})
-
-#add disease by admin
-def adddisease(request):
-    disease=request.POST.get("disease")
-    symptom1=request.POST.get("symptom1")
-    symptom2=request.POST.get("symptom2")
-    symptom3=request.POST.get("symptom3")
-    symptom4=request.POST.get("symptom4")
-    s1=symptom1.lower()
-    s2=symptom2.lower()
-    s3=symptom3.lower()
-    s4=symptom4.lower()
-    d=disease.lower()
-    
-    print ("symptom1",s1)
-    print ("symptom2",s2)
-    print ("symptom3",s3)
-    print ("symptom4",s4)
-    print ("disease",d)
-    obj=diseasetable(disease=disease,symptom1=symptom1,symptom2=symptom2,symptom3=symptom3,symptom4=symptom4)
-    obj.save()
-    return HttpResponse("<script>alert('Successfully Added');window.location.href='/disease/'</script>")
-
-def viewdiseasepage(request):
-
-    return render(request,'symptoms.html',{})
-
-def healthcheck(request):
-    symptom1=request.POST.get("symptom1")
-    symptom2=request.POST.get("symptom2")
-    symptom3=request.POST.get("symptom3")
-    symptom4=request.POST.get("symptom4")
-    s1=symptom1.lower()
-    s2=symptom2.lower()
-    s3=symptom3.lower()
-    s4=symptom4.lower()
-    
-    print ("symptom1",s1)
-    print ("symptom2",s2)
-    print ("symptom3",s3)
-    print ("symptom4",s4)
-    obj=diseasetable.objects.filter(symptom1=s1,symptom2=s2,symptom3=s3,symptom4=s4)
-    c=obj.count()
-    if c==1:
-        obj=diseasetable.objects.get(symptom1=s1,symptom2=s2,symptom3=s3,symptom4=s4)
-        disease=obj.disease
-        result="<div style='height: 117px;width: 400px;background-color:#00f9ff;color: white;font-size: 50px;text-transform: capitalize;margin: auto;margin-top: 15%;padding: 39px 21px 10px 82px;'>"+disease+"</div>"
-        return HttpResponse(result)
-    else:
-        return HttpResponse("<script>alert('No Disease Found');window.location.href='/viewdiseasepage/'</script>")
-    
-
-def prescription(request):
-     obj=pharmacy_tb.objects.all()
-     return render(request,'prescription.html',{'detail':obj})
-
-def uploadprescription(request):
-    uid=request.session['uid']
-    number=request.POST.get("number")
-    prescription=request.FILES["prescription"]
-    pharmacy=request.POST.get("pharmacy")
-    print ("pharmacy",pharmacy)
-    print ("prescription",prescription)
-    print ("number",number)
-    status="Pending"
-    obj1=patient_regis.objects.get(lid=uid)
-    place=obj1.place
-    phone=obj1.ph_no
-    name=obj1.name
-    fs=FileSystemStorage("hms_app/static/prescription")
-    fs.save(prescription.name,prescription)
-    obj=prescriptiontable(number=number,prescription=prescription,pharmacy=pharmacy,status=status,userid=uid,place=place,phone=phone,name=name)
-    obj.save()
-    return HttpResponse("<script>alert('Uploaded Successfully,The medicine will be cash on delivery');window.location.href='/prescription/'</script>")
-    
-
-def pharmacyviewprescription(request):
-    uid=request.session['uid']
-    obj=prescriptiontable.objects.filter(pharmacy=uid)
-    return render(request,'pharmacyviewprescription.html',{'detail':obj})
-
-def presc_status(request):
-    id1=request.GET.get("id")
-    status=request.GET.get("status")
-   
-    print ("id1",id1)
-    obj=prescriptiontable.objects.get(id=id1)
-    obj.status=status
-    obj.save()
-    return HttpResponse("Successfully Updated")
-
-#updation
-def user_feedback(request):
-    return render(request,'user_feedback.html',{})
-
-def addfeedback(request):
-    userid=request.session["uid"]
-    obj=patient_regis.objects.get(lid=userid)
-    name=obj.name
-    print ("name",name)
-    feedback=request.POST.get("feedback")
-    ob1=feedbacktable(feedback=feedback,name=name,lid=userid)
-    ob1.save()
-    print ("feedback",feedback)
-    return HttpResponse('<script>alert("Thanks For Your Feedback");window.location.href="/user_feedback/"</script>')
-
-def viewfeedback(request):
-    obj=feedbacktable.objects.all()
-    return render(request,'adminviewfeedback.html',{'detail':obj})
+            bk_loc=request.POST.get("loc")
+            bk_hos=request.POST.get("selt_hosp")
+            bk_dist=request.POST.get("departmnt")
+            bk_dr=request.POST.get("dr")
+            bk_dt=request.POST.get("appointment_dt")
+            bk_tym=request.POST.get("appoint_tym")
+            print ("bk_loc",bk_loc)
+            print ("bk_hos",bk_hos)
+            print ("bk_dist",bk_dist)
+            print ("bk_dr",bk_dr)
+            print ("bk_dt",bk_dt)
+            print ("bk_tym",bk_tym)
+            return HttpResponse("<script>alert('Please Login');window.location.href='/for_log/';</script>")
+    return render(request,"index.html",{})         
