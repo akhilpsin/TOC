@@ -1,524 +1,682 @@
 {% load staticfiles %}
-
-<!doctype html>
+{% static "" as img %}
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <title>Colorlib Medi+</title>
+
+<head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+	
 
-    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300, 400, 700" rel="stylesheet">
-
-    <link rel="stylesheet" href="{% static 'home/css/bootstrap.css' %}">
-    <link rel="stylesheet" href="{% static 'home/css/animate.css' %}">
-    <link rel="stylesheet" href="{% static 'home/css/owl.carousel.min.css' %}">
-    <link rel="stylesheet" href="{% static 'home/css/bootstrap-datepicker.css' %}">
+    <title>Welcome to Touch of Care</title>
+	<link rel="icon" href="{% static 'index/img/icon.png' %}" type="image/x-icon">
+	
+    <!-- css -->
+    <link href="{% static 'index/css/bootstrap.min.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'index/font-awesome/css/font-awesome.min.css' %}" rel="stylesheet" type="text/css" />
+	<link rel="stylesheet" type="text/css" href="{% static 'index/plugins/cubeportfolio/css/cubeportfolio.min.css' %}">
+	<link href="{% static 'index/css/nivo-lightbox.css' %}" rel="stylesheet" />
+	<link href="{% static 'index/css/nivo-lightbox-theme/default/default.css' %}" rel="stylesheet" type="text/css" />
+	<link href="{% static 'index/css/owl.carousel.css' %}" rel="stylesheet" media="screen" />
+    <link href="{% static 'index/css/owl.theme.css' %}" rel="stylesheet" media="screen" />
+	<link href="{% static 'index/css/animate.css' %}" rel="stylesheet" />
+    <link href="{% static 'index/css/style.css' %}" rel="stylesheet">
+	<!-- boxed bg -->
+	<link id="bodybg" href="{% static 'index/bodybg/bg1.css' %}" rel="stylesheet" type="text/css" />
+	<!-- template skin -->
+	<link id="t-colors" href="{% static 'index/color/default.css' %}" rel="stylesheet">
+	<link rel="stylesheet" href="{% static 'home/css/bootstrap-datepicker.css' %}">
     <link rel="stylesheet" href="{% static 'home/css/jquery.timepicker.css' %}">
 
-    <link rel="stylesheet" href="{% static 'home/fonts/ionicons/css/ionicons.min.css' %}">
-    <link rel="stylesheet" href="{% static 'home/fonts/fontawesome/css/font-awesome.min.css' %}">
-    <link rel="stylesheet" href="{% static 'home/fonts/flaticon/font/flaticon.css' %}">
-
-
-    <!-- Theme Style -->
-    <link rel="stylesheet" href="{% static 'home/css/style.css' %}">
-	<!-- Meta tag Keywords -->
-
-	<!-- css files -->
-	<link rel="stylesheet" href="{% static 'home/css2/style.css' %}" type="text/css" media="all" />
-	<!-- Style-CSS -->
-	<link href="{% static 'home/css2/font-awesome.min.css' %}" rel="stylesheet">
-	<!-- Font-Awesome-Icons-CSS -->
-	<!-- //css files -->
-
-	<!-- web-fonts -->
-	<link href="//fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i&amp;subset=cyrillic,cyrillic-ext,greek,greek-ext"
-	 rel="stylesheet">
-	<!-- //web-fonts -->
-	<script>
-		addEventListener("load", function () {
-			setTimeout(hideURLbar, 0);
-		}, false);
-
-		function hideURLbar() {
-			window.scrollTo(0, 1);
-		}
-
+<script>
 function Validate() {
-/* alert(document.getElementById("pa").value)
-alert(document.getElementById("con_pass").value)	*/
-if (document.getElementById("pa").value!=document.getElementById("con_pass").value){
-alert("Please enter same password as confirm password");
-$("#con_pass").focus();
-return false;
+if ($(('#sel_loc')).val() == null){
+    alert('Please select location')
+	$( '#sel_loc' ).focus();
+            return false;
+        }
+if ($(('#sel_hosp')).val() == null) {
+    alert('Please select Hospital')
+	$( '#sel_hosp' ).focus();
+            return false;
+        }
+if ($(('#spl')).val() == null){
+    alert('Please select Department')
+	$( '#spl' ).focus();
+            return false;
+        }
+if ($(('#dr')).val() == null) {
+    alert('Please select your Doctor')
+	$( '#dr' ).focus();
+            return false;
+        }
+if ($(('#datess')).val() == null) {
+    alert('Please select your appoinment date')
+	$( '#datess' ).focus();
+            return false;
+		}
+if ($(('#appointment_tyme')).val() == null) {
+    alert('Please select your appoinment time')
+	$( '#appointment_tyme' ).focus();
+            return false;
         }
     }
-</script>	
-  </head>
-  <body>
-    
-    <header role="banner">
-      <div class="top-bar">
-        <div class="container">
-          <div class="row">
-            <div class="col-md-6 col-sm-6 col-5">
-            <!--   <ul class="social list-unstyled">
-                <li><a href="#"><span class="fa fa-facebook"></span></a></li>
-                <li><a href="#"><span class="fa fa-twitter"></span></a></li>
-                <li><a href="#"><span class="fa fa-instagram"></span></a></li>
-              </ul> -->
-            </div>
-            <div class="col-md-6 col-sm-6 col-7 text-right">
-			 <p class="mb-0">
-                <a href="{% url 'booking_hm' %}" class="cta-btn">Make an Appointment</a>
-				<a href="#" class="cta-btn" data-toggle="modal" data-target="#modalAppointment">Register/Login</a>
-
-            </div>
-<!--             <div class="col-md-6 col-sm-6 col-7 text-right">
-			 <p class="mb-0">
-                <a href="{% url 'booking' %}" class="cta-btn">Make an Appointment</a>
-</p>
-            </div> -->
-          </div>
-        </div>
-      </div>
-      <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <div class="container">
-          <a class="navbar-brand" href="index.html">Touch Of <span>Care</span> </a>
-          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExample05" aria-controls="navbarsExample05" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-          </button>
-
-          <div class="collapse navbar-collapse" id="navbarsExample05">
-            <ul class="navbar-nav ml-auto">
-              <li class="nav-item">
-                <a class="nav-link active" href="{% url 'index' %}">Home</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link active" href="{% url 'articlespg' %}">Articles</a>
-              </li>
-              <li class="nav-item">
-				<!-- <a class="nav-link active" href="{% url 'index' %}">Articles</a> -->
-              </li>
-<!--               <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="services.html" id="dropdown04" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Services</a>
-                <div class="dropdown-menu" aria-labelledby="dropdown04">
-                  <a class="dropdown-item" href="#">Institute</a>
-                  <a class="dropdown-item" href="#">Departments</a>
-                  <a class="dropdown-item" href="services.html">Services</a>
-                </div>
-
-              </li>
-              <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="doctors.html" id="dropdown05" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Doctors</a>
-                <div class="dropdown-menu" aria-labelledby="dropdown05">
-                  <a class="dropdown-item" href="doctors.html">Find Doctors</a>
-                  <a class="dropdown-item" href="#">Practitioner</a>
-                </div>
-              </li>
-              <li class="nav-item">
-				<a class="nav-link active" href="{% url 'index' %}">Articles</a>
-
-                <a class="nav-link" href="news.html">News</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="about.html">About</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="contact.html">Contact</a>
-              </li> -->
-            </ul>
-          </div>
-        </div>
-      </nav>
-    </header>
-    <!-- END header -->
-    
-    <section class="home-slider owl-carousel"> 
-      <div class="slider-item" style="background-image: url('{% static 'home/img/slider-2.jpg' %}');">
-        
-        <div class="container">
-          <div class="row slider-text align-items-center">
-            <div class="col-md-7 col-sm-12 element-animate">
-              <h1>We Care For You</h1>
-              <!-- <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Commodi unde impedit, necessitatibus, soluta sit quam minima expedita atque corrupti reiciendis.</p> -->
-            </div>
-          </div>
-        </div>
-
-      </div>
-
-      <div class="slider-item" style="background-image: url('{% static 'home/img/slider-1.jpg' %}');">
-        <div class="container">
-          <div class="row slider-text align-items-center">
-            <div class="col-md-7 col-sm-12 element-animate">
-              <h1>We Provide Health Care Solutions</h1>
-              <!-- <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Commodi unde impedit, necessitatibus, soluta sit quam minima expedita atque corrupti reiciendis.</p> -->
-            </div>
-          </div>
-        </div>
-        
-      </div>
-
-    </section>
-    <!-- END slider -->
-
-    
-    <section class="container home-feature mb-5">
-      <div class="row">
-        <div class="col-md-4 p-0 one-col element-animate">
-          <div class="col-inner p-xl-5 p-lg-5 p-md-4 p-sm-4 p-4">
-            <span class="icon flaticon-hospital-bed"></span>
-            <h2>Patient Services</h2>
-            <!-- <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Commodi unde impedit, necessitatibus, soluta sit quam minima expedita atque corrupti reiciendis.</p> -->
-          </div>
-          <a  class="btn-more"></a>
-        </div>
-        <div class="col-md-4 p-0 two-col element-animate">
-          <div class="col-inner p-xl-5 p-lg-5 p-md-4 p-sm-4 p-4">
-            <span class="icon flaticon-first-aid-kit"></span>
-            <h2>Medical Services</h2>
-            <!-- <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Commodi unde impedit, necessitatibus, soluta sit quam minima expedita atque corrupti reiciendis.</p> -->
-          </div>
-          <a class="btn-more"></a>
-        </div>
-        <div class="col-md-4 p-0 three-col element-animate">
-          <div class="col-inner p-xl-5 p-lg-5 p-md-4 p-sm-4 p-4">
-            <span class="icon flaticon-hospital"></span>
-            <h2>Hospital Services</h2>
-            <!-- <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Commodi unde impedit, necessitatibus, soluta sit quam minima expedita atque corrupti reiciendis.</p> -->
-          </div>
-          <a  class="btn-more"></a>
-        </div>
-      </div>
-    </section>
-    <!-- END section -->
-
-    <section class="section stretch-section" style="padding: 0px;">
-      <div class="container">
-        <div class="row justify-content-center mb-5 element-animate">
-          <div class="col-md-8 text-center mb-5">
-		  <h2 class="text-uppercase heading border-bottom mb-4" style="font-size: -webkit-xxx-large;">Why Choose Us</h2>
-            <!-- <p class="mb-0 lead">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Commodi unde impedit, necessitatibus, soluta sit quam minima expedita atque corrupti reiciendis.</p> -->
-          </div>
-        </div>
-        <div class="row align-items-center">
-          
-          <div class="col-md-6 stretch-left-1 element-animate" data-animate-effect="fadeInLeft">
-            <a href="#" class="video"><img src="{% static 'home/img/testimonial-bg.jpg' %}" alt="" class="img-fluid"></a>
-          </div>
-          <div class="col-md-6 stretch-left-1-offset pl-md-5 pl-0 element-animate" data-animate-effect="fadeInLeft">
-            <div class="row">
-              <div class="col-lg-6 col-md-6 col-sm-6 col-6">
-                <div class="media d-block media-feature text-center">
-                  <span class="icon flaticon-hospital"></span>
-                  <div class="media-body">
-                    <h3 class="mt-0 text-black">Hospitals</h3>
-                    <!-- <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p> -->
-                  </div>
-                </div>
-              </div>
-              <div class="col-lg-6 col-md-6 col-sm-6 col-6">
-                <div class="media d-block media-feature text-center">
-                  <span class="icon flaticon-first-aid-kit"></span>
-                  <div class="media-body">
-                    <h3 class="mt-0 text-black">Medical Services</h3>
-                    <!-- <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p> -->
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="row">
-              <div class="col-lg-6 col-md-6 col-sm-6 col-6">
-                <div class="media d-block media-feature text-center">
-                  <span class="icon flaticon-hospital-bed"></span>
-                  <div class="media-body">
-                    <h3 class="mt-0 text-black">Patient Services</h3>
-                    <!-- <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p> -->
-                  </div>
-                </div>
-              </div>
-              <div class="col-lg-6 col-md-6 col-sm-6 col-6">
-                <div class="media d-block media-feature text-center">
-                  <span class="icon flaticon-doctor"></span>
-                  <div class="media-body">
-                    <h3 class="mt-0 text-black">Expert Doctors</h3>
-                    <!-- <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p> -->
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-    
-<div style="border: solid white 7px;">
-    <a href="#" class="cta-link element-animate" data-animate-effect="fadeIn" data-toggle="modal" data-target="#modalAppointment">
-      <span class="sub-heading">Ready to Visit?</span>
-      <span class="heading">Make an Appointment</span>
-    </a>
-</div>
-
-    <footer class="site-footer" role="contentinfo">
-      <div class="container">
-        <div class="row mb-5 element-animate">
-          <div class="col-md-3 mb-5">
-            <h3>Online Medicine Shopping</h3>
-            <ul class="footer-link list-unstyled">
-              <li><a>Find a location</a></li>
-              <li><a>Find a Pharmacy</a></li>
-              <li><a>Buy Medicine</a></li>
-            </ul>
-          </div>
-          <div class="col-md-3 mb-5">
-            <h3>Make a Appointment</h3>
-            <ul class="footer-link list-unstyled">
-			  <li><a>Choose Your Location</a></li>
-              <li><a>Choose Your Hospital</a></li>
-              <li><a>Find Your Doctor</a></li>
-            </ul>
-          </div>
-          <div class="col-md-3 mb-5">
-            <h3>Book Your Lab Test</h3>
-            <ul class="footer-link list-unstyled">
-              <li><a>Choose Your Location</a></li>
-              <li><a>Choose Your Lab</a></li>
-              <li><a>Book Your Lab Test</a></li>
-
-            </ul>
-          </div>
-        </div>
-	        <div class="row pt-md-3 element-animate">
-          <div class="col-md-12">
-            <hr class="border-t">
-          </div>
-          <div class="col-md-6 col-sm-12 copyright">
-            <p>&copy; 2019 Your Doctor</p>
-          </div>
-   
-        </div>
-      </div>
-    </footer>
-    <!-- END footer -->  
+</script>
 
 
-    <!-- Modal -->
-    <div class="modal fade" id="modalAppointment" tabindex="-1"  role="dialog" aria-labelledby="modalAppointmentLabel" aria-hidden="true">
-	  <div class="modal-dialog" role="document" style="margin-left: 20%;background-color:white;">
-			<div class="sub-main-w3">
+</head>
 
-        <div class="modal-content">
-	  
-		<!-- 	<div class="image-style">
+<body id="page-top" data-spy="scroll" data-target=".navbar-custom">
 
-			</div> -->
-			<!-- vertical tabs -->
-			<div class="vertical-tab">
-				<div id="section1" class="section-w3ls">
-					<input type="radio" name="sections" id="option1" checked>
-					<label for="option1" class="icon-left-w3pvt"><span class="fa fa-user-circle" aria-hidden="true"></span>Login</label>
-					<article>
-				<form action="{% url 'login_check' %}" method="post">{% csrf_token %}
-							<h3 class="legend">Login Here</h3>
-							<div class="input">
-								<span class="fa fa-user-o" aria-hidden="true"></span>
-								<input type="text" placeholder="Username" name="uname" required />
-							</div>
-							<div class="input">
-								<span class="fa fa-key" aria-hidden="true"></span>
-								<input type="password" placeholder="Password" name="passwd" required />
-							</div>
-							<button type="submit" class="btn submit">Login</button>
-							
-							<!-- <a href="#" class="bottom-text-w3ls">Forgot Password?</a> -->
-						</form></article>
+<div id="wrapper">
+	
+    <nav class="navbar navbar-custom navbar-fixed-top" role="navigation">
+		<div class="top-area">
+			<div class="container">
+				<div class="row">
+					<div class="col-sm-6 col-md-6">
+						<p class="bold text-left">24*7 services </p>
+					</div>
+					<div class="col-sm-6 col-md-6">
+						<p class="bold text-right">Call us 0484 2578 456</p>
+					</div>
 				</div>
-				<div id="section3" class="section-w3ls">
-					<input type="radio" name="sections" id="option3">
-					<label for="option3" class="icon-left-w3pvt"><span class="fa fa-lock" aria-hidden="true"></span>Forgot Password?</label>
-					<article>
-						<form action="{% url 'forgot' %}" method="post">{% csrf_token %}
-						<!--<form action="#" method="post"> -->
-							<h3 class="legend last">Reset Password</h3>
-							<p class="para-style">Enter your email address below and we'll send you an email with Password.</p>
-							<p class="para-style-2"><strong>Need Help?</strong> Learn more about how to <a href="#">retrieve an existing
-									account.</a></p>
-							<div class="input">
-								<span class="fa fa-envelope-o" aria-hidden="true"></span>
-								<input type="text" placeholder="Username" name="user" required />
-								<input type="email" placeholder="Email" name="email" required />
+			</div>
+		</div>
+        <div class="container navigation">
+		
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-main-collapse">
+                    <i class="fa fa-bars"></i>
+                </button>
+                <a class="navbar-brand" href="{% url 'index' %}">Touch Of <span>Care</span>  </a>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse navbar-right navbar-main-collapse">
+			  <ul class="nav navbar-nav">
+				<li class="active"><a href="{% url 'index' %}">Home</a></li>
+				<li><a href="{% url 'login' %}">login</a></li>
+				<li><a href="#service">Service</a></li>
+				<li><a href="{% url 'hos_list' %}">Hospitals</a></li>
+				<li><a href="#facilities">Facilities</a></li>
+				<li class="dropdown">
+				  <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="badge custom-badge red pull-right">Extra</span>More <b class="caret"></b></a>
+				  <ul class="dropdown-menu">
+					<li><a href="index.html">About us</a></li>
+					<li><a href="index-video.html">Articles</a></li>
+					<li><a href="index-video.html">Contact us</a></li>
+				  </ul>
+				</li>
+			  </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container -->
+    </nav>
+	
+
+	<!-- Section: intro -->
+    <section id="intro" class="intro">
+		<div class="intro-content">
+			<div class="container">
+				<div class="row">
+					<div class="col-lg-6" id="topl">
+					<div class="wow fadeInDown" data-wow-offset="0" data-wow-delay="0.1s">
+					<h2 class="h-ultra">Touch of Care</h2>
+					</div>
+					<div class="wow fadeInUp" data-wow-offset="0" data-wow-delay="0.1s">
+					<h4 class="h-light">Provide <span class="color">best quality healthcare</span> for you</h4>
+					</div>
+						<div class="well well-trans">
+						<div class="wow fadeInRight" data-wow-delay="0.1s">
+
+						<ul class="lead-list">
+							<li><span class="fa fa-check fa-2x icon-success"></span> <span class="list"><strong>Take Appointments</strong><br />Here you can make appoinments from home to consult doctor</span></li>
+							<li><span class="fa fa-check fa-2x icon-success"></span> <span class="list"><strong>User Friendly Interface</strong><br />We Provide simple user interface for all users</span></li>
+							<li><span class="fa fa-check fa-2x icon-success"></span> <span class="list"><strong>Be a Part of change</strong><br />Your health status is now on your hands</span></li>
+						</ul>
+
+						</div>
+						</div>
+
+
+					</div>
+					<div class="col-lg-6">
+						<div class="form-wrapper">
+						<div class="wow fadeInRight" data-wow-duration="2s" data-wow-delay="0.2s">
+						
+							<div class="panel panel-skin">
+							<div class="panel-heading">
+								<h3 class="panel-title"><span class="fa fa-pencil-square-o"></span> Make an appoinment <small>(It's free!)</small></h3>
 							</div>
-							<button type="submit" class="btn submit last-btn">Reset</button>
+							<div class="panel-body">
+						<form role="form" id="app" class="lead" action="{% url 'book_now' %}" style="display: inline-block;" method="post">{% csrf_token %}
+							<div class="row">
+								<div class="col-xs-6 col-sm-6 col-md-6">
+								<label for="appointment_name" class="form-group">Location</label>
+								<select id="sel_loc" name="loc" class="form-control input-md" required pattern="[A-Z]">
+									<option selected disabled>SELECT</option>
+									<option value="Alappuzha">Alappuzha</option>
+									<option value="Ernakulam">Ernakulam </option>
+									<option value="Idukki">Idukki</option>
+									<option value="Kannur">Kannur</option>
+									<option value="Kasaragod">Kasaragod</option>
+									<option value="Kollam">Kollam</option>
+									<option value="Kottayam">Kottayam</option>
+									<option value="Kozhikode">Kozhikode </option>
+									<option value="Malappuram">Malappuram</option>
+									<option value="Palakkad">Palakkad</option>
+									<option value="Pathanamthitta">Pathanamthitta</option>   
+									<option value="Thiruvananthapuram">Thiruvananthapuram</option>
+									<option value="Thrissur">Thrissur</option>
+									<option value="Wayanad">Wayanad</option>   
+								</select>
+								</div>
+								<div class="col-xs-6 col-sm-6 col-md-6">
+									<label for="appointment_date" class="form-group">Hospitals</label>
+											<select id="sel_hosp" name="selt_hosp" class="form-control input-md" required pattern="[A-Z]">
+												<option selected disabled>SELECT</option>
+											</select>
+								</div>
+							</div>
+
+								<div class="row">
+									<div class="col-xs-6 col-sm-6 col-md-6">
+											<label for="appointment_date" class="form-group">Departments</label>
+												<div class="input">
+													<select id="spl" name="departmnt" class="form-control input-md" required pattern="[A-Z]">
+														<option selected disabled>SELECT</option>
+													</select>								
+												</div>
+									</div>
+											<div class="col-xs-6 col-sm-6 col-md-6">
+													<label for="appointment_time" class="form-group">Doctors</label>
+														<div class="input">
+															<select id="dr" name="dr" class="form-control input-md" required pattern="[A-Z]">
+															<option selected disabled>SELECT</option>
+															</select>								
+														</div>
+											</div>
+								</div>
+								
+								<div class="row">
+									<div class="col-xs-6 col-sm-6 col-md-6">
+											<div class="form-group">
+												<label for="appointment_date" class="text-black">Date</label>
+												<div class="input">
+													<input id="datess" data-provide="datepicker" class="form-control" name="appointment_dt" style="background-color:white;" required>
+												</div>    
+											</div>    
+									</div>
+									<div class="col-xs-6 col-sm-6 col-md-6">
+										<label for="appointment_date" class="text-black">Time</label>
+											<div class="input">
+												<select required id="appointment_tyme" name="appoint_tym" class="form-control" >
+													<option selected disabled>SELECT</option>
+													<option value="9AM to 10AM">9AM to 10AM</option>
+													<option value="10AM to 11AM">10AM to 11AM</option>
+													<option value="11AM to 12PM">11AM to 12PM</option>
+													<option value="12PM to 1PM">12PM to 1PM</option>
+													<option value="2PM to 3PM">2PM to 3PM</option>
+													<option value="3PM to 4PM">3PM to 4PM</option>
+													<option value="4PM to 5PM">4PM to 5PM</option>
+													<option value="5PM to 6PM">5PM to 6PM</option> 
+												</select>                  
+											</div>
+									</div>
+									
+								</div>
+										
+										<div class="form-group">
+										<input type="submit" value="Book Now" id="bkinggg" class="btn btn-skin btn-block btn-lg" onclick="return Validate()">
+										</div>
+										
+										<p class="lead-footer">* We'll contact you by phone & email later</p>
+									
 						</form>
-					</article>
+								</div>
+							</div>				
+						
+						</div>
+						</div>
+					</div>					
+				</div>		
+			</div>
+		</div>		
+    </section>
+	
+	<!-- /Section: intro -->
+
+	<!-- Section: boxes -->
+    <section id="boxes" class="home-section paddingtop-80">
+	
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-3 col-md-3">
+					<div class="wow fadeInUp" data-wow-delay="0.2s">
+						<div class="box text-center">
+							
+							<i class="fa fa-check fa-3x circled bg-skin"></i>
+							<h4 class="h-bold">Make an appoinment</h4>
+							<p>
+							Lorem ipsum dolor sit amet, nec te mollis utroque honestatis, ut utamur molestiae vix, graecis eligendi ne.
+							</p>
+						</div>
+					</div>
 				</div>
-				<div id="section2" class="section-w3ls">
-					<input type="radio" name="sections" id="option2">
-					<label for="option2" class="icon-left-w3pvt"><span class="fa fa-pencil-square" aria-hidden="true"></span>Register</label>
-					<article>
+				<div class="col-sm-3 col-md-3">
+					<div class="wow fadeInUp" data-wow-delay="0.2s">
+						<div class="box text-center">
+							
+							<i class="fa fa-list-alt fa-3x circled bg-skin"></i>
+							<h4 class="h-bold">Choose your package</h4>
+							<p>
+							Lorem ipsum dolor sit amet, nec te mollis utroque honestatis, ut utamur molestiae vix, graecis eligendi ne.
+							</p>
+						</div>
+					</div>
+				</div>
+				<div class="col-sm-3 col-md-3">
+					<div class="wow fadeInUp" data-wow-delay="0.2s">
+						<div class="box text-center">
+							<i class="fa fa-user-md fa-3x circled bg-skin"></i>
+							<h4 class="h-bold">Help by specialist</h4>
+							<p>
+							Lorem ipsum dolor sit amet, nec te mollis utroque honestatis, ut utamur molestiae vix, graecis eligendi ne.
+							</p>
+						</div>
+					</div>
+				</div>
+				<div class="col-sm-3 col-md-3">
+					<div class="wow fadeInUp" data-wow-delay="0.2s">
+						<div class="box text-center">
+							
+							<i class="fa fa-hospital-o fa-3x circled bg-skin"></i>
+							<h4 class="h-bold">Get diagnostic report</h4>
+							<p>
+							Lorem ipsum dolor sit amet, nec te mollis utroque honestatis, ut utamur molestiae vix, graecis eligendi ne.
+							</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
 
-				<form action="{% url 'patient_reg' %}" method="post">{% csrf_token %}
-							<h3 class="legend">Register Here</h3>
-		              <div class="row">
-						<div class="col-md-6">
-						  <div class="form-group">
-									<div class="input">
-										<span class="fa fa-user-o" aria-hidden="true"></span>
-										<input type="text" placeholder="Name" name="name" required />
+	</section>
+	<!-- /Section: boxes -->
+	
+	
+	<section id="callaction" class="home-section paddingtop-40">	
+           <div class="container">
+				<div class="row">
+					<div class="col-md-12">
+						<div class="callaction bg-gray">
+							<div class="row">
+								<div class="col-md-8">
+									<div class="wow fadeInUp" data-wow-delay="0.1s">
+									<div class="cta-text">
+									<h3>In an emergency? Need help now?</h3>
+									<p>Lorem ipsum dolor sit amet consectetur adipiscing elit uisque interdum ante eget faucibus. </p>
+									</div>
 									</div>
 								</div>
-							</div>	
-						<div class="col-md-6">
-						  <div class="form-group">									
-									<div class="input">
-										<span aria-hidden="true"></span>
-										<input type="text" placeholder="Place" name="place" required />
-									</div>
-								</div>
-							</div>
-
-						<div class="col-md-6">
-						  <div class="form-group" style="color: gray;">									
-									<div class="input">GENDER:
-										<span  aria-hidden="true"></span>									
-										<input type="radio" name="gender" value="male" required> Male
-										<input type="radio" name="gender" value="female" required> Female
-									</div>
-								</div>
-							</div>							
-						<div class="col-md-6">
-						  <div class="form-group">
-									<div class="input">
-										<span  aria-hidden="true"></span>
-										<input type="tel" placeholder="Contact No" name="phno" pattern="[1-9]{1}[0-9]{9}" required />
-									</div>
-								</div>
-							</div>	
-							<div class="col-md-6">
-						  <div class="form-group">
-									<div class="input">
-										<span  aria-hidden="true"></span>
-										<input type="text" placeholder="Blood Group" name="bld" required />
-									</div>
-								</div>
-							</div>	
-						<div class="col-md-6">
-						  <div class="form-group">
-									<div class="input">
-										<span class="fa fa-envelope-o" aria-hidden="true"></span>
-										<input type="email" placeholder="Email" name="email" required />
-									</div>
-								</div>
-							</div>	
-						<div class="col-md-6">
-						  <div class="form-group">
-									<div class="input">
-										<span class="fa fa-user-o" aria-hidden="true"></span>
-										<input type="text" placeholder="Userameame" name="username" required />
-									</div>
-								</div>
-							</div>	
-						<div class="col-md-6">
-						  <div class="form-group">									
-									<div class="input">
-								<span class="fa fa-key" aria-hidden="true"></span>
-								<input type="password" id="pa" placeholder="Password" name="password" required />
-									</div>
-								</div>
-							</div>
-						<div class="col-md-6">
-						  <div class="form-group">									
-									<div class="input">
-								<span class="fa fa-key" aria-hidden="true"></span>
-								<input id="con_pass" type="password" placeholder="Confirm Password" name="password"  required>
+								<div class="col-md-4">
+									<div class="wow lightSpeedIn" data-wow-delay="0.1s">
+										<div class="cta-btn">
+										<a href="#app" class="btn btn-skin btn-lg">Book an appoinment</a>	
+										</div>
 									</div>
 								</div>
 							</div>
 						</div>
-							<button type="submit" class="btn submit" onclick="return Validate()">Register</button>
-				</form>
+					</div>
+				</div>
+            </div>
+	</section>	
+	
+
+	<!-- Section: services -->
+    <section id="service" class="home-section nopadding paddingtop-60">
+
+		<div class="container">
+
+        <div class="row">
+			<div class="col-sm-6 col-md-6">
+				<div class="wow fadeInUp" data-wow-delay="0.2s">
+				<img src="img/dummy/img-1.jpg" class="img-responsive" alt="" />
+				</div>
+            </div>
+			<div class="col-sm-3 col-md-3">
 				
-				<form action="{% url 'out_hospital_pg' %}" method="post">{% csrf_token %}
-				<input type="submit" class="btn submit" value="Hospital Register">
-				</form>
-				<form action="{% url 'out_lab_regs_pg' %}" method="post">{% csrf_token %}
-				<input type="submit" class="btn submit" value="Lab Register">
-				</form>
-				<form action="{% url 'out_pharmacy_pg' %}" method="post">{% csrf_token %}
-				<input type="submit" class="btn submit" value="Pharmacy Register">
-				</form>
-					</article>
+				<div class="wow fadeInRight" data-wow-delay="0.1s">
+                <div class="service-box">
+					<div class="service-icon">
+						<span class="fa fa-stethoscope fa-3x"></span> 
+					</div>
+					<div class="service-desc">
+						<h5 class="h-light">Medical checkup</h5>
+						<p>Vestibulum tincidunt enim in pharetra malesuada.</p>
+					</div>
+                </div>
+				</div>
+				
+				<div class="wow fadeInRight" data-wow-delay="0.2s">
+				<div class="service-box">
+					<div class="service-icon">
+						<span class="fa fa-wheelchair fa-3x"></span> 
+					</div>
+					<div class="service-desc">
+						<h5 class="h-light">Nursing Services</h5>
+						<p>Vestibulum tincidunt enim in pharetra malesuada.</p>
+					</div>
+                </div>
+				</div>
+				<div class="wow fadeInRight" data-wow-delay="0.3s">
+				<div class="service-box">
+					<div class="service-icon">
+						<span class="fa fa-plus-square fa-3x"></span> 
+					</div>
+					<div class="service-desc">
+						<h5 class="h-light">Pharmacy</h5>
+						<p>Vestibulum tincidunt enim in pharetra malesuada.</p>
+					</div>
+                </div>
 				</div>
 
-			</div>
-			<!-- //vertical tabs -->
-			<div class="clear"></div>
-		</div>
-        <!-- <div class="modal-content"> -->
-<!--           <div class="modal-header">
-            <h5 class="modal-title" id="modalAppointmentLabel">Appointment</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-            <form action="#">
-              <div class="form-group">
-                <label for="appointment_name" class="text-black">Full Name</label>
-                <input type="text" class="form-control" id="appointment_name">
-              </div>
-              <div class="form-group">
-                <label for="appointment_email" class="text-black">Email</label>
-                <input type="text" class="form-control" id="appointment_email">
-              </div>
-              <div class="row">
-                <div class="col-md-6">
-                  <div class="form-group">
-                    <label for="appointment_date" class="text-black">Date</label>
-                    <input type="text" class="form-control" id="appointment_date">
-                  </div>    
-                </div>
-                <div class="col-md-6">
-                  <div class="form-group">
-                    <label for="appointment_time" class="text-black">Time</label>
-                    <input type="text" class="form-control" id="appointment_time">
-                  </div>
-                </div>
-              </div>
-              
 
-              <div class="form-group">
-                <label for="appointment_message" class="text-black">Message</label>
-                <textarea name="" id="appointment_message" class="form-control" cols="30" rows="10"></textarea>
-              </div>
-              <div class="form-group">
-                <input type="submit" value="Send Message" class="btn btn-primary">
-              </div>
-            </form>
-          </div> -->
-		  
-		</div>  
-	</div>
-</div>		  
-    <script src="{% static 'home/js/jquery-3.2.1.min.js' %}"></script>
-    <script src="{% static 'home/js/popper.min.js' %}"></script>
-    <script src="{% static 'home/js/bootstrap.min.js' %}"></script>
-    <script src="{% static 'home/js/owl.carousel.min.js' %}"></script>
-    <script src="{% static 'home/js/bootstrap-datepicker.js' %}"></script>
+            </div>
+			<div class="col-sm-3 col-md-3">
+				
+				<div class="wow fadeInRight" data-wow-delay="0.1s">
+                <div class="service-box">
+					<div class="service-icon">
+						<span class="fa fa-h-square fa-3x"></span> 
+					</div>
+					<div class="service-desc">
+						<h5 class="h-light">Gyn Care</h5>
+						<p>Vestibulum tincidunt enim in pharetra malesuada.</p>
+					</div>
+                </div>
+				</div>
+				
+				<div class="wow fadeInRight" data-wow-delay="0.2s">
+				<div class="service-box">
+					<div class="service-icon">
+						<span class="fa fa-filter fa-3x"></span> 
+					</div>
+					<div class="service-desc">
+						<h5 class="h-light">Neurology</h5>
+						<p>Vestibulum tincidunt enim in pharetra malesuada.</p>
+					</div>
+                </div>
+				</div>
+				<div class="wow fadeInRight" data-wow-delay="0.3s">
+				<div class="service-box">
+					<div class="service-icon">
+						<span class="fa fa-user-md fa-3x"></span> 
+					</div>
+					<div class="service-desc">
+						<h5 class="h-light">Sleep Center</h5>
+						<p>Vestibulum tincidunt enim in pharetra malesuada.</p>
+					</div>
+                </div>
+				</div>
+
+            </div>
+			
+        </div>		
+		</div>
+	</section>
+	<!-- /Section: services -->
+    <section id="facilities" class="home-section paddingbot-60">
+		<div class="container marginbot-50">
+			<div class="row">
+				<div class="col-lg-8 col-lg-offset-2">
+					<div class="wow fadeInDown" data-wow-delay="0.1s">
+					<div class="section-heading text-center">
+					<h2 class="h-bold">Our facilities</h2>
+					<p>Ea melius ceteros oportere quo, pri habeo viderer facilisi ei</p>
+					</div>
+					</div>
+					<div class="divider-short"></div>
+				</div>
+			</div>
+		</div>
+
+<div class="container">
+			<div class="row">
+                <div class="col-sm-12 col-md-12 col-lg-12" >
+					<div class="wow bounceInUp" data-wow-delay="0.2s">
+                    <div id="owl-works" class="owl-carousel">
+                        <div class="item"><a href="img/photo/1.jpg" title="This is an image title" data-lightbox-gallery="gallery1" data-lightbox-hidpi="img/works/1@2x.jpg"><img src="img/photo/1.jpg" class="img-responsive" alt="img"></a></div>
+                        <div class="item"><a href="img/photo/2.jpg" title="This is an image title" data-lightbox-gallery="gallery1" data-lightbox-hidpi="img/works/2@2x.jpg"><img src="img/photo/2.jpg" class="img-responsive " alt="img"></a></div>
+                        <div class="item"><a href="img/photo/3.jpg" title="This is an image title" data-lightbox-gallery="gallery1" data-lightbox-hidpi="img/works/3@2x.jpg"><img src="img/photo/3.jpg" class="img-responsive " alt="img"></a></div>
+                        <div class="item"><a href="img/photo/4.jpg" title="This is an image title" data-lightbox-gallery="gallery1" data-lightbox-hidpi="img/works/4@2x.jpg"><img src="img/photo/4.jpg" class="img-responsive " alt="img"></a></div>
+                        <div class="item"><a href="img/photo/5.jpg" title="This is an image title" data-lightbox-gallery="gallery1" data-lightbox-hidpi="img/works/5@2x.jpg"><img src="img/photo/5.jpg" class="img-responsive " alt="img"></a></div>
+                        <div class="item"><a href="img/photo/6.jpg" title="This is an image title" data-lightbox-gallery="gallery1" data-lightbox-hidpi="img/works/6@2x.jpg"><img src="img/photo/6.jpg" class="img-responsive " alt="img"></a></div>
+                    </div>
+					</div>
+                </div>
+            </div>
+		</div>
+	</section>
+	<!-- /Section: works -->	 
+
+	<footer>
+	
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-6 col-md-4">
+					<div class="wow fadeInDown" data-wow-delay="0.1s">
+					<div class="widget">
+						<h5>About Medicio</h5>
+						<p>
+						Lorem ipsum dolor sit amet, ne nam purto nihil impetus, an facilisi accommodare sea
+						</p>
+					</div>
+					</div>
+					<div class="wow fadeInDown" data-wow-delay="0.1s">
+					<div class="widget">
+						<h5>Information</h5>
+						<ul>
+							<li><a href="#">Home</a></li>
+							<li><a href="#">Laboratory</a></li>
+							<li><a href="#">Medical treatment</a></li>
+							<li><a href="#">Terms & conditions</a></li>
+						</ul>
+					</div>
+					</div>
+				</div>
+				<div class="col-sm-6 col-md-4">
+					<div class="wow fadeInDown" data-wow-delay="0.1s">
+					<div class="widget">
+						<h5>Medicio center</h5>
+						<p>
+						Nam leo lorem, tincidunt id risus ut, ornare tincidunt naqunc sit amet.
+						</p>
+						<ul>
+							<li>
+								<span class="fa-stack fa-lg">
+									<i class="fa fa-circle fa-stack-2x"></i>
+									<i class="fa fa-calendar-o fa-stack-1x fa-inverse"></i>
+								</span> Monday - Saturday, 8am to 10pm
+							</li>
+							<li>
+								<span class="fa-stack fa-lg">
+									<i class="fa fa-circle fa-stack-2x"></i>
+									<i class="fa fa-phone fa-stack-1x fa-inverse"></i>
+								</span> +62 0888 904 711
+							</li>
+							<li>
+								<span class="fa-stack fa-lg">
+									<i class="fa fa-circle fa-stack-2x"></i>
+									<i class="fa fa-envelope-o fa-stack-1x fa-inverse"></i>
+								</span> hello@medicio.com
+							</li>
+
+						</ul>
+					</div>
+					</div>
+				</div>
+				<div class="col-sm-6 col-md-4">
+					<div class="wow fadeInDown" data-wow-delay="0.1s">
+					<div class="widget">
+						<h5>Our location</h5>
+						<p>The Suithouse V303, Kuningan City, Jakarta Indonesia 12940</p>		
+						
+					</div>
+					</div>
+					<div class="wow fadeInDown" data-wow-delay="0.1s">
+					<div class="widget">
+						<h5>Follow us</h5>
+						<ul class="company-social">
+								<li class="social-facebook"><a href="#"><i class="fa fa-facebook"></i></a></li>
+								<li class="social-twitter"><a href="#"><i class="fa fa-twitter"></i></a></li>
+								<li class="social-google"><a href="#"><i class="fa fa-google-plus"></i></a></li>
+								<li class="social-vimeo"><a href="#"><i class="fa fa-vimeo-square"></i></a></li>
+								<li class="social-dribble"><a href="#"><i class="fa fa-dribbble"></i></a></li>
+						</ul>
+					</div>
+					</div>
+				</div>
+			</div>	
+		</div>
+		<div class="sub-footer">
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-6 col-md-6 col-lg-6">
+					<div class="wow fadeInLeft" data-wow-delay="0.1s">
+					<div class="text-left">
+					<p>&copy;Copyright 2015 - Medicio. All rights reserved.</p>
+					</div>
+					</div>
+				</div>
+				<div class="col-sm-6 col-md-6 col-lg-6">
+					<div class="wow fadeInRight" data-wow-delay="0.1s">
+					<div class="text-right">
+						<p><a href="http://bootstraptaste.com/">Bootstrap Themes</a> by BootstrapTaste</p>
+					</div>
+                    <!-- 
+                        All links in the footer should remain intact. 
+                        Licenseing information is available at: http://bootstraptaste.com/license/
+                        You can buy this theme without footer links online at: http://bootstraptaste.com/buy/?theme=Medicio
+                    -->
+					</div>
+				</div>
+			</div>	
+		</div>
+		</div>
+	</footer>
+
+</div>
+<a href="#" class="scrollup"><i class="fa fa-angle-up active"></i></a>
+
+	<!-- Core JavaScript Files -->
+    <script src="{% static 'index/js/jquery.min.js' %}"></script>	 
+    <script src="{% static 'index/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'index/js/jquery.easing.min.js' %}"></script>
+	<script src="{% static 'index/js/wow.min.js' %}"></script>
+	<script src="{% static 'index/js/jquery.scrollTo.js' %}"></script>
+	<script src="{% static 'index/js/jquery.appear.js' %}"></script>
+	<script src="{% static 'index/js/stellar.js' %}"></script>
+	<script src="{% static 'index/plugins/cubeportfolio/js/jquery.cubeportfolio.min.js' %}"></script>
+	<script src="{% static 'index/js/owl.carousel.min.js' %}"></script>
+	<script src="{% static 'index/js/nivo-lightbox.min.js' %}"></script>
+    <script src="{% static 'index/js/custom.js' %}"></script>
+	
+	<script src="{% static 'home/js/bootstrap-datepicker.js' %}"></script>
     <script src="{% static 'home/js/jquery.timepicker.min.js' %}"></script>
     <script src="{% static 'home/js/jquery.waypoints.min.js' %}"></script>
     <script src="{% static 'home/js/main.js' %}"></script>
-<script>
-$(document).ready(function(){
-/*alert(msg);
- if (msg =="Invalid User"){
- alert(msg);
- } */
- 
-
+	
+ 	<script>
+var date1 = new Date();
+date1.setDate(date1.getDate());
+$('#datess').datepicker({ 
+    startDate: date1
 });
 </script>
-  </body>
+<script>
+$(document).ready(function(){
+	<!-- alert("Booking"); -->
+	$("#sel_loc").on('change', function(){
+	<!-- alert($('#sel_loc').val()); -->
+		$.ajax({	
+			url:'/list_hosp/',
+			data:{"loc":$('#sel_loc').val()},
+		success:function(data){	
+<!-- alert("ok"); -->
+	$('#sel_hosp').empty()
+			$('#sel_hosp').append('<option selected disabled>SELECT</option>')
+
+        	for(var i=0;i<data.dt1.length;i++)
+        	{
+			<!-- alert(data.dt1[i].fields.hosp_nm); -->
+			$('#sel_hosp').append('<option value='+data.dt1[i].pk+'> '+data.dt1[i].fields.name+'</option>');
+			}
+		
+			}
+		});
+	});
+
+	$("#sel_hosp").on('change', function(){
+		<!-- alert($('#sel_hosp').val()); -->
+		$.ajax({	
+			url:'/list_dept/',
+			data:{"hosp_id":$('#sel_hosp').val()},
+		success:function(data){	
+var arr1 = [];
+var i = 0;
+for (i = 0;i<data.dt1.length; i++){
+  arr1.push(data.dt1[i].fields.special)
+}
+/*alert("hi");
+alert(arr1.length);
+alert("ok");*/
+	$('#spl').empty()
+			$('#spl').append('<option selected disabled>SELECT</option>')
+  var dept = arr1.filter(function(elem, index, self) {
+      return index === self.indexOf(elem);
+  });
+   
+  console.log(dept);
+
+   	for(var i=0;i<dept.length;i++)
+        	{
+			<!-- alert(dept[i]); -->
+			$('#spl').append('<option value='+dept[i]+'> '+dept[i]+'</option>');
+			} 
+		
+			}
+		});
+	});
+	$("#spl").on('change', function(){
+		<!-- alert($('#spl').val()); -->
+		<!-- alert($('#sel_hosp').val()); -->
+		$.ajax({	
+			url:'/list_dr/',
+			data:{"dept":$('#spl').val(),"hosp_id":$('#sel_hosp').val()},
+		success:function(data){	
+<!-- alert("ok"); -->
+	$('#dr').empty()
+			$('#dr').append('<option selected disabled>SELECT</option>')
+
+        	for(var i=0;i<data.dt1.length;i++)
+        	{
+			<!-- alert(data.dt1[i].pk); -->
+			$('#dr').append('<option value='+data.dt1[i].pk+'> '+data.dt1[i].fields.name+'</option>');
+			}
+		
+			}
+		});
+	});
+});
+</script>
+
+
+</body>
+
 </html>
