@@ -80,6 +80,7 @@
                 </div>
             </div>
         </div>
+		<form action="{% url 'fresh' %}" method="post">{% csrf_token %}
         <div class="page-wrapper">
             <div class="content">
                 <div class="row">
@@ -87,7 +88,7 @@
                         <div class="dash-widget">
 							<span class="dash-widget-bg1"><i class="fa fa-user-md" aria-hidden="true"></i></span>
 							<div class="dash-widget-info text-right">
-								<h3>2</h3>
+								<h3>{{dat.doc}}</h3>
 								<span class="widget-title1">Doctor<i class="fa fa-check" aria-hidden="true"></i></span>
 							</div>
                         </div>
@@ -96,7 +97,7 @@
                         <div class="dash-widget">
                             <span class="dash-widget-bg3"><i class="fa fa-medkit" aria-hidden="true"></i></span>
                             <div class="dash-widget-info text-right">
-                                <h3>7</h3>
+                                <h3>{{dat.pha}}</h3>
                                 <span class="widget-title3">Pharmacy<i class="fa fa-check" aria-hidden="true"></i></span>
                             </div>
                         </div>
@@ -105,15 +106,16 @@
                         <div class="dash-widget">
                             <span class="dash-widget-bg4"><i class="fa fa-flask" aria-hidden="true"></i></span>
                             <div class="dash-widget-info text-right">
-                                <h3>8</h3>
+                                <h3>{{dat.lab}}</h3>
                                 <span class="widget-title4">Laboratory <i class="fa fa-check" aria-hidden="true"></i></span>
                             </div>
                         </div>
                     </div>
                 </div>
 				</div>
-				<button type="submit"  class="imgs" onClick="refreshPage()">Refresh</button>
+				<button type="submit"  class="imgs">Refresh</button>
             </div>
+			</form>
         </div>
     <div class="sidebar-overlay" data-reff=""></div>
 	<script src="{% static 'assets/js/jquery-3.2.1.min.js' %}"></script>

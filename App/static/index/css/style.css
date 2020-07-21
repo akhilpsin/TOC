@@ -255,6 +255,40 @@ Top area
 	margin-bottom: 10px;
 }
 
+.avail{
+	color:black;
+}
+
+.btnn{
+	display: inline-block;
+    outline: none;
+    margin-left: 265px;
+    color: #fff;
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 400;
+    text-shadow: 0 0 1px rgba(255,255,255,0.3);
+    font-size: 14px;
+    font-weight: 700;
+    border-radius: 10px;
+}
+
+.btn-primarys {
+    color: #fff;
+    background-color: #428bca;
+    border-color: #357ebd;
+}
+
+.search{
+	color: #fff;
+    background-color: #428bca;
+    border-color: #357ebd;
+	border-radius: 10px;
+    margin-left: 100px;
+	font-weight:bold;
+}
+
 /* ===========
 Navigation
 ============= */
@@ -717,6 +751,7 @@ hr.bold {
 
 
 
+
 /* ===========================
 --- Intro
 ============================ */
@@ -730,7 +765,18 @@ hr.bold {
 	background: url(../img/dummy/bg1.jpg) no-repeat top center;
 	padding:200px 0 60px;
 }
+.intro-contents {
+	padding: 200px 0 60px;
+    margin-left: 300px;
+	
+}
 .intro-content.intro-nobg {
+	background:#fff;
+	position:relative;
+	margin:0;
+	padding:140px 0 60px;
+}
+.intro-contents.intro-nobg {
 	background:#fff;
 	position:relative;
 	margin:0;
@@ -749,6 +795,9 @@ hr.bold {
 }
 
 .intro-content h2 {
+	margin-bottom: 10px;
+}
+.intro-contents h2 {
 	margin-bottom: 10px;
 }
 

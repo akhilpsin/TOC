@@ -22,6 +22,15 @@ class admin_tb(models.Model):
     pat=models.IntegerField()
     lab=models.IntegerField()
     phar=models.IntegerField()
+    out_lab=models.IntegerField()
+    out_phar=models.IntegerField()
+    out_hosp=models.IntegerField()
+
+class hosp_tb(models.Model):
+    lid=models.IntegerField(primary_key=True)
+    doc=models.IntegerField()
+    pha=models.IntegerField()
+    lab=models.IntegerField()
 
 #--------Hospital------------------------------------------------------------
 
@@ -66,6 +75,7 @@ class doc_regis(models.Model):
     phone=models.IntegerField()
     user=models.CharField(max_length=30)
     passw=models.CharField(max_length=30)
+    avail=models.CharField(max_length=30)
 
 #--------Patient------------------------------------------------------------
 
@@ -141,6 +151,7 @@ class hos_phar(models.Model):
     place=models.CharField(max_length=30)
     cont_name=models.CharField(max_length=10)
     ph_no=models.IntegerField()
+    address=models.TextField(max_length=120)
     email=models.CharField(max_length=30)
     user=models.CharField(max_length=30,default="none")
     passw=models.CharField(max_length=30,default="none")
@@ -184,7 +195,8 @@ class lab_tb(models.Model):
     doc=models.CharField(max_length=30)
     hos=models.CharField(max_length=30)
     date=models.CharField(max_length=30)
-    result=models.FileField()
+    result=models.FileField(null=True,blank=True)
+    pat=models.CharField(max_length=30)
 
 class phar_tb(models.Model):
     llid=models.IntegerField(primary_key=True)
@@ -197,3 +209,23 @@ class phar_tb(models.Model):
     date=models.CharField(max_length=30)
     timing=models.CharField(max_length=30)
     days=models.IntegerField()
+    pat=models.CharField(max_length=30)
+
+#--------------------------------------medicine stock---------------------------------------------------
+
+class med_stock(models.Model):
+    mlid=models.IntegerField(primary_key=True)
+    f_date=models.CharField(max_length=30)
+    e_date=models.CharField(max_length=30)
+    med=models.CharField(max_length=30)
+    disease=models.CharField(max_length=30)
+    stock=models.IntegerField()
+    lid=models.IntegerField()
+    ph_no=models.IntegerField()
+    address=models.TextField(max_length=120)
+    hos=models.CharField(max_length=30)
+    place=models.CharField(max_length=30)
+
+    def __str__(self):
+        return self.med
+    

@@ -5,28 +5,16 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
-    <title>{{ user.name}}</title>
+    <title>{{ user.name }} Pharmacy</title>
 	<link rel="icon" href="{% static 'assets/img/logo.png' %}" type="image/x-icon">
+<link rel="icon" href="{% static 'assets/img/logo.png' %}" type="image/x-icon">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="{% static 'assets/css/bootstrap.min.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'assets/css/font-awesome.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'assets/css/select2.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'assets/css/bootstrap-datetimepicker.min.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'assets/css/style.css' %}">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-	
-	<link rel="stylesheet" href="{% static 'patient/css/open-iconic-bootstrap.min.css' %}">
-    <link rel="stylesheet" href="{% static 'patient/css/animate.css' %}">
-    
-    <link rel="stylesheet" href="{% static 'patient/css/owl.carousel.min.css' %}">
-    <link rel="stylesheet" href="{% static 'patient/css/owl.theme.default.min.css' %}">
-    <link rel="stylesheet" href="{% static 'patient/css/magnific-popup.css' %}">
-
-    <link rel="stylesheet" href="{% static 'patient/css/aos.css' %}">
-
-    <link rel="stylesheet" href="{% static 'patient/css/ionicons.min.css' %}">
-    
-    <link rel="stylesheet" href="{% static 'patient/css/flaticon.css' %}">
-    <link rel="stylesheet" href="{% static 'patient/css/icomoon.css' %}">
-    <link rel="stylesheet" href="{% static 'patient/css/style.css' %}">
 	<link rel="stylesheet" href="{% static 'patient/css/data.css' %}">
     <!--[if lt IE 9]>
 		<script src="assets/js/html5shiv.min.js"></script>
@@ -57,7 +45,7 @@
 							<img class="rounded-circle" src="{% static 'assets/img/user.jpg' %}" width="24" alt="Admin">
 							<span class="status online"></span>
 						</span>
-						<span>{{ user.name}}</span>
+						<span>Pharmacy</span>
                     </a>
 					<div class="dropdown-menu">
 						<a class="dropdown-item" href="#">My Profile</a>
@@ -82,68 +70,77 @@
                 <div id="sidebar-menu" class="sidebar-menu">
                     <ul>
                         <li class="menu-title">Main</li>
-                        <li class="active">
-                            <a href="{% url 'doct_hm' %}"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a>
+                        <li >
+                            <a href="{% url 'pha_hm' %"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a>
                         </li>
 						<li>
-                            <a href="{% url 'dr_bk_vw' %}"><i class="fa fa-user-md"></i> <span>View Patients</span></a>
+                            <a href="{% url 'vew_presc' %}"><i class="fa fa-user-md"></i> <span>View Patients</span></a>
+                        </li>
+						<li>
+                            <a href="{% url 'me_vw' %}"><i class="fa fa-medkit"></i> <span>Medicine list</span></a>
+                        </li>
+						<li class="active">
+                            <a href="{% url 'pg_med_add' %}"><i class="fa fa-medkit"></i> <span>Add Medicine</span></a>
                         </li>
                     </ul>
                 </div>
             </div>
         </div>
-        <div class="content-wrapper">
-	
-	<div class="content-wrapper">
-	<section class="ftco-about img ftco-section ftco-no-pt ftco-no-pb" id="about-section">
-    	<div class="container">
-    		<div class="row d-flex no-gutters">
-    			<div class="col-md-6 col-lg-6 pl-md-5 py-5">
-    				<div class="row justify-content-start pb-3">
-		          <div class="col-md-12 heading-section ftco-animate">
-		            <h2 class="mb-4">About Me</h2>
-		            <ul class="about-info mt-4 px-md-0 px-2">
-		            	<li class="d-flex"><span>Name:</span> <span>{{user.name}}</span></li>
-						<li class="d-flex"><span>Qualification:</span> <span>{{user.qual}}</span></li>
-		            	<li class="d-flex"><span>Specialization:</span> <span>{{user.special}}</span></li>
-		            	<li class="d-flex"><span>Experience:</span> <span>{{user.exper}}</span></li>
-		            	<li class="d-flex"><span>Email:</span> <span>{{user.email}}</span></li>
-						<li class="d-flex"><span>Mobile:</span> <span>{{user.phone}}</span></li>
-		            </ul>
-		          </div>
-		        </div>
-	          </div>
-	        </div>
+		<div class="page-wrapper">
+            <div class="content">
+                <div class="row">
+                    <div class="col-lg-8 offset-lg-2">
+                        <h4 class="page-title">Add Medicine</h4>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-8 offset-lg-2">
+                        <form action="{% url 'stock' %}" method="post">{% csrf_token %}
+                            <div class="row">
+								<div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label>Production Date<span class="text-danger">*</span></label>
+                                        <div class="cal-icon">
+                                            <input type="text" name="f_date" class="form-control datetimepicker">
+                                        </div>
+                                    </div>
+                                </div>
+								<div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label>Expiry Date<span class="text-danger">*</span></label>
+                                        <div class="cal-icon">
+                                            <input type="text" name="e_date" class="form-control datetimepicker">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label>Medicine Name <span class="text-danger">*</span></label>
+                                        <input class="form-control" name="med" type="text" autocomplete="off" required>
+                                    </div>
+                                </div>
+								<div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label>Disease <span class="text-danger">*</span></label>
+                                        <input class="form-control" name="dis" type="text" autocomplete="off" required>
+                                    </div>
+                                </div>
+								<div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label>Total Stock<span class="text-danger">*</span></label>
+                                        <input class="form-control" name="stock" type="text" autocomplete="off" required>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="m-t-20 text-center">
+                                <button class="btn btn-primary submit-btn">Add Medicine</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
         </div>
-    	</div>
-		</section>
-	
-	<section class="qrcode" id="resume-section">
-    	<div class="container">
-		<form action="{% url 'qrcheck_dr' %}" method="post" enctype="multipart/form-data">{% csrf_token %}
-    		<div class="row">
-					<div class="col-md-9">
-					  <div id="page-2" class= "page two">
-					  	<h2 class="heading">Check Patient</h2>
-	    				<div class="resume-wrap d-flex ftco-animate">
-	    					<div class="icon d-flex align-items-center justify-content-center">
-					    		<span class="flaticon-ideas"></span>
-					    	</div>
-					    	<div class="text pl-3">
-								<input type="file" name="files" class="code" style="width:100%;">
-		    				</div>
-							<input type="submit" value="Check" class="btn btn-primary">
-	    				</div>
-					  </div>
-					  
-					  
-					</div>
-			  </div>
-		</form>
-    	</div>
-    </section>
-	</div>
-	<br></br>
+    </div>
+		<br></br>
 <footer class="ftc">
           <div class="col-md-12 text-center">
 
@@ -152,13 +149,13 @@
   <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. --></p>
           </div>
     </footer>
-    <div class="sidebar-overlay" data-reff=""></div>
 	<script src="{% static 'assets/js/jquery-3.2.1.min.js' %}"></script>
 	<script src="{% static 'assets/js/popper.min.js' %}"></script>
     <script src="{% static 'assets/js/bootstrap.min.js' %}"></script>
     <script src="{% static 'assets/js/jquery.slimscroll.js' %}"></script>
-    <script src="{% static 'assets/js/Chart.bundle.js' %}"></script>
-    <script src="{% static 'assets/js/chart.js' %}"></script>
+    <script src="{% static 'assets/js/select2.min.js' %}"></script>
+    <script src="{% static 'assets/js/moment.min.js' %}"></script>
+    <script src="{% static 'assets/js/bootstrap-datetimepicker.min.js' %}"></script>
     <script src="{% static 'assets/js/app.js' %}"></script>
 	
 	<script src="{% static 'patient/js/jquery.min.js' %}"></script>
@@ -172,7 +169,6 @@
   <script src="{% static 'patient/js/jquery.animateNumber.min.js' %}"></script>
   <script src="{% static 'patient/js/scrollax.min.js' %}"></script>
   <script src="{% static 'patient/js/main.js' %}"></script>
-
-</body>
-
-</html>
+ <script>
+ </body>
+ </html>

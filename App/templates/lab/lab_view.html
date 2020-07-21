@@ -136,7 +136,7 @@ table {
 			<input type="text" name="doc" style="display:none;" value="{{ i.doc }}">{{i.doc}}
         </td>
 		<td>
-			<input type="text" name="name" style="display:none;" value="{{ date.name }}">&nbsp;{{ data.name }}
+			<input type="text" name="name" style="display:none;" value="{{ i.pat }}">&nbsp;{{ i.pat }}
         </td>
         <td>
             <input type="text" name="test" value="{{ i.test }}" style="display:none;">&nbsp;{{ i.test }}
@@ -145,7 +145,7 @@ table {
 			<input type="text" name="pt" value="{{ i.pid }}" style="display:none;">
 			<td style="width: 1%;">
 		<div class="form-group">
-				<input type="submit" class="btn btn-primary" onclick="change()" value="Give">
+				<button class="btn btn-primary" onclick="change()" type="button" id="myButton">Check</button>
          </div>
 		</td>
         </tr>

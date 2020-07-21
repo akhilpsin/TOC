@@ -151,13 +151,13 @@ table {
 <br><br>
 <thead>
     <tr>
-	<th>No.</th><th>Date</th><th> Doctor &nbsp;&nbsp;&nbsp;</th><th>Patient</th><th>Test &nbsp;&nbsp;&nbsp;</th><th>Result</th><th>Status</th>
+	<th>No.</th><th>Date</th><th> Doctor &nbsp;&nbsp;&nbsp;</th><th>Patient</th><th>Test &nbsp;&nbsp;&nbsp;</th><th>Result</th>
     </tr>
     </thead>
 <tbody>
     {% for i in lab %}
         <tr>
-		<form action="{% url 'lstatus' %}" method="post">{% csrf_token %}
+		<form action="{% url 'info' %}" method="post">{% csrf_token %}
 		<td class="count"></td>
 		<td>
 			<input type="text" name="date" style="display:none;" value="{{ i.date }}">&nbsp;{{ i.date }}
@@ -167,22 +167,20 @@ table {
         </td>
 		<td>
 			<input type="text" name="name" style="display:none;" value="{{ date.name }}">&nbsp;{{ data.name }}
+			<input type="text" name="llid" value="{{i.llid}}" style="display:none;">&nbsp;
+			<input type="text" name="pt" value="{{ i.pid }}" style="display:none;">
         </td>
         <td>
             <input type="text" name="test" value="{{ i.test }}" style="display:none;">&nbsp;{{ i.test }}
 		</td>
         <td>
-            <input type="button" id="bt" onclick="print()" value="Upload" />
-        </td>
-            <input type="text" name="llid" value="{{i.llid}}" style="display:none;">&nbsp;
-			<input type="text" name="pt" value="{{ i.pid }}" style="display:none;">
-			<td style="width: 1%;">
-		<div class="form-group">
-				<input type="submit" class="btn btn-primary" onclick="change()" value="Give">
+            <div class="form-group">
+				<button class="btn btn-primary">Upload</button>
          </div>
-		</td>
-        </tr>
+        </td>
 		</form>
+        </tr>
+		
     {% endfor %}
 </tbody>
 </table>
@@ -199,12 +197,6 @@ table {
   <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. --></p>
           </div>
     </footer>
-<script>
-function change() // no ';' here
-{
-    document.getElementById("myButton2").innerHTML="Given";
-}
-</script>
 <div class="sidebar-overlay" data-reff=""></div>
 	<script src="{% static 'assets/js/jquery-3.2.1.min.js' %}"></script>
 	<script src="{% static 'assets/js/popper.min.js' %}"></script>

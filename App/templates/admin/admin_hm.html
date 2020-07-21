@@ -137,6 +137,37 @@
                     </div>
                 </div>
 				</div>
+				<div class="content">
+                <div class="row">
+                    <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
+                        <div class="dash-widget">
+							<span class="dash-widget-bg1"><i class="fa fa-hospital-o" aria-hidden="true"></i></span>
+							<div class="dash-widget-info text-right">
+								<h3>{{ data.out_hosp }}</h3>
+								<span class="widget-title1">Hospitals Pending<i class="fa fa-check" aria-hidden="true"></i></span>
+							</div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
+                        <div class="dash-widget">
+                            <span class="dash-widget-bg3"><i class="fa fa-medkit" aria-hidden="true"></i></span>
+                            <div class="dash-widget-info text-right">
+                                <h3>{{ data.out_phar }}</h3>
+                                <span class="widget-title3">Pharmacy Pending<i class="fa fa-check" aria-hidden="true"></i></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
+                        <div class="dash-widget">
+                            <span class="dash-widget-bg4"><i class="fa fa-flask" aria-hidden="true"></i></span>
+                            <div class="dash-widget-info text-right">
+                                <h3>{{ data.out_lab }}</h3>
+                                <span class="widget-title4">Laboratory Pending<i class="fa fa-check" aria-hidden="true"></i></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+				</div>
 				<button type="submit"  class="imgs" onClick="refreshPage()">Refresh</button>
             </div>
 		</form>

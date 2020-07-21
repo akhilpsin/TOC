@@ -25,6 +25,10 @@
     <link rel="stylesheet" href="{% static 'patient/css/icomoon.css' %}">
     <link rel="stylesheet" href="{% static 'patient/css/style.css' %}">
 	<link rel="stylesheet" href="{% static 'patient/css/data.css' %}">
+	
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 
  <style>
 table, th, td {
@@ -101,7 +105,7 @@ table, th, td {
 			<input type="text" name="hos" value="{{ i.hos}}" style="display:none;">&nbsp;{{ i.hos }}
         </td>
 		<td>
-			<input type="button" id="bt" onclick="print()" value="View" />
+			<a href="{{ i.result.url }}">View</a>
         </td>
         </tr>
     {% endfor %}

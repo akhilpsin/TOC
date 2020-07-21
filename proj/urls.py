@@ -75,6 +75,8 @@ urlpatterns = [
     url(r'^upd_hos',upd_hos,name="upd_hos"),                            #Hospital profile update
     url(r'^forget_pass',forget_pass,name="forget_pass"),                #password reset page
     url(r'reset',reset,name="reset"),                                   #reset password
+    url(r'^fresh',fresh,name="fresh"),                                  #refresh in hospital
+    url(r'^avail',avail,name="avail"),                                  #doctor available check
     
 
 
@@ -98,6 +100,8 @@ urlpatterns = [
     url(r'^tst_lab',tst_lab,name="tst_lab"),                            #lab qrcode check after
     url(r'^lstatus',lstatus,name="lstatus"),                            #lab test complete
     url(r'^vow_lab',vow_lab,name="vow_lab"),                            #lab test view request
+    url(r'^info',info,name="info"),                                     #upload page
+    url(r'^file_lab',file_lab,name="file_lab"),                          #upload file
 
 
     url(r'^o_labo_hm',o_labo_hm,name="o_labo_hm"),                      #out lab home page
@@ -108,6 +112,10 @@ urlpatterns = [
     url(r'^presc_pha',presc_pha,name="presc_pha"),                      #Pharmacy qrcode check after
     url(r'^pstatus',pstatus,name="pstatus"),                            #after medicine given
     url(r'^vew_presc',vew_presc,name="vew_presc"),                      #hosp pharamacy view
+    url(r'^me_vw',me_vw,name="me_vw"),                                  #stock medicine view
+    url(r'^pg_med_add',pg_med_add,name="pg_med_add"),                    #Add med pag
+    url(r'^stock',stock,name="stock"),                                   #add medicine
+    url(r'^print_bill',print_bill,name="print_bill"),                   #print bill
 
 
 
@@ -118,6 +126,10 @@ urlpatterns = [
     url(r'^list_dept',list_dept,name="list_dept"),                      #hospital department
     url(r'^list_dr',list_dr,name="list_dr"),                            #hospital doctor
     url(r'^book_now',book_now,name="book_now"),                         #appointemnet doctor
+    url(r'^stk_med',stk_med,name="stk_med"),                            #medicine stock check
+    url(r'^z_stock',z_stock,name="z_stock"),                            #stock checker
+    url(r'^autocomplete',autocomplete,name="autocomplete"),             #auto medicine load
+    url(r'^medchecker',medchecker,name="medchecker"),                   #medicine availability checker
     
    #url(r'^patient_reg',patient_reg,name="Patient"),
    # url(r'^doc_reg',doc_reg,name="Doctor"),

@@ -30,6 +30,7 @@
 	<link rel="stylesheet" href="{% static 'patient/css/data.css' %}">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <!--[if lt IE 9]>
 		<script src="assets/js/html5shiv.min.js"></script>
 		<script src="assets/js/respond.min.js"></script>
@@ -204,8 +205,8 @@ table, th, td {
 					</div>
 					<div class="col-sm-6">
 						<div class="form-group1">
-                            <label>Medicine:</label>
-							<input class="form-controls" name="med" type="text" autocomplete="off" required>
+								<label for="product">Medicine :</label>
+								<input type="text" name="med" id="product" class="form-controls" >
                         </div>
 					</div>
 					<div class="col-sm-6">
@@ -326,7 +327,7 @@ table, th, td {
 			<input type="text" name="pt" value="{{ i.pid }}" style="display:none;">
 		</td>
 		<td>
-			<input type="button" id="bt" onclick="print()" value="View" />
+			<a href="{{ i.result.url }}">View</a>
 		</td>
         </tr>
 		</form>
@@ -367,12 +368,5 @@ table, th, td {
   <script src="{% static 'patient/js/jquery.animateNumber.min.js' %}"></script>
   <script src="{% static 'patient/js/scrollax.min.js' %}"></script>
   <script src="{% static 'patient/js/main.js' %}"></script>
- <script>
-    function print() {
-        var objFra = document.getElementById('myFrame');
-        objFra.contentWindow.focus();
-        objFra.contentWindow.print();
-    }
-</script>
-  </head>
+  </body>
   </html>

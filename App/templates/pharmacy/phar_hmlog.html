@@ -83,10 +83,19 @@
                     <ul>
                         <li class="menu-title">Main</li>
                         <li class="active">
-                            <a href="{% url 'pha_hm' %"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a>
+                            <a href="{% url 'pha_hm' %}"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a>
                         </li>
 						<li>
                             <a href="{% url 'vew_presc' %}"><i class="fa fa-user-md"></i> <span>View Patients</span></a>
+                        </li>
+						<li>
+                            <a href="{% url 'me_vw' %}"><i class="fa fa-medkit"></i> <span>Medicine list</span></a>
+                        </li>
+						<li>
+                            <a href="{% url 'pg_med_add' %}"><i class="fa fa-medkit"></i> <span>Add Medicine</span></a>
+                        </li>
+						<li>
+                            <a href="{% url 'print_bill' %}"><i class="fa fa-medkit"></i> <span>bill</span></a>
                         </li>
                     </ul>
                 </div>
