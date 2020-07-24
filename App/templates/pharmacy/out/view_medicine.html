@@ -5,7 +5,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
-    <title>{{ user.name}}</title>
+    <title>{{ user.name }} Pharmacy</title>
 	<link rel="icon" href="{% static 'assets/img/logo.png' %}" type="image/x-icon">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="{% static 'assets/css/bootstrap.min.css' %}">
@@ -69,7 +69,7 @@ table {
 							<img class="rounded-circle" src="{% static 'assets/img/user.jpg' %}" width="24" alt="Admin">
 							<span class="status online"></span>
 						</span>
-						<span>{{ user.name}}</span>
+						<span>Pharmacy</span>
                     </a>
 					<div class="dropdown-menu">
 						<a class="dropdown-item" href="#">My Profile</a>
@@ -94,11 +94,14 @@ table {
                 <div id="sidebar-menu" class="sidebar-menu">
                     <ul>
                         <li class="menu-title">Main</li>
-                        <li>
-                            <a href="{% url 'doct_hm' %}"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a>
+                        <li >
+                            <a href="{% url 'aa_o_pha_hm' %}"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a>
                         </li>
 						<li class="active">
-                            <a href="{% url 'dr_bk_vw' %}"><i class="fa fa-user-md"></i> <span>View Patients</span></a>
+                            <a href="{% url 'ee_vw' %}"><i class="fa fa-medkit"></i> <span>Medicine list</span></a>
+                        </li>
+						<li>
+                            <a href="{% url 'vv_med_add' %}"><i class="fa fa-medkit"></i> <span>Add Medicine</span></a>
                         </li>
                     </ul>
                 </div>
@@ -108,7 +111,7 @@ table {
             <div class="content">
                 <div class="row">
                     <div class="col-sm-4 col-3">
-                        <h4 class="page-title">Appointments</h4>
+                        <h4 class="page-title">Pharmacy</h4>
                     </div>
                 </div>
  <section class="content">
@@ -117,43 +120,35 @@ table {
 		<a class="cta-link element-animate">
       <!-- <span class="sub-heading">Ready to Visit?</span> -->
 			<table id="tb2" style="width:100%">
-<h1 class="h1">APPOINTMENTS</h1>
+<h1 class="h1">Medicine List</h1>
 <br><br>
 <thead>
     <tr>
-	<th>No.</th><th>Date</th><th> Person Name &nbsp;&nbsp;&nbsp;</th><th>Age &nbsp;&nbsp;&nbsp;</th><th>Gender &nbsp;&nbsp;&nbsp;</th><th>Place</th><th>Status</th>
+	<th>No.</th><th>prdct date</th><th>expiry date</th><th> Medicine Name &nbsp;&nbsp;&nbsp;</th><th>Disease &nbsp;&nbsp;&nbsp;</th><th>Stock &nbsp;&nbsp;&nbsp;</th>
     </tr>
     </thead>
 <tbody>
-    {% for i in book %}
+    {% for i in data %}
 	
         <tr>
 		<form action="#" method="post">{% csrf_token %}
 		<td class="count"></td>
 		<td>
-			<input type="text" name="date" style="display:none;" value="{{ i.name }}">&nbsp;{{ i.date }}
+			<input type="text" name="date" style="display:none;" value="{{ i.f_date }}">&nbsp;{{ i.f_date }}
         </td>
 		<td>
-			<input type="text" name="name" style="display:none;" value="{{ i.name }}">&nbsp;{{ i.name }}
+			<input type="text" name="date" style="display:none;" value="{{ i.e_date }}">&nbsp;{{ i.e_date }}
         </td>
-        <td>
-            <input type="text" name="age" value="{{ i.age }}" style="display:none;">&nbsp;{{ i.age }}
-		</td>
-        <td>
+		<td>
             <input type="text" name="out" value="out" style="display:none;">
-			<input type="text" name="gender" value="{{ i.gender }}" style="display:none;">{{ i.gender }}
+			<input type="text" name="gender" value="{{ i.med }}" style="display:none;">{{ i.med }}
         </td>
-		 <td>
-            <input type="text" name="place" value="{{ i.place }}" style="display:none;">&nbsp;{{ i.place }}
-			<input type="text" name="id" value="{{ i.bid }}" style="display:none;">
-			<input type="text" name="pt" value="{{ i.pid }}" style="display:none;">
+		<td>
+			<input type="text" name="name" style="display:none;" value="{{ i.disease }}">&nbsp;{{ i.disease }}
+        </td>
+        <td>
+            <input type="text" name="age" value="{{ i.stock }}" style="display:none;">&nbsp;{{ i.stock }}
 		</td>
-		<td style="width: 1%;">
-		<div class="form-group">
-		 <input type="text" name="status" value="{{ i.status }}" readonly class="btn btn-primary">&nbsp;
-         </div>
-
-     </td>
         </tr>
 		</form>
     {% endfor %}
@@ -173,13 +168,7 @@ table {
   <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. --></p>
           </div>
     </footer>
-<script>
-function change() // no ';' here
-{
-    document.getElementById("myButton2").innerHTML="Checked";
-}
-</script>
-<div class="sidebar-overlay" data-reff=""></div>
+    <div class="sidebar-overlay" data-reff=""></div>
 	<script src="{% static 'assets/js/jquery-3.2.1.min.js' %}"></script>
 	<script src="{% static 'assets/js/popper.min.js' %}"></script>
     <script src="{% static 'assets/js/bootstrap.min.js' %}"></script>
@@ -199,5 +188,7 @@ function change() // no ';' here
   <script src="{% static 'patient/js/jquery.animateNumber.min.js' %}"></script>
   <script src="{% static 'patient/js/scrollax.min.js' %}"></script>
   <script src="{% static 'patient/js/main.js' %}"></script>
+
 </body>
+
 </html>

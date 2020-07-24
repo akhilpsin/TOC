@@ -83,10 +83,7 @@
                     <ul>
                         <li class="menu-title">Main</li>
                         <li class="active">
-                            <a href="#"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a>
-                        </li>
-						<li>
-                            <a href="#"><i class="fa fa-user-md"></i> <span>View Patients</span></a>
+                            <a href="{% url 'o_labo_hm' %}"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a>
                         </li>
                     </ul>
                 </div>
@@ -119,6 +116,7 @@
 	
 	<section class="qrcode" id="resume-section">
     	<div class="container">
+		<form action="{% url 'ot_tst_lab' %}" method="post" enctype="multipart/form-data">{% csrf_token %}
     		<div class="row">
 					<div class="col-md-9">
 					  <div id="page-2" class= "page two">
@@ -128,14 +126,16 @@
 					    		<span class="flaticon-ideas"></span>
 					    	</div>
 					    	<div class="text pl-3">
-		    					<p class="mb-0"><a href="#" class="btn btn-primary py-3 px-5">Scan QR</a></p>
+								<input type="file" name="files" class="code" style="width:100%;">
 		    				</div>
+							<input type="submit" value="Check" class="btn btn-primary">
 	    				</div>
 					  </div>
 					  
 					  
 					</div>
 			  </div>
+		</form>
     	</div>
     </section>
 	</div>

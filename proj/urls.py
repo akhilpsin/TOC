@@ -86,6 +86,7 @@ urlpatterns = [
     url(r'^test_dr',test_dr,name="test_dr"),                            #add test
     url(r'^pre_dr',pre_dr,name="pre_dr"),                               #prescription
     url(r'^back',back,name="back"),                                     #redirect to qr view page
+    url(r'^submit',submit,name="submit"),                               #consultaion
 
     
     url(r'^pat_hm',pat_hm,name="pat_hm"),                               #Patient home
@@ -101,10 +102,13 @@ urlpatterns = [
     url(r'^lstatus',lstatus,name="lstatus"),                            #lab test complete
     url(r'^vow_lab',vow_lab,name="vow_lab"),                            #lab test view request
     url(r'^info',info,name="info"),                                     #upload page
-    url(r'^file_lab',file_lab,name="file_lab"),                          #upload file
+    url(r'^file_lab',file_lab,name="file_lab"),                         #upload file
 
 
     url(r'^o_labo_hm',o_labo_hm,name="o_labo_hm"),                      #out lab home page
+    url(r'^ot_tst_lab',ot_tst_lab,name="ot_tst_lab"),                   #lab qrcode check after
+    url(r'^aout_info',aout_info,name="aout_info"),                      #upload page
+    url(r'^bout_file_lab',bout_file_lab,name="bout_file_lab"),          #upload file
     
 
 
@@ -120,6 +124,11 @@ urlpatterns = [
 
 
     url(r'^aa_o_pha_hm',aa_o_pha_hm,name="aa_o_pha_hm"),                #out pharmacy home page
+    url(r'^kout_presc_pha',kout_presc_pha,name="kout_presc_pha"),       #out phar qrcode after
+    url(r'^mout_pstatus',mout_pstatus,name="mout_pstatus"),             #after medicine given
+    url(r'^vv_med_add',vv_med_add,name="vv_med_add"),                   #add medicine
+    url(r'^yy_stock',yy_stock,name="yy_stock"),                         #update stock
+    url(r'^ee_vw',ee_vw,name="ee_vw"),                                  #stock medicine view
     
     
     url(r'^list_hosp',list_hosp,name="list_hosp"),                      #hospital list
@@ -130,6 +139,13 @@ urlpatterns = [
     url(r'^z_stock',z_stock,name="z_stock"),                            #stock checker
     url(r'^autocomplete',autocomplete,name="autocomplete"),             #auto medicine load
     url(r'^medchecker',medchecker,name="medchecker"),                   #medicine availability checker
+
+    url(r'^appoit',appoit,name="appoit"),                               #add appointmnet
+    url(r'^recp',recp,name="recp"),                                     #add reception
+    url(r'^wdept',wdept,name="wdept"),                                  #hosp departmenst
+    url(r'^pbooking',pbooking,name="pbooking"),
+    url(r'^iibook',iibook,name="iibook"),
+    url(r'nn_list_dr',nn_list_dr,name="nn_list_dr"),
     
    #url(r'^patient_reg',patient_reg,name="Patient"),
    # url(r'^doc_reg',doc_reg,name="Doctor"),

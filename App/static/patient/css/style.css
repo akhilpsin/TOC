@@ -2611,6 +2611,12 @@ input[type="button"].btn-block {
   bottom: 100%;
   margin-top: 0;
   margin-bottom: 0.125rem; }
+#myButton{
+	color:red;
+	margin-left: 50%;
+    margin-top: 3%;
+	border-radius:10px;
+}
 
 .dropup .dropdown-toggle::after {
   display: inline-block;

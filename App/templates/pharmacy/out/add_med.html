@@ -5,28 +5,16 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
-    <title>{{ user.name}}</title>
+    <title>{{ user.name }} Pharmacy</title>
 	<link rel="icon" href="{% static 'assets/img/logo.png' %}" type="image/x-icon">
+<link rel="icon" href="{% static 'assets/img/logo.png' %}" type="image/x-icon">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="{% static 'assets/css/bootstrap.min.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'assets/css/font-awesome.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'assets/css/select2.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'assets/css/bootstrap-datetimepicker.min.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'assets/css/style.css' %}">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-	
-	<link rel="stylesheet" href="{% static 'patient/css/open-iconic-bootstrap.min.css' %}">
-    <link rel="stylesheet" href="{% static 'patient/css/animate.css' %}">
-    
-    <link rel="stylesheet" href="{% static 'patient/css/owl.carousel.min.css' %}">
-    <link rel="stylesheet" href="{% static 'patient/css/owl.theme.default.min.css' %}">
-    <link rel="stylesheet" href="{% static 'patient/css/magnific-popup.css' %}">
-
-    <link rel="stylesheet" href="{% static 'patient/css/aos.css' %}">
-
-    <link rel="stylesheet" href="{% static 'patient/css/ionicons.min.css' %}">
-    
-    <link rel="stylesheet" href="{% static 'patient/css/flaticon.css' %}">
-    <link rel="stylesheet" href="{% static 'patient/css/icomoon.css' %}">
-    <link rel="stylesheet" href="{% static 'patient/css/style.css' %}">
 	<link rel="stylesheet" href="{% static 'patient/css/data.css' %}">
     <!--[if lt IE 9]>
 		<script src="assets/js/html5shiv.min.js"></script>
@@ -36,18 +24,6 @@
 .imgs {
 	margin-left:1000px;
 	border-radius:15px;
-}
-table, th, td {
-  border: 2px solid #ba2424;
-  text-align: center;
-}
-table {
-  counter-reset: section;
-}
-
-.count:before {
-  counter-increment: section;
-  content: counter(section);
 }
 </style>
 </head>
@@ -69,7 +45,7 @@ table {
 							<img class="rounded-circle" src="{% static 'assets/img/user.jpg' %}" width="24" alt="Admin">
 							<span class="status online"></span>
 						</span>
-						<span>{{ user.name}}</span>
+						<span>Pharmacy</span>
                     </a>
 					<div class="dropdown-menu">
 						<a class="dropdown-item" href="#">My Profile</a>
@@ -94,11 +70,14 @@ table {
                 <div id="sidebar-menu" class="sidebar-menu">
                     <ul>
                         <li class="menu-title">Main</li>
-                        <li>
-                            <a href="{% url 'doct_hm' %}"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a>
+                        <li >
+                            <a href="{% url 'aa_o_pha_hm' %}"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a>
+                        </li>
+						<li>
+                            <a href="{% url 'ee_vw' %}"><i class="fa fa-medkit"></i> <span>Medicine list</span></a>
                         </li>
 						<li class="active">
-                            <a href="{% url 'dr_bk_vw' %}"><i class="fa fa-user-md"></i> <span>View Patients</span></a>
+                            <a href="{% url 'vv_med_add' %}"><i class="fa fa-medkit"></i> <span>Add Medicine</span></a>
                         </li>
                     </ul>
                 </div>
@@ -107,64 +86,58 @@ table {
 		<div class="page-wrapper">
             <div class="content">
                 <div class="row">
-                    <div class="col-sm-4 col-3">
-                        <h4 class="page-title">Appointments</h4>
+                    <div class="col-lg-8 offset-lg-2">
+                        <h4 class="page-title">Add Medicine</h4>
                     </div>
                 </div>
- <section class="content">
-      <div class="container-fluid">
-        <!-- Small boxes (Stat box) -->
-		<a class="cta-link element-animate">
-      <!-- <span class="sub-heading">Ready to Visit?</span> -->
-			<table id="tb2" style="width:100%">
-<h1 class="h1">APPOINTMENTS</h1>
-<br><br>
-<thead>
-    <tr>
-	<th>No.</th><th>Date</th><th> Person Name &nbsp;&nbsp;&nbsp;</th><th>Age &nbsp;&nbsp;&nbsp;</th><th>Gender &nbsp;&nbsp;&nbsp;</th><th>Place</th><th>Status</th>
-    </tr>
-    </thead>
-<tbody>
-    {% for i in book %}
-	
-        <tr>
-		<form action="#" method="post">{% csrf_token %}
-		<td class="count"></td>
-		<td>
-			<input type="text" name="date" style="display:none;" value="{{ i.name }}">&nbsp;{{ i.date }}
-        </td>
-		<td>
-			<input type="text" name="name" style="display:none;" value="{{ i.name }}">&nbsp;{{ i.name }}
-        </td>
-        <td>
-            <input type="text" name="age" value="{{ i.age }}" style="display:none;">&nbsp;{{ i.age }}
-		</td>
-        <td>
-            <input type="text" name="out" value="out" style="display:none;">
-			<input type="text" name="gender" value="{{ i.gender }}" style="display:none;">{{ i.gender }}
-        </td>
-		 <td>
-            <input type="text" name="place" value="{{ i.place }}" style="display:none;">&nbsp;{{ i.place }}
-			<input type="text" name="id" value="{{ i.bid }}" style="display:none;">
-			<input type="text" name="pt" value="{{ i.pid }}" style="display:none;">
-		</td>
-		<td style="width: 1%;">
-		<div class="form-group">
-		 <input type="text" name="status" value="{{ i.status }}" readonly class="btn btn-primary">&nbsp;
-         </div>
-
-     </td>
-        </tr>
-		</form>
-    {% endfor %}
-</tbody>
-</table>
-
-  </div>
-</section>
+                <div class="row">
+                    <div class="col-lg-8 offset-lg-2">
+                        <form action="{% url 'yy_stock' %}" method="post">{% csrf_token %}
+                            <div class="row">
+								<div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label>Production Date<span class="text-danger">*</span></label>
+                                        <div class="cal-icon">
+                                            <input type="text" name="f_date" class="form-control datetimepicker">
+                                        </div>
+                                    </div>
+                                </div>
+								<div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label>Expiry Date<span class="text-danger">*</span></label>
+                                        <div class="cal-icon">
+                                            <input type="text" name="e_date" class="form-control datetimepicker">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label>Medicine Name <span class="text-danger">*</span></label>
+                                        <input class="form-control" name="med" type="text" autocomplete="off" required>
+                                    </div>
+                                </div>
+								<div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label>Disease <span class="text-danger">*</span></label>
+                                        <input class="form-control" name="dis" type="text" autocomplete="off" required>
+                                    </div>
+                                </div>
+								<div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label>Total Stock<span class="text-danger">*</span></label>
+                                        <input class="form-control" name="stock" type="text" autocomplete="off" required>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="m-t-20 text-center">
+                                <button class="btn btn-primary submit-btn">Add Medicine</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+        </div>
     </div>
-    </div>
-	<br></br>
+		<br></br>
 <footer class="ftc">
           <div class="col-md-12 text-center">
 
@@ -173,19 +146,13 @@ table {
   <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. --></p>
           </div>
     </footer>
-<script>
-function change() // no ';' here
-{
-    document.getElementById("myButton2").innerHTML="Checked";
-}
-</script>
-<div class="sidebar-overlay" data-reff=""></div>
 	<script src="{% static 'assets/js/jquery-3.2.1.min.js' %}"></script>
 	<script src="{% static 'assets/js/popper.min.js' %}"></script>
     <script src="{% static 'assets/js/bootstrap.min.js' %}"></script>
     <script src="{% static 'assets/js/jquery.slimscroll.js' %}"></script>
-    <script src="{% static 'assets/js/Chart.bundle.js' %}"></script>
-    <script src="{% static 'assets/js/chart.js' %}"></script>
+    <script src="{% static 'assets/js/select2.min.js' %}"></script>
+    <script src="{% static 'assets/js/moment.min.js' %}"></script>
+    <script src="{% static 'assets/js/bootstrap-datetimepicker.min.js' %}"></script>
     <script src="{% static 'assets/js/app.js' %}"></script>
 	
 	<script src="{% static 'patient/js/jquery.min.js' %}"></script>
@@ -199,5 +166,6 @@ function change() // no ';' here
   <script src="{% static 'patient/js/jquery.animateNumber.min.js' %}"></script>
   <script src="{% static 'patient/js/scrollax.min.js' %}"></script>
   <script src="{% static 'patient/js/main.js' %}"></script>
-</body>
-</html>
+ <script>
+ </body>
+ </html>

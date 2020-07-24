@@ -1,5 +1,6 @@
 {% load staticfiles %}
 {% static "" as img %}
+{% block content %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -30,7 +31,6 @@
 	<link rel="stylesheet" href="{% static 'patient/css/data.css' %}">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-  <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <!--[if lt IE 9]>
 		<script src="assets/js/html5shiv.min.js"></script>
 		<script src="assets/js/respond.min.js"></script>
@@ -44,6 +44,14 @@ table, th, td {
   border: 2px solid #ba2424;
   text-align: center;
   margin-top:-40px;
+}
+table {
+  counter-reset: section;
+}
+
+.count:before {
+  counter-increment: section;
+  content: counter(section);
 }
 </style>
 </head>
@@ -91,10 +99,13 @@ table, th, td {
                     <ul>
                         <li class="menu-title">Main</li>
                         <li class="active">
-                            <a href="{% url 'doct_hm' %}"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a>
+                            <a href="{% url 'aa_o_pha_hm' %}"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a>
                         </li>
 						<li>
-                            <a href="{% url 'dr_bk_vw' %}"><i class="fa fa-user-md"></i> <span>View Patients</span></a>
+                            <a href="{% url 'ee_vw' %}"><i class="fa fa-medkit"></i> <span>Medicine list</span></a>
+                        </li>
+						<li>
+                            <a href="{% url 'vv_med_add' %}"><i class="fa fa-medkit"></i> <span>Add Medicine</span></a>
                         </li>
                     </ul>
                 </div>
@@ -131,165 +142,7 @@ table, th, td {
 				</div>
 			</div>
 		</div>
-		<div class="row">
-            <div class="col-lg-8 offset-lg-2">
-				<div class="raw">
-					<div class="col-sm-6">
-						<div class="form-group1">
-                            <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Add Test</button>
-						</div>
-					</div>
-					<div class="col-sm-6">
-						<div class="form-group1">
-                            <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal2">Prescription</button>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-		<div class="modal fade" id="myModal" role="dialog">
-    <div class="modal-dialog">
-    
-      <!-- Modal content-->
-	  <form action="{% url 'test_dr' %}" method="post">{% csrf_token %}
-      <div class="modal-content">
-        <div class="modal-header">
-          <h4 class="modal-titles">Add Test</h4>
-        </div>
-        <div class="modal-body">
-					<div class="col-sm-6">
-						<div class="form-group1">
-                            <label>Test Name :</label>
-							<input class="form-controls" name="test" type="text" autocomplete="off" required>
-							<input type="text" name="pid" value="{{ data.lid }}" style="display:none;">
-                        </div>
-					</div>
-					<div class="col-sm-6">
-						<div class="form-group1">
-                            <label>Date :</label>
-							<input class="form-controls" name="date" value="{{ data.date }}" type="text" autocomplete="off" readonly>
-							<input type="text" name="pass" value="{{ i.passw }}" style="display:none;">
-                        </div>
-					</div>
-			</div>
-			<div class="modal-footer">
-			<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-			<button type="submit" class="btn btn-default" style="color:red">Add Test</button>
-			</div>
-      </div>
-	  </form>
-    </div>
-  </div>
-  <div class="modal fade" id="myModal2" role="dialog">
-    <div class="modal-dialog">
-    
-      <!-- Modal content-->
-	  <form action="{% url 'pre_dr' %}" method="post">{% csrf_token %}
-      <div class="modal-content">
-        <div class="modal-header">
-          <h4 class="modal-titles1">Add Prescription</h4>
-        </div>
-        <div class="modal-body">
-					<div class="col-sm-6">
-						<div class="form-group1">
-                            <label>Date :</label>
-							<input class="form-controls" name="date" value="{{ data.date }}" type="text" autocomplete="off" readonly>
-							<input type="text" name="pass" value="{{ i.passw }}" style="display:none;">
-                        </div>
-					</div>
-					<div class="col-sm-6">
-						<div class="form-group1">
-                            <label>Disease</label>
-							<input class="form-controls" name="dis" type="text" autocomplete="off" required>
-                        </div>
-					</div>
-					<div class="col-sm-6">
-						<div class="form-group1">
-								<label for="product">Medicine :</label>
-								<input type="text" name="med" id="product" class="form-controls" >
-                        </div>
-					</div>
-					<div class="col-sm-6">
-						<div class="form-group1">
-                            <label>Times :</label>
-							<input class="form-controls" name="times" type="text" autocomplete="off" required>
-							<input type="text" name="pid" value="{{ data.lid }}" style="display:none;">
-                        </div>
-					</div>
-					<div class="col-sm-6">
-						<div class="form-group1">
-                            <label>Days:</label>
-							<input class="form-controls" name="day" type="text" autocomplete="off" required>
-                        </div>
-					</div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-		 <button type="submit" class="btn submit" style="color:red">Add Prescription</button>
-        </div>
-      </div>
-	  </form>
-      
-    </div>
-  </div>
-  
-</div>
-		<div class="page-wrap">
-            <div class="content">
-		 <section class="content">
-      <div class="container-fluid">
-        <!-- Small boxes (Stat box) -->
-		<a class="cta-link element-animate">
-      <!-- <span class="sub-heading">Ready to Visit?</span> -->
-			<table id="tb2" style="width:100%">
-<h1 class="hhh">Previous Prescription</h1>
-<br><br>
-<thead>
-    <tr>
-	<th>Date</th><th> Pharmacy Name &nbsp;&nbsp;&nbsp;</th><th>Disease</th><th>Medicine &nbsp;&nbsp;&nbsp;</th><th>Doctor</th><th>Timing &nbsp;&nbsp;&nbsp;</th><th>Days</th>
-    </tr>
-    </thead>
-<tbody>
-    {% for i in phar %}
-        <tr>
-		<form action="#" method="post">{% csrf_token %}
-		<td>
-			<input type="text" name="date" style="display:none;" value="{{ i.date }}">&nbsp;{{ i.date }}
-        </td>
-		<td>
-			<input type="text" name="name" style="display:none;" value="{{ i.name }}">&nbsp;{{ i.name }}
-        </td>
-		<td>
-			<input type="text" name="dis" style="display:none;" value="{{ i.disease }}">&nbsp;{{ i.disease }}
-        </td>
-        <td>
-            <input type="text" name="med" value="{{ i.med }}" style="display:none;">&nbsp;{{ i.med }}
-		</td>
-        <td>
-            <input type="text" name="out" value="out" style="display:none;">
-			<input type="text" name="doc" value="{{ i.doc }}" style="display:none;">{{ i.doc }}
-        </td>
-		<td>
-            <input type="text" name="out" value="out" style="display:none;">
-			<input type="text" name="doc" value="{{ i.timing }}" style="display:none;">{{ i.timing }}
-        </td>
-		 <td>
-            <input type="text" name="place" value="{{ i.days }}" style="display:none;">&nbsp;{{ i.days }}
-			<input type="text" name="pt" value="{{ i.lid }}" style="display:none;">
-		</td>
-
-     </td>
-        </tr>
-		</form>
-    {% endfor %}
-</tbody>
-</table>
-
-  </div>
-</section>
-</div>
-</div>
-
+		<br></br>
 <div class="page-wrap">
             <div class="content">
 		 <section class="content">
@@ -298,36 +151,46 @@ table, th, td {
 		<a class="cta-link element-animate">
       <!-- <span class="sub-heading">Ready to Visit?</span> -->
 			<table id="tb2" style="width:100%">
-<h1 class="hhh">Previous Lab Test</h1>
+<h1 class="hhh">Prescription</h1>
 <br><br>
 <thead>
     <tr>
-	<th>Date</th><th> Lab Name &nbsp;&nbsp;&nbsp;</th><th>Test Name &nbsp;&nbsp;&nbsp;</th><th>Doctor &nbsp;&nbsp;&nbsp;</th><th>Hospital</th><th>Result</th>
+	<th>No.</th><th>Date</th><th> Patient Name &nbsp;&nbsp;&nbsp;</th><th>Disease</th><th>Medicine &nbsp;&nbsp;&nbsp;</th><th>Doctor</th><th>Timing/day &nbsp;&nbsp;&nbsp;</th><th>Status</th>
     </tr>
     </thead>
 <tbody>
-    {% for i in lab %}
+    {% for i in phar %}
         <tr>
-		<form action="#" method="post">{% csrf_token %}
+		<form action="{% url 'mout_pstatus' %}" method="post">{% csrf_token %}
+		<td class="count"></td>
 		<td>
-			<input type="text" name="date" style="display:none;" value="{{ i.name }}">&nbsp;{{ i.date }}
+			<input type="text" name="date" style="display:none;" value="{{ i.date }}">&nbsp;{{ i.date }}
         </td>
 		<td>
-			<input type="text" name="name" style="display:none;" value="{{ i.name }}">&nbsp;{{ i.name }}
+			<input type="text" name="name" style="display:none;" value="{{ data.name }}">&nbsp;{{ data.name }}
+        </td>
+		<td>
+			<input type="text" name="dis" style="display:none;" value="{{ i.disease }}">&nbsp;{{ i.disease }}
         </td>
         <td>
-            <input type="text" name="test" value="{{ i.test }}" style="display:none;">&nbsp;{{ i.test }}
+            <input type="text" name="med" value="{{ i.med }}" style="display:none;">&nbsp;{{ i.med }}
 		</td>
         <td>
-            <input type="text" name="out" value="out" style="display:none;">
+            <input type="text" name="hos" value="{{ i.hos }}" style="display:none;">
+			<input type="text" name="pharm" value="{{ name }}" style="display:none;">
 			<input type="text" name="doc" value="{{ i.doc }}" style="display:none;">{{ i.doc }}
         </td>
-		 <td>
-            <input type="text" name="hos" value="{{ i.hos }}" style="display:none;">&nbsp;{{ i.hos }}
-			<input type="text" name="pt" value="{{ i.pid }}" style="display:none;">
-		</td>
 		<td>
-			<a href="{{ i.result.url }}">View</a>
+            <input type="text" name="llid" value="{{i.llid}}" style="display:none;">
+			<input type="text" name="t" value="{{ i.timing }}" style="display:none;">{{ i.timing }}/{{ i.days }}
+			<input type="text" name="d" value="{{ i.days }}" style="display:none;">
+        </td>
+            <input type="text" name="place" value="" style="display:none;">&nbsp;
+			<input type="text" name="pt" value="{{ i.pid }}" style="display:none;">
+			<td style="width: 1%;">
+		<div class="form-group">
+				<input type="submit" class="btn btn-primary" onclick="change()" value="Give">
+         </div>
 		</td>
         </tr>
 		</form>
@@ -337,14 +200,8 @@ table, th, td {
 
   </div>
 </section>
-<form action="{% url 'submit' %}" method="post">{% csrf_token %}
-	</div>
-		<input type="text" name="id" style="display:none;" value="{{ data.lid }}">
-		<input type="text" name="name" style="display:none;" value="{{ data.name }}">
-		<button id="myButton">Checked</button>
-	</div>
-</form>
-<br></br>
+</div>
+</div>
 <footer class="ftc">
           <div class="col-md-12 text-center">
 
@@ -354,6 +211,12 @@ table, th, td {
           </div>
     </footer>
 <div class="sidebar-overlay" data-reff=""></div>
+<script>
+function change() // no ';' here
+{
+    document.getElementById("myButton2").innerHTML="Given";
+}
+</script>
 	<script src="{% static 'assets/js/jquery-3.2.1.min.js' %}"></script>
 	<script src="{% static 'assets/js/popper.min.js' %}"></script>
     <script src="{% static 'assets/js/bootstrap.min.js' %}"></script>
@@ -373,5 +236,6 @@ table, th, td {
   <script src="{% static 'patient/js/jquery.animateNumber.min.js' %}"></script>
   <script src="{% static 'patient/js/scrollax.min.js' %}"></script>
   <script src="{% static 'patient/js/main.js' %}"></script>
-  </body>
-  </html>
+</body>
+</html>
+{% endblock %}

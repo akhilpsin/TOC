@@ -121,7 +121,7 @@ table {
 <br><br>
 <thead>
     <tr>
-	<th>No.</th><th>Date</th><th> Doctor &nbsp;&nbsp;&nbsp;</th><th>Patient</th><th>Test &nbsp;&nbsp;&nbsp;</th><th>Status</th>
+	<th>No.</th><th>Date</th><th> Doctor &nbsp;&nbsp;&nbsp;</th><th>Patient</th><th>Test &nbsp;&nbsp;&nbsp;</th><!--<th>Status</th>-->
     </tr>
     </thead>
 <tbody>
@@ -143,11 +143,11 @@ table {
 		</td>
             <input type="text" name="llid" value="{{i.llid}}" style="display:none;">&nbsp;
 			<input type="text" name="pt" value="{{ i.pid }}" style="display:none;">
-			<td style="width: 1%;">
+			<!--<td style="width: 1%;">
 		<div class="form-group">
 				<button class="btn btn-primary" onclick="change()" type="button" id="myButton">Check</button>
          </div>
-		</td>
+		</td>-->
         </tr>
 		</form>
     {% endfor %}

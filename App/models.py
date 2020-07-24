@@ -13,6 +13,13 @@ class login_tb(models.Model):
     password=models.CharField(max_length=30)
     usertype=models.CharField(max_length=30)
 
+class recep(models.Model):
+    rlid=models.IntegerField(primary_key=True)
+    lid=models.IntegerField()
+    hos_id=models.IntegerField()
+    hos=models.CharField(max_length=30)
+    place=models.CharField(max_length=30)
+
 
 #--------------------ADMIN------------------------------------------------------------
 

@@ -57,6 +57,8 @@ def forget_pass(request):
     return render(request,"forgotpassword.html",{})
 def stk_med(request):
     return render(request,"med_check.html",{})
+def appoit(request):
+    return render(request,"hospital/add_rec.html",{})
 
 #-----------------------out_pharm reg-------------------------------------------------------------
 
@@ -174,6 +176,124 @@ def aa_o_pha_hm(request):
     else:
         return HttpResponse("<script>alert('Please login using lab username and password');window.location.href='/login/';</script>")
     return HttpResponse("<script>alert('Please login using lab username and password');window.location.href='/login/';</script>")
+
+def kout_presc_pha(request):
+    c=request.session['uid']
+    global pat
+    print("checkqr")
+    val="9"
+    s=request.FILES["files"]
+    if s:
+        fs=  FileSystemStorage("app\\static\\res")
+        try:
+            os.remove("app\\static\\res\\out.png")
+        except:
+            pass
+        fs.save("out.png",s)
+        try:
+            img = cv2.imread('app\\static\\res\\out.png')
+            d = decode(img)
+            val=d[0].data.decode('ascii')
+           
+        except Exception as e:
+            print("cannot read",e)
+    print("Value: ",val)
+    pat=int(val)
+    user=phar_regis.objects.get(lid=c)
+    obb=patient_regis.objects.filter(lid=int(val))
+    if(obb.count()==0):
+        return HttpResponse("<script>alert('No Data Available. check crct qr');window.location.href='/aa_o_pha_hm/';</script>")
+    else:
+        ob=patient_regis.objects.get(lid=int(val))
+    from datetime import date
+    today = date.today()
+    ob.date=today
+    dates=ob.dob
+    ag = int(today.year) - int(dates.year)
+    ob.age=ag
+    name=user.name
+    pre=phar_tb.objects.all().filter(pid=int(val),name="Not visited").order_by('-date')
+    return render(request,"pharmacy/out/out_qrcode_after.html",{"data":ob,"user":user,"name":name,"phar":pre})
+
+def mout_pstatus(request):
+    c=request.session['uid']
+    user=phar_regis.objects.get(lid=c)
+    a=request.POST.get("date")
+    b=request.POST.get("hos")
+    z=request.POST.get("pharm")
+    d=request.POST.get("pt")
+    e=request.POST.get("doc")
+    mm=request.POST.get("med")
+    time=request.POST.get("t")
+    day=request.POST.get("d")
+    f=request.POST.get("llid")
+    sums=0
+    for i in range (0,5,2):
+        sums=sums+int(time[i])
+    print(sums)
+    s=sums*int(day)
+    print(s)
+    da=med_stock.objects.filter(med=mm)
+    if (da.count()==0):
+        return HttpResponse("<script>alert('Medicine not Added');window.location.href='/aa_o_pha_hm/';</script>")
+    if (da.count()==1):
+        st=med_stock.objects.get(med=mm,hos=z)
+        aa=st.stock
+        new=int(aa)-int(s)
+        st.stock=new
+        st.save()
+        obj=phar_tb.objects.get(pid=d,doc=e,date=a,hos=b,llid=f)
+        obj.name=user.name
+        obj.save()
+    #return render(request,"pharmacy/phar_hmlog.html",{"user":user})
+        return HttpResponse("<script>alert('Prescription Successfully Provided');window.location.href='/aa_o_pha_hm/';</script>")
+
+def vv_med_add(request):
+    if request.session.has_key('uid'):
+        c=request.session['uid']
+        obj=login_tb.objects.filter(lid=c)
+        for i in obj:
+            typ=i.usertype
+    if request.session.has_key('uid') and typ=="out_pharmacy":
+        user=phar_regis.objects.get(lid=c)
+        return render(request,"pharmacy/out/add_med.html",{"user":user})
+
+def yy_stock(request):
+    if request.session.has_key('uid'):
+        c=request.session['uid']
+        obj=login_tb.objects.filter(lid=c)
+        for i in obj:
+            typ=i.usertype
+    if request.session.has_key('uid') and typ=="out_pharmacy":
+        a=request.POST.get("f_date")
+        b=request.POST.get("e_date")
+        m=request.POST.get("med")
+        h=request.POST.get("dis")
+        d=request.POST.get("stock")
+        ob=phar_regis.objects.get(lid=c)
+        e=ob.name
+        f=ob.place
+        ss=ob.ph_no
+        g=ob.lid
+        obj=med_stock(f_date=a,e_date=b,med=m,disease=h,lid=g,stock=d,hos=e,place=f,ph_no=ss)
+        obj.save()
+        obb=med_stock.objects.get(f_date=a,e_date=b,med=m,disease=h,lid=g,stock=d,hos=e,place=f)
+        obb.address=ob.address
+        obb.save()
+        return HttpResponse("<script>alert('Stock Successfully updated');window.location.href='/aa_o_pha_hm/';</script>")
+
+def ee_vw(request):
+    if request.session.has_key('uid'):
+        c=request.session['uid']
+        obj=login_tb.objects.filter(lid=c)
+        for i in obj:
+            typ=i.usertype
+    if request.session.has_key('uid') and typ=="out_pharmacy":
+        user=phar_regis.objects.get(lid=c)
+        data=med_stock.objects.filter(hos=user.name,place=user.place).order_by('med')
+        return render(request,"pharmacy/out/view_medicine.html",{"user":user,"data":data})
+
+
 
 #-----------------------out_hosp reg--------------------------------------------------------------------------------------------
 
@@ -402,6 +522,77 @@ def o_labo_hm(request):
         return HttpResponse("<script>alert('Please login using lab username and password');window.location.href='/login/';</script>")
     return HttpResponse("<script>alert('Please login using lab username and password');window.location.href='/login/';</script>")
 
+def ot_tst_lab(request):
+    c=request.session['uid']
+    global pat
+    print("checkqr")
+    val="9"
+    s=request.FILES["files"]
+    if s:
+        fs=  FileSystemStorage("app\\static\\res")
+        try:
+            os.remove("app\\static\\res\\out.png")
+        except:
+            pass
+        fs.save("out.png",s)
+        try:
+            img = cv2.imread('app\\static\\res\\out.png')
+            d = decode(img)
+            val=d[0].data.decode('ascii')
+           
+        except Exception as e:
+            print("cannot read",e)
+    print("Value: ",val)
+    pat=int(val)
+    user=lab_regis.objects.get(lid=c)
+    obb=patient_regis.objects.filter(lid=int(val))
+    if(obb.count()==0):
+        return HttpResponse("<script>alert('No Data Available. check crct qr');window.location.href='/doct_hm/';</script>")
+    else:
+        ob=patient_regis.objects.get(lid=int(val))
+    from datetime import date
+    today = date.today()
+    ob.date=today
+    dates=ob.dob
+    ag = int(today.year) - int(dates.year)
+    ob.age=ag
+    ob.save()
+    lab=lab_tb.objects.all().filter(pid=int(val),name="Not visited").order_by('-date')
+    return render(request,"lab/out/out_qrcode_after_lab.html",{"data":ob,"user":user,"lab":lab})
+
+def aout_info(request):
+    a=request.POST.get("date")
+    b=request.POST.get("test")
+    d=request.POST.get("pt")
+    e=request.POST.get("doc")
+    f=request.POST.get("llid")
+    g=request.POST.get("hos")
+    print(a,b,d,e,f,g)
+    obj=lab_tb.objects.get(pid=d,doc=e,date=a,hos=g,test=b,llid=f)
+    return render(request,"lab/out/upload.html",{"data":obj})
+
+def bout_file_lab(request):
+    if request.session.has_key('uid'):
+        c=request.session['uid']
+        print(c)
+        obj=login_tb.objects.filter(lid=c)
+        for i in obj:
+            typ=i.usertype
+    if request.session.has_key('uid') and typ=="out_laboratory":
+        a=request.POST.get("pid")
+        b=request.POST.get("pat")
+        f=request.POST.get("test")
+        d=request.POST.get("hos")
+        user=lab_regis.objects.get(lid=c)
+        if request.method=='POST':
+            upload_file=request.FILES['document']
+            fs=FileSystemStorage()
+            obj=lab_tb.objects.get(pid=a,pat=b,name="Not visited",hos=d,test=f)
+            obj.result=upload_file
+            obj.name=user.name
+            obj.save()
+            return HttpResponse("<script>alert('Result uploaded successfully');window.location.href='/o_labo_hm/';</script>")
+
 
 
 #--------------------patient registration------------------------------------------------------------
@@ -565,7 +756,13 @@ def login_ck(request):
                     data=phar_regis.objects.get(lid=llid)
                     print(request.session['uid'])
                     return render(request,"pharmacy/out/out_phar_hmlog.html",{"user":data})
-                    
+            if count==1 and typ=="recept":
+                user_dt=login_tb.objects.get(lid=llid)
+                request.session['uid']=user_dt.lid
+                print("session:= created ", request.session['uid'])
+                if request.session.has_key('uid'):
+                    print(request.session['uid'])
+                    return render(request,"hospital/booking.html",{})
 def reset(request):
     a=request.POST.get("uname")
     b=request.POST.get("email")
@@ -1211,6 +1408,84 @@ def fresh(request):
         print (request.session['uid'])
         return render(request,"hospital/hospital_hm.html",{"dat":dat})
 
+def recp(request):
+    if request.session.has_key('uid'):
+        z=request.session['uid']
+        obj=login_tb.objects.filter(lid=z)
+        for i in obj:
+            typ=i.usertype
+    print(typ)
+    if request.session.has_key('uid') and typ=="hospital":
+        a=request.POST.get("uname")
+        b=request.POST.get("pass")
+        dat=hosp_regis.objects.get(lid=z)
+        amt=login_tb.objects.filter(username=a)
+        if(amt.count()==0):
+            obj=login_tb(username=a,password=b,usertype="recept")
+            obj.save()
+            obj=login_tb.objects.get(username=a,password=b)
+            data=recep(hos_id=z,hos=dat.name,place=dat.place,lid=obj.lid)
+            data.save()
+            return HttpResponse("<script>alert('Successfully added');window.location.href='/hm_hosp/';</script>")
+        else:
+            return HttpResponse("<script>alert('Username Already exist');window.location.href='/hm_hosp/';</script>")
+
+def pbooking(request):
+    c=request.session['uid']
+    global pat
+    print("checkqr")
+    val="9"
+    s=request.FILES["file"]
+    if s:
+        fs=  FileSystemStorage("app\\static\\res")
+        try:
+            os.remove("app\\static\\res\\out.png")
+        except:
+            pass
+        fs.save("out.png",s)
+        try:
+            img = cv2.imread('app\\static\\res\\out.png')
+            d = decode(img)
+            val=d[0].data.decode('ascii')
+           
+        except Exception as e:
+            print("cannot read",e)
+    print("Value: ",val)
+    pat=int(val)
+    user=recep.objects.get(lid=c)
+    obb=patient_regis.objects.filter(lid=int(val))
+    if(obb.count()==0):
+        return HttpResponse("<script>alert('No Data Available. check crct qr');window.location.href='/wdept/';</script>")
+    else:
+        ob=patient_regis.objects.get(lid=int(val))
+        obj=recep.objects.get(lid=request.session['uid'])
+        from datetime import date
+        today = date.today()
+    return render(request,"hospital/appoitment.html",{"user":obj,"data":ob,"today":today})
+    #return render(request,"hospital/list.html",{"doc":data,"day":today})
+
+def wdept(request):
+    return render(request,"hospital/booking.html",{})
+
+def iibook(request):
+    m=request.session['uid']
+    a=request.POST.get("pid")
+    b=request.POST.get("pname")
+    c=request.POST.get("selt_hosp")
+    d=request.POST.get("departmnt")
+    e=request.POST.get("dr")
+    g=request.POST.get("tym")
+    ob=patient_regis.objects.get(lid=a,name=b)
+    aa=recep.objects.get(lid=m)
+    data=doc_regis.objects.get(did=e,hos=c,special=d)
+    from datetime import date
+    today = date.today()
+    dates=ob.dob
+    ag = int(today.year) - int(dates.year)
+    obj=booking_tb(pid=a,did=data.did,location=aa.place,specialization=d,time=g,date=today,hid=data.hid,name=b,age=ag,gender=ob.gender,place=ob.place,hosp_name=c,dr_name=data.name,status="Requested")
+    obj.save()
+    return HttpResponse("<script>alert('Booked Successful');window.location.href='/wdept/';</script>")
+
 def avail(request):
     print("available")
     a=request.POST.get("loc")
@@ -1331,7 +1606,7 @@ def test_dr(request):
     obj=doc_regis.objects.get(lid=c)
     print (pat)
     aa=patient_regis.objects.get(lid=pat)
-    ob=lab_tb(name="Not visited",pid=d,test=a,doc=obj.name,hos=obj.hos,date=b,result="Not Avilable",pat=aa.name
+    ob=lab_tb(name="Not visited",pid=d,test=a,doc=obj.name,hos=obj.hos,date=b,result="default.png",pat=aa.name,
               )
     ob.save()
     return HttpResponse("<script>alert('Test successfully added');window.location.href='/back/';</script>")
@@ -1350,8 +1625,23 @@ def pre_dr(request):
     ob=phar_tb(name="Not visited",pid=g,date=a,doc=obj.name,hos=obj.hos,disease=b,med=d,timing=e,days=f,pat=aa.name
               )
     ob.save()
-    return HttpResponse("<script>alert('Prescription successfully added');window.location.href='/back/';</script>")    
-    
+    return HttpResponse("<script>alert('Prescription successfully added');window.location.href='/back/';</script>")
+
+def submit(request):
+    c=request.session['uid']
+    user=doc_regis.objects.get(lid=c)
+    d=user.name
+    e=user.special
+    f=user.hos
+    a=request.POST.get("id")
+    b=request.POST.get("name")
+    from datetime import date
+    today = date.today()
+    print(today)
+    obj=booking_tb.objects.get(pid=a,name=b,specialization=e,dr_name=d,hosp_name=f,date=today)
+    obj.status="Visited"
+    obj.save()
+    return HttpResponse("<script>alert('Consultation Completed');window.location.href='/doct_hm/';</script>")
 
 #--------------PATIENT----------------------------------------------------------------------------------------------------------------------
 
@@ -1541,22 +1831,26 @@ def pstatus(request):
     time=request.POST.get("t")
     day=request.POST.get("d")
     f=request.POST.get("llid")
-    obj=phar_tb.objects.get(pid=d,doc=e,date=a,hos=b,llid=f)
-    obj.name=user.name
-    obj.save()
     sums=0
     for i in range (0,5,2):
         sums=sums+int(time[i])
     print(sums)
     s=sums*int(day)
     print(s)
-    st=med_stock.objects.get(med=mm,hos=b)
-    aa=st.stock
-    new=int(aa)-int(s)
-    st.stock=new
-    st.save()
+    da=med_stock.objects.filter(med=mm)
+    if (da.count()==0):
+        return HttpResponse("<script>alert('Medicine not Added');window.location.href='/pg_med_add/';</script>")
+    if (da.count()==1):
+        st=med_stock.objects.get(med=mm,hos=b)
+        aa=st.stock
+        new=int(aa)-int(s)
+        st.stock=new
+        st.save()
+        obj=phar_tb.objects.get(pid=d,doc=e,date=a,hos=b,llid=f)
+        obj.name=user.name
+        obj.save()
     #return render(request,"pharmacy/phar_hmlog.html",{"user":user})
-    return HttpResponse("<script>alert('Prescription Successfully Provided');window.location.href='/pha_hm/';</script>")
+        return HttpResponse("<script>alert('Prescription Successfully Provided');window.location.href='/pha_hm/';</script>")
 
 def vew_presc(request):
     c=request.session['uid']
@@ -1631,7 +1925,7 @@ def medchecker(request):
     a=request.POST.get("loc")
     b=request.POST.get("product")
     print(a,b)
-    obj=med_stock.objects.filter(med=b,place=a,stock__gt=50)
+    obj=med_stock.objects.filter(med=b,place=a,stock__gt=50).distinct()
     if obj.count()>=1:
         status="Available"
         return render(request,"med_check.html",{"data":obj,"status":status})
@@ -1779,6 +2073,19 @@ def list_dr(request):
     hosp_id=request.GET.get("hosp_id")
     print ("selected department id___________________________________________",dept,hosp_id)
     ob=serializers.serialize("json",doc_regis.objects.filter(special=dept,hid=hosp_id))
+    data["dt1"]=json.loads(ob)
+    print (data)
+    return JsonResponse(data,safe=False)
+def nn_list_dr(request):
+    print ("list_dr")
+    data={}
+    dept=request.GET.get("dept")
+    ho=recep.objects.get(lid=request.session['uid'])
+    aa=ho.hos
+    ab=ho.place
+    hos_id=hosp_regis.objects.get(name=aa,place=ab)
+    print ("selected department id___________________________________________",dept)
+    ob=serializers.serialize("json",doc_regis.objects.filter(special=dept,hid=hos_id.hid))
     data["dt1"]=json.loads(ob)
     print (data)
     return JsonResponse(data,safe=False)

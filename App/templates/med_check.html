@@ -56,6 +56,15 @@ td {
   content: counter(section);
 }
 </style>
+<script>
+function Validate() {
+if ($(('#sel_loc')).val() == null){
+    alert('Please select location')
+	$( '#sel_loc' ).focus();
+            return false;
+        }
+	}
+</script>
 
 
 </head>
@@ -111,7 +120,7 @@ td {
 					<div class="col-sm-6">
 						<div class="form-group">
                             <label>District :</label>
-							<select id="sel_loc" name="loc" class="form-control input-md" required pattern="[A-Z]">
+							<select id="sel_loc" name="loc" class="form-control input-md" required>
 									<option selected disabled>SELECT</option>
 									<option value="Alappuzha">Alappuzha</option>
 									<option value="Ernakulam">Ernakulam </option>
@@ -132,7 +141,7 @@ td {
 						<div class="form-group">
 							<form>
 								<label for="product">Medicine :</label>
-								<input type="text" name="product" id="product" class="form-control input-md">
+								<input type="text" name="product" id="product" class="form-control input-md" required>
 							</form>
 						</div>
 						<div class="form-groups">
