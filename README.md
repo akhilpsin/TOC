@@ -50,9 +50,9 @@ Follow these steps to get the Touch of Care application up and running on your l
     pip install -r requirements.txt
    ```
 4. Launch the Django server:
-  ```bash
-    python manage.py runserver   
-  ```
-6. Visit http://127.0.0.1:8000/ in your browser to explore the application.
+   ```bash
+    python manage.py runserver
+   ```
+5. Visit http://127.0.0.1:8000/ in your browser to explore the application.
 
 This updated README.md file now includes a comprehensive overview, objective, key features, and quick start guide, based on the detailed description of the application's functionality provided. It gives a clear understanding of the project's intent, its technical composition, and the benefits it offers to users within the healthcare system.
