@@ -1,4 +1,4 @@
-# Touch of Care (TOC) | Django Project  
+# Touch of Care (TOC) | hospital management|  Django Project  
   
 ## Overview  
   
@@ -34,29 +34,25 @@ For environment setup, please follow the instructions outlined in the `requireme
   
 Follow these steps to get the Touch of Care application up and running on your local environment:  
   
-1. Clone the repository and navigate to the project directory:  
+1. Clone the repository and navigate to the project directory:
    ```bash  
    git clone https://github.com/akhilpsin/TOC.git  
    cd TOC
    ```
- 
 2. Create and activate a virtual environment:
-```bash
-  py -m venv venv
-  .\venv\Scripts\activate  # For Windows  
-  source venv/bin/activate  # For Unix/MacOS
-```
-
+   ```bash
+    py -m venv venv
+    .\venv\Scripts\activate  # For Windows  
+    source venv/bin/activate  # For Unix/MacOS
+   ```
 3. Install dependencies:
-```bash
-  pip install -r requirements.txt  
-```
- 
+   ```bash
+    pip install -r requirements.txt
+   ```
 4. Launch the Django server:
-```bash
-  python manage.py runserver   
-```
-
-5. Visit http://127.0.0.1:8000/ in your browser to explore the application.
+  ```bash
+    python manage.py runserver   
+  ```
+6. Visit http://127.0.0.1:8000/ in your browser to explore the application.
 
 This updated README.md file now includes a comprehensive overview, objective, key features, and quick start guide, based on the detailed description of the application's functionality provided. It gives a clear understanding of the project's intent, its technical composition, and the benefits it offers to users within the healthcare system.
